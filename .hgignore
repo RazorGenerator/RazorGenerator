@@ -1,0 +1,11 @@
+glob:bin
+glob:Bin
+glob:obj
+glob:App_Data
+glob:*.user
+glob:*.patch
+glob:*.hg
+glob:*.sln.cache
+glob:*.orig
+glob:*.suo
+glob:TestResults
