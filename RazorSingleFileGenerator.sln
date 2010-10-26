@@ -1,21 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorSingleFileGenerator", "RazorSingleFileGenerator.csproj", "{461089E7-008E-4737-BA17-E1FCD1CC3D0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorSingleFileGenerator", "RazorSingleFileGenerator\RazorSingleFileGenerator.csproj", "{461089E7-008E-4737-BA17-E1FCD1CC3D0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Coverage|Any CPU = Coverage|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Coverage|Any CPU.ActiveCfg = Debug|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Coverage|Any CPU.Build.0 = Debug|Any CPU
 		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
