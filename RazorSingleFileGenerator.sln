@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleRazorHelperLibrary", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcApplicationTestRazorGenerator", "MvcApplicationTestRazorGenerator\MvcApplicationTestRazorGenerator.csproj", "{F2CF78E6-FD1E-40E5-A18B-D6E528F47156}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{1B1EA4C3-DE93-437E-AE87-31F1D9312435}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,5 +30,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F2CF78E6-FD1E-40E5-A18B-D6E528F47156} = {1B1EA4C3-DE93-437E-AE87-31F1D9312435}
+		{1B1DA7CD-BA37-47C3-AD30-2016659E2CDD} = {1B1EA4C3-DE93-437E-AE87-31F1D9312435}
 	EndGlobalSection
 EndGlobal

@@ -13,8 +13,8 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 using System.Reflection;
 using System.Resources;
 
-[assembly: AssemblyTitle("SingleFileGenerator")]
-[assembly: AssemblyDescription("Single-file generator VS SDK Sample")]
+[assembly: AssemblyTitle("RazorSingleFileGenerator")]
+[assembly: AssemblyDescription("Single-file generator for the ASP.NET Razor View Engine")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
 [assembly: AssemblyProduct("")]
