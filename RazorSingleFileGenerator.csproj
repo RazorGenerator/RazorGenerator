@@ -109,7 +109,6 @@
     </Compile>
     <Compile Include="BaseCodeGenerator.cs" />
     <Compile Include="BaseCodeGeneratorWithSite.cs" />
-    <Compile Include="CompiledWebRazorHost.cs" />
     <Compile Include="RegistrationAttributes\CodeGeneratorRegistrationAttribute.cs" />
     <Compile Include="Strings.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -25,6 +25,8 @@ using EnvDTE;
 using System.Web.Razor;
 using System.Web.Razor.Parser;
 using System.Web.Razor.Parser.SyntaxTree;
+using System.Web.WebPages.Razor;
+using System.Web;
 
 namespace Microsoft.Web.RazorSingleFileGenerator {
     /// <summary>
@@ -56,8 +58,19 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             // Determine the project-relative path
             string projectRelativePath = InputFilePath.Substring(appRoot.Length);
 
+            // Turn it into a virtual path by prepending ~ and fixing it up
+            string virtualPath = VirtualPathUtility.ToAppRelative("~" + projectRelativePath);
+
             // Create the host and engine
-            CompiledWebRazorHost host = new CompiledWebRazorHost(FileNameSpace, projectRelativePath, InputFilePath);
+
+
+            var host = new WebCodeRazorHost(virtualPath, InputFilePath);
+
+            host.DefaultNamespace = FileNameSpace;
+
+            // Remove the WebMatrix.Data namespace which is not typically used in MVC
+            host.NamespaceImports.Remove("WebMatrix.Data");
+            
             RazorTemplateEngine engine = new RazorTemplateEngine(host);
 
             // Generate code
