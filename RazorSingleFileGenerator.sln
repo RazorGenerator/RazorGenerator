@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorSingleFileGenerator", "RazorSingleFileGenerator\RazorSingleFileGenerator.csproj", "{461089E7-008E-4737-BA17-E1FCD1CC3D0E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleRazorHelperLibrary", "SampleRazorHelperLibrary\SampleRazorHelperLibrary.csproj", "{1B1DA7CD-BA37-47C3-AD30-2016659E2CDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcApplicationTestRazorGenerator", "MvcApplicationTestRazorGenerator\MvcApplicationTestRazorGenerator.csproj", "{F2CF78E6-FD1E-40E5-A18B-D6E528F47156}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +17,14 @@ Global
 		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B1DA7CD-BA37-47C3-AD30-2016659E2CDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B1DA7CD-BA37-47C3-AD30-2016659E2CDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B1DA7CD-BA37-47C3-AD30-2016659E2CDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B1DA7CD-BA37-47C3-AD30-2016659E2CDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2CF78E6-FD1E-40E5-A18B-D6E528F47156}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2CF78E6-FD1E-40E5-A18B-D6E528F47156}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2CF78E6-FD1E-40E5-A18B-D6E528F47156}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2CF78E6-FD1E-40E5-A18B-D6E528F47156}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

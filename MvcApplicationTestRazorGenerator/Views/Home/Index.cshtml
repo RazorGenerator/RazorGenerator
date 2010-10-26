@@ -1,0 +1,14 @@
+﻿@{
+    View.Title = "Precompiled Razor test page";
+}
+
+<h2>@View.Message</h2>
+<p>
+    This page demonstrates the use of precompiled razor helpers
+</p>
+
+<p>Calling helper defined in the web app itself:</p>
+@MyWebAppHelpers.WriteList(new [] { "Hello", "Razor" })
+
+<p>Calling helper defined in an external library:</p>
+@MyLibraryHelpers.WriteList(new [] { "Hello", "Razor" })

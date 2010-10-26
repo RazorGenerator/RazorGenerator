@@ -1,0 +1,9 @@
+﻿@helper WriteList(string[] items) {
+    <ul>
+        @foreach (var s in items) {
+            <li>
+                @s! (from library)
+            </li>
+        }
+    </ul>
+}
