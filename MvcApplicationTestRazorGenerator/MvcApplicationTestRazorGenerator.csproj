@@ -64,10 +64,10 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\Helpers\MyWebAppHelpers.cs">
+    <Compile Include="Views\Helpers\WebAppHelpers.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MyWebAppHelpers.cshtml</DependentUpon>
+      <DependentUpon>WebAppHelpers.cshtml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -96,9 +96,9 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Helpers\MyWebAppHelpers.cshtml">
+    <None Include="Views\Helpers\WebAppHelpers.cshtml">
       <Generator>RazorClassGenerator</Generator>
-      <LastGenOutput>MyWebAppHelpers.cs</LastGenOutput>
+      <LastGenOutput>WebAppHelpers.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
