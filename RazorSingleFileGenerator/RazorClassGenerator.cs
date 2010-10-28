@@ -61,17 +61,17 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             // Turn it into a virtual path by prepending ~ and fixing it up
             string virtualPath = VirtualPathUtility.ToAppRelative("~" + projectRelativePath);
 
-            // Create the host and engine
-
-
+            // Create the same type of Razor host that's used to process Razor files in App_Code
             var host = new WebCodeRazorHost(virtualPath, InputFilePath);
 
+            // Set the namespace to be the same as what's used by default for regular .cs files
             host.DefaultNamespace = FileNameSpace;
 
             // Remove the WebMatrix.Data namespace which is not typically used in MVC
             host.NamespaceImports.Remove("WebMatrix.Data");
             
-            RazorTemplateEngine engine = new RazorTemplateEngine(host);
+            // Create a Razor engine nad pass it our host
+            var engine = new RazorTemplateEngine(host);
 
             // Generate code
             GeneratorResults results = null;
