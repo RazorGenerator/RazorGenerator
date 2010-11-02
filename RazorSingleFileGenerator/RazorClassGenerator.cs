@@ -104,8 +104,17 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
                     options.BlankLinesBetweenMembers = false;
                     options.BracingStyle = "C";
 
+                    // Add a GeneratedCode attribute to the generated class
+                    CodeCompileUnit generatedCode = results.GeneratedCode;
+                    CodeTypeDeclaration generatedType = generatedCode.Namespaces[0].Types[0];
+                    generatedType.CustomAttributes.Add(
+                        new CodeAttributeDeclaration(
+                            new CodeTypeReference(typeof(GeneratedCodeAttribute)),
+                            new CodeAttributeArgument(new CodePrimitiveExpression("RazorSingleFileGenerator")),
+                            new CodeAttributeArgument(new CodePrimitiveExpression("1.0"))));
+
                     //Generate the code
-                    provider.GenerateCodeFromCompileUnit(results.GeneratedCode, writer, options);
+                    provider.GenerateCodeFromCompileUnit(generatedCode, writer, options);
 
                     if (this.CodeGeneratorProgress != null) {
                         //Report that we are done

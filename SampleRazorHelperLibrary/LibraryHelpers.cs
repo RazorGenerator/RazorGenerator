@@ -22,6 +22,7 @@ namespace SampleRazorHelperLibrary
     using System.Web.WebPages;
     using System.Web.WebPages.Html;
     
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorSingleFileGenerator", "1.0")]
     public class LibraryHelpers : System.Web.WebPages.HelperPage
     {
 
