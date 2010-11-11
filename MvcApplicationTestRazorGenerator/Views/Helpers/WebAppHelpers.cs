@@ -22,6 +22,7 @@ namespace MvcApplicationTestRazorGenerator.Views.Helpers
     using System.Web.WebPages;
     using System.Web.WebPages.Html;
     
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorSingleFileGenerator", "1.0")]
     public class WebAppHelpers : System.Web.WebPages.HelperPage
     {
 #line hidden
