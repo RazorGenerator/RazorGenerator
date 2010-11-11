@@ -24,12 +24,15 @@ namespace SampleRazorHelperLibrary
     
     public class LibraryHelpers : System.Web.WebPages.HelperPage
     {
-
+#line hidden
+#line hidden
 public static System.Web.WebPages.HelperResult WriteList(string[] items) {
 return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 
 
-WriteLiteralTo(@__razor_helper_writer, "\r\n    <ul>\r\n");
+                                   
+
+WriteLiteralTo(@__razor_helper_writer, "    <ul>\r\n");
 
 
          foreach (var s in items) {
@@ -45,6 +48,7 @@ WriteLiteralTo(@__razor_helper_writer, "! (from library)\r\n            </li>\r\
         }
 
 WriteLiteralTo(@__razor_helper_writer, "    </ul>\r\n");
+
 
 
 });
