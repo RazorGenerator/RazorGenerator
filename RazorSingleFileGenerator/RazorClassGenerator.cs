@@ -10,23 +10,18 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 using System;
-using System.Runtime.InteropServices;
-using System.CodeDom.Compiler;
 using System.CodeDom;
+using System.CodeDom.Compiler;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
-using System.Xml;
-using System.Xml.Schema;
-using Microsoft.Win32;
-using Microsoft.VisualStudio.Shell;
-using VSLangProj80;
-using Microsoft.VisualStudio.Shell.Interop;
-using EnvDTE;
+using System.Web;
 using System.Web.Razor;
-using System.Web.Razor.Parser;
 using System.Web.Razor.Parser.SyntaxTree;
 using System.Web.WebPages.Razor;
-using System.Web;
+using Microsoft.VisualStudio.Shell;
+using VSLangProj80;
 
 namespace Microsoft.Web.RazorSingleFileGenerator {
     /// <summary>
@@ -67,10 +62,6 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             // Set the namespace to be the same as what's used by default for regular .cs files
             host.DefaultNamespace = FileNameSpace;
 
-            // Remove the WebMatrix.Data namespaces which is not typically used in MVC
-            host.NamespaceImports.Remove("WebMatrix.Data");
-            host.NamespaceImports.Remove("WebMatrix.WebData");
-            
             // Create a Razor engine nad pass it our host
             var engine = new RazorTemplateEngine(host);
 
@@ -107,12 +98,18 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
 
                     // Add a GeneratedCode attribute to the generated class
                     CodeCompileUnit generatedCode = results.GeneratedCode;
-                    CodeTypeDeclaration generatedType = generatedCode.Namespaces[0].Types[0];
+                    var ns = generatedCode.Namespaces[0];
+                    CodeTypeDeclaration generatedType = ns.Types[0];
                     generatedType.CustomAttributes.Add(
                         new CodeAttributeDeclaration(
                             new CodeTypeReference(typeof(GeneratedCodeAttribute)),
                             new CodeAttributeArgument(new CodePrimitiveExpression("RazorSingleFileGenerator")),
                             new CodeAttributeArgument(new CodePrimitiveExpression("1.0"))));
+
+                    // Remove all the WebMatrix namespaces
+                    var imports = ns.Imports.OfType<CodeNamespaceImport>().Where(import => !import.Namespace.Contains("WebMatrix")).ToList();
+                    ns.Imports.Clear();
+                    imports.ForEach(import => ns.Imports.Add(import));
 
                     //Generate the code
                     provider.GenerateCodeFromCompileUnit(generatedCode, writer, options);

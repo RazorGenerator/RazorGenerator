@@ -57,6 +57,9 @@ WriteLiteralTo(@__razor_helper_writer, "    </ul>\r\n");
 }
 
 
+        public LibraryHelpers()
+        {
+        }
         protected static System.Web.HttpApplication ApplicationInstance
         {
             get
