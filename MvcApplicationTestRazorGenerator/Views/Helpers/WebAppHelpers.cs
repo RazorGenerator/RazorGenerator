@@ -19,8 +19,8 @@ namespace MvcApplicationTestRazorGenerator.Views.Helpers
     using System.Web.Helpers;
     using System.Web.Security;
     using System.Web.UI;
-    using System.Web.WebPages;
-    using System.Web.WebPages.Html;
+    using System.Web.Mvc;
+    using System.Web.Mvc.Html;
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorSingleFileGenerator", "1.0")]
     public class WebAppHelpers : System.Web.WebPages.HelperPage
@@ -56,7 +56,25 @@ WriteLiteralTo(@__razor_helper_writer, "    </ul>\r\n");
 
 }
 
+#line hidden
+public static System.Web.WebPages.HelperResult RenderAboutLink(System.Web.Mvc.HtmlHelper Html) {
+return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 
+
+                                                         
+    
+WriteTo(@__razor_helper_writer, Html.ActionLink("About link from helper", "About", "Home"));
+
+                                                               ;
+
+});
+
+}
+
+
+        public WebAppHelpers()
+        {
+        }
         protected static System.Web.HttpApplication ApplicationInstance
         {
             get

@@ -107,9 +107,10 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
                             new CodeAttributeArgument(new CodePrimitiveExpression("1.0"))));
 
                     // Remove all the WebMatrix namespaces
-                    var imports = ns.Imports.OfType<CodeNamespaceImport>().Where(import => !import.Namespace.Contains("WebMatrix")).ToList();
+                    var imports = ns.Imports.OfType<CodeNamespaceImport>().Where(KeepImport).ToList();
                     ns.Imports.Clear();
                     imports.ForEach(import => ns.Imports.Add(import));
+                    ns.Imports.Add(new CodeNamespaceImport("System.Web.Mvc.Html"));
 
                     //Generate the code
                     provider.GenerateCodeFromCompileUnit(generatedCode, writer, options);
@@ -143,6 +144,14 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
                 //Returning null signifies that generation has failed
                 return null;
             }
+        }
+
+        private static bool KeepImport(CodeNamespaceImport import) {
+            // Remove all the WebMatrix and WebPahes namespaces
+            if (import.Namespace.Contains("WebMatrix")) return false;
+            if (import.Namespace.Contains("WebPages")) return false;
+
+            return true;
         }
     }
 }

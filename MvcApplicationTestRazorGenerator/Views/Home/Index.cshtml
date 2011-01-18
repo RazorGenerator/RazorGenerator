@@ -9,6 +9,8 @@
 
 <p>Calling helper defined in the web app itself:</p>
 @WebAppHelpers.WriteList(new [] { "Hello", "Razor" })
+@WebAppHelpers.RenderAboutLink(Html)
 
 <p>Calling helper defined in an external library:</p>
 @LibraryHelpers.WriteList(new [] { "Hello", "Razor" })
+
