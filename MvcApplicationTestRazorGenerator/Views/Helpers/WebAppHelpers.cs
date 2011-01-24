@@ -19,6 +19,7 @@ namespace MvcApplicationTestRazorGenerator.Views.Helpers
     using System.Web.Helpers;
     using System.Web.Security;
     using System.Web.UI;
+    using System.Web.WebPages;
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
     

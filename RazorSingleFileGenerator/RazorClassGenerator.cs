@@ -147,9 +147,11 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
         }
 
         private static bool KeepImport(CodeNamespaceImport import) {
-            // Remove all the WebMatrix and WebPahes namespaces
+            // Remove all the WebMatrix namespaces
             if (import.Namespace.Contains("WebMatrix")) return false;
-            if (import.Namespace.Contains("WebPages")) return false;
+
+            // System.Web.WebPages.Html conflicts with some MVC namespaces, so remove it
+            if (import.Namespace == "System.Web.WebPages.Html") return false;
 
             return true;
         }
