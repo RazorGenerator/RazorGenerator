@@ -113,7 +113,9 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
                     ns.Imports.Add(new CodeNamespaceImport("System.Web.Mvc.Html"));
 
                     //Generate the code
+                    writer.WriteLine("#pragma warning disable 1591");
                     provider.GenerateCodeFromCompileUnit(generatedCode, writer, options);
+                    writer.WriteLine("#pragma warning restore 1591");
 
                     if (this.CodeGeneratorProgress != null) {
                         //Report that we are done
