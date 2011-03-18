@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
 
 Copyright (c) Microsoft Corporation. All rights reserved.
 This code is licensed under the Visual Studio SDK license terms.
@@ -23,14 +23,13 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
     /// to the project system
     /// </summary>
     [ComVisible(true)]
-    [Guid("52B316AA-1997-4c81-9969-83604C09EEB4")]
-    [CodeGeneratorRegistration(typeof(RazorClassGenerator), "C# Razor Generator (.cshtml)", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true)]
-    //[CodeGeneratorRegistration(typeof(RazorClassGenerator), "VB Razor Generator (.vbhtml)", vsContextGuids.vsContextGuidVBProject, GeneratesDesignTimeSource = true)]
-    [ProvideObject(typeof(RazorClassGenerator))]
-    public class RazorClassGenerator : BaseCodeGeneratorWithSite {
+    [Guid("B7E5E1A1-6E39-46CC-8335-1E24C6400B7F")]
+    [CodeGeneratorRegistration(typeof(RazorMvcHelperGenerator), "C# Razor Helper Generator for Mvc (.cshtml)", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true)]
+    [ProvideObject(typeof(RazorMvcHelperGenerator))]
+    public class RazorMvcHelperGenerator : BaseCodeGeneratorWithSite {
 #pragma warning disable 0414
         //The name of this generator (use for 'Custom Tool' property of project item)
-        internal static string name = "RazorClassGenerator";
+        internal static string name = "RazorMvcHelperGenerator";
 #pragma warning restore 0414
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
         /// <param name="inputFileContent">Content of the input file</param>
         /// <returns>Generated file as a byte array</returns>
         protected override byte[] GenerateCode(string inputFileContent) {
-            var codeGenerator = new RazorCodeGenerator() { ErrorHandler = GeneratorError };
+            var codeGenerator = new RazorCodeGenerator() { ErrorHandler = GeneratorError, GenerateStaticType = true };
             if (this.CodeGeneratorProgress != null) {
                 codeGenerator.CompletionHandler = CodeGeneratorProgress.Progress;
             }
@@ -50,8 +49,8 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             // Determine the project-relative path
             string projectRelativePath = InputFilePath.Substring(appRoot.Length);
 
-            var razorHost = new CompiledWebRazorHost(FileNameSpace, projectRelativePath, InputFilePath);
-            
+            var razorHost = new CompiledMvcHelperRazorHost(FileNameSpace, projectRelativePath, InputFilePath);
+
             return codeGenerator.GenerateCode(inputFileContent, razorHost, GetCodeProvider());
         }
     }

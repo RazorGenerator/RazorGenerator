@@ -1,8 +1,8 @@
-﻿@helper WriteList(string[] items) {
+﻿@helper WriteList(this HtmlHelper helper, IEnumerable<string> items) {
     <ul>
         @foreach (var s in items) {
             <li>
-                @s! (from library)
+                @s
             </li>
         }
     </ul>
