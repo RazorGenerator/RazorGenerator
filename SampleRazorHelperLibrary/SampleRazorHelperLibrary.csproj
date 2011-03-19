@@ -65,7 +65,6 @@
     <None Include="MvcHelperSamples.cshtml">
       <Generator>RazorMvcHelperGenerator</Generator>
       <LastGenOutput>MvcHelperSamples.cs</LastGenOutput>
-      <CustomToolNamespace>MyCustomNamespace</CustomToolNamespace>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +74,7 @@
     <Content Include="WebPagesClassHelperSample.cshtml">
       <Generator>RazorClassGenerator</Generator>
       <LastGenOutput>WebPagesClassHelperSample.cs</LastGenOutput>
+      <CustomToolNamespace>MyCustomNamespace</CustomToolNamespace>
     </Content>
     <Content Include="WebPagesHelperSample.cshtml">
       <Generator>RazorHelperGenerator</Generator>
