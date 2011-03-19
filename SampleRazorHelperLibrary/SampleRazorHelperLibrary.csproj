@@ -42,6 +42,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WebMatrix.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="WebMatrix.WebData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -50,15 +52,15 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="WebPagesClassHelperSample.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>WebPagesClassHelperSample.cshtml</DependentUpon>
-    </Compile>
     <Compile Include="WebPagesHelperSample.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>WebPagesHelperSample.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="WebPagesSample.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebPagesSample.cshtml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -71,9 +73,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="WebPagesClassHelperSample.cshtml">
+    <EmbeddedResource Include="Images\Cake.jpg" />
+    <Content Include="WebPagesSample.cshtml">
       <Generator>RazorClassGenerator</Generator>
-      <LastGenOutput>WebPagesClassHelperSample.cs</LastGenOutput>
+      <LastGenOutput>WebPagesSample.cs</LastGenOutput>
       <CustomToolNamespace>MyCustomNamespace</CustomToolNamespace>
     </Content>
     <Content Include="WebPagesHelperSample.cshtml">
@@ -81,6 +84,7 @@
       <LastGenOutput>WebPagesHelperSample.cs</LastGenOutput>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

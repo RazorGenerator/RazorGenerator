@@ -97,7 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\Helpers\WebAppHelpers.cshtml">
-      <Generator>RazorClassGenerator</Generator>
+      <Generator>RazorMvcHelperGenerator</Generator>
       <LastGenOutput>WebAppHelpers.cs</LastGenOutput>
     </None>
   </ItemGroup>

@@ -35,10 +35,10 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
                 CodeTypeMember hrefMethod = new CodeSnippetTypeMember(@"
                     // Resolve package relative syntax
                     // Also, if it comes from a static embedded resource, change the path accordingly
-                    public override string Href(string virtualPath, params object[] pathParts) {{
+                    public override string Href(string virtualPath, params object[] pathParts) {
                         virtualPath = ApplicationPart.ProcessVirtualPath(GetType().Assembly, VirtualPath, virtualPath);
                         return base.Href(virtualPath, pathParts);
-                    }}");
+                    }");
 
                 generatedClass.Members.Add(hrefMethod);
             }

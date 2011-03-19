@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.WebPages;
 
 namespace MvcApplicationTestRazorGenerator {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
@@ -27,7 +28,7 @@ namespace MvcApplicationTestRazorGenerator {
 
         protected void Application_Start() {
             AreaRegistration.RegisterAllAreas();
-
+            ApplicationPart.Register(new ApplicationPart(typeof(SampleRazorHelperLibrary.WebPagesHelperSample).Assembly, "~/WebPages"));
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
         }
