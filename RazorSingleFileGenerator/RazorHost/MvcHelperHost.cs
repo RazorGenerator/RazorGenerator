@@ -4,14 +4,16 @@ using System.Linq;
 using System.Web.Razor.Generator;
 
 namespace Microsoft.Web.RazorSingleFileGenerator {
-    public class CompiledMvcHelperRazorHost : CompiledWebHelperRazorHost {
+    public class MvcHelperHost : WebPagesHelperHost {
         private const string WriteToMethodName = "WebViewPage.WriteTo";
         private const string WriteLiteralToMethodName = "WebViewPage.WriteLiteralTo";
 
-        public CompiledMvcHelperRazorHost(string fileNamespace, string projectRelativePath, string fullPath)
+        public MvcHelperHost(string fileNamespace, string projectRelativePath, string fullPath)
             : base(fileNamespace, projectRelativePath, fullPath) {
             // Do not derive from HelperPage.
             DefaultBaseClass = String.Empty;
+
+            GenerateStaticType = true;
 
             // Replace the WriteTo and WriteLiteralTo methods 
             GeneratedClassContext = new GeneratedClassContext(base.GeneratedClassContext.ExecuteMethodName, 

@@ -9,17 +9,20 @@ using System.Web;
 using System.Web.WebPages.Razor;
 
 namespace Microsoft.Web.RazorSingleFileGenerator {
-    public class CompiledWebHelperRazorHost : WebCodeRazorHost {
-        public CompiledWebHelperRazorHost(string fileNamespace, string projectRelativePath, string fullPath)
+    public class WebPagesHelperHost : WebCodeRazorHost, IHostContext {
+        public WebPagesHelperHost(string fileNamespace, string projectRelativePath, string fullPath)
             : base(GetVirtualPath(projectRelativePath), fullPath) {
+
             DefaultNamespace = String.IsNullOrEmpty(fileNamespace) ? "ASP" : fileNamespace;
         }
+
+        public bool GenerateStaticType { get; set; }
 
         protected override string GetClassName(string virtualPath) {
             return Path.GetFileNameWithoutExtension(virtualPath);
         }
 
-        private static string GetVirtualPath(string projectRelativePath) {
+        protected static string GetVirtualPath(string projectRelativePath) {
             return VirtualPathUtility.ToAppRelative("~" + projectRelativePath);
         }
 
@@ -50,7 +53,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             // Mark the result as generated code
             generatedClass.CustomAttributes.Add(new CodeAttributeDeclaration(typeof(GeneratedCodeAttribute).FullName,
                     new CodeAttributeArgument(new CodePrimitiveExpression("RazorSingleFileGenerator")),
-                    new CodeAttributeArgument(new CodePrimitiveExpression(typeof(CompiledWebRazorHost).Assembly.GetName().Version.ToString()))));
+                    new CodeAttributeArgument(new CodePrimitiveExpression(typeof(WebPageHost).Assembly.GetName().Version.ToString()))));
         }
     }
 }

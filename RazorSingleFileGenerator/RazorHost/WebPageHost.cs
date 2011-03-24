@@ -6,19 +6,24 @@ using System.Web.WebPages;
 using System.Web.WebPages.Razor;
 
 namespace Microsoft.Web.RazorSingleFileGenerator {
-    public class CompiledWebRazorHost : WebPageRazorHost {
-        public CompiledWebRazorHost(string fileNamespace, string projectRelativePath, string fullPath)
+    public class WebPageHost : WebPageRazorHost, IHostContext {
+        public WebPageHost(string fileNamespace, string projectRelativePath, string fullPath)
             : base(GetVirtualPath(projectRelativePath), fullPath) {
+
             DefaultNamespace = fileNamespace;
+        }
+
+        public bool GenerateStaticType {
+            get; set;
+        }
+
+        protected static string GetVirtualPath(string projectRelativePath) {
+            return VirtualPathUtility.ToAppRelative("~" + projectRelativePath);
         }
 
         protected override string GetClassName(string virtualPath) {
             virtualPath = virtualPath.TrimStart('~', '/', '_');
             return Regex.Replace(virtualPath, @"[\/.]", "_");
-        }
-
-        private static string GetVirtualPath(string projectRelativePath) {
-            return VirtualPathUtility.ToAppRelative("~" + projectRelativePath);
         }
 
         public override void PostProcessGeneratedCode(CodeCompileUnit codeCompileUnit,
@@ -49,7 +54,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
 
             generatedClass.CustomAttributes.Add(new CodeAttributeDeclaration(typeof(GeneratedCodeAttribute).FullName,
                     new CodeAttributeArgument(new CodePrimitiveExpression("RazorSingleFileGenerator")),
-                    new CodeAttributeArgument(new CodePrimitiveExpression(typeof(CompiledWebRazorHost).Assembly.GetName().Version.ToString()))));
+                    new CodeAttributeArgument(new CodePrimitiveExpression(typeof(WebPageHost).Assembly.GetName().Version.ToString()))));
         }
 
         private bool IsPageStart(CodeTypeDeclaration generatedClass) {

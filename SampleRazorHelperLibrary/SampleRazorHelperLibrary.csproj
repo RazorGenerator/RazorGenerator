@@ -46,12 +46,12 @@
     <Reference Include="WebMatrix.WebData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MvcHelperSamples.cs">
-      <DependentUpon>MvcHelperSamples.cshtml</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>MvcHelperSamples.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebPagesHelperSample.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -65,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="MvcHelperSamples.cshtml">
-      <Generator>RazorMvcHelperGenerator</Generator>
+      <Generator>RazorGenerator</Generator>
       <LastGenOutput>MvcHelperSamples.cs</LastGenOutput>
     </None>
   </ItemGroup>
@@ -75,12 +75,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\Cake.jpg" />
     <Content Include="WebPagesSample.cshtml">
-      <Generator>RazorClassGenerator</Generator>
-      <LastGenOutput>WebPagesSample.cs</LastGenOutput>
+      <Generator>RazorGenerator</Generator>
       <CustomToolNamespace>MyCustomNamespace</CustomToolNamespace>
+      <LastGenOutput>WebPagesSample.cs</LastGenOutput>
     </Content>
     <Content Include="WebPagesHelperSample.cshtml">
-      <Generator>RazorHelperGenerator</Generator>
+      <Generator>RazorGenerator</Generator>
       <LastGenOutput>WebPagesHelperSample.cs</LastGenOutput>
     </Content>
   </ItemGroup>
