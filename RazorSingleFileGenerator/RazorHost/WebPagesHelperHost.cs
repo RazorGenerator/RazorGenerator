@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.WebPages.Razor;
 
-namespace Microsoft.Web.RazorSingleFileGenerator {
+namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
     public class WebPagesHelperHost : WebCodeRazorHost, IHostContext {
         public WebPagesHelperHost(string fileNamespace, string projectRelativePath, string fullPath)
             : base(GetVirtualPath(projectRelativePath), fullPath) {

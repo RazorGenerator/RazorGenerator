@@ -3,7 +3,7 @@ using System.CodeDom;
 using System.Linq;
 using System.Web.Razor.Generator;
 
-namespace Microsoft.Web.RazorSingleFileGenerator {
+namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
     public class MvcHelperHost : WebPagesHelperHost {
         private const string WriteToMethodName = "WebViewPage.WriteTo";
         private const string WriteLiteralToMethodName = "WebViewPage.WriteLiteralTo";

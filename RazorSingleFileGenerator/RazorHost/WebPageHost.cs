@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.WebPages;
 using System.Web.WebPages.Razor;
 
-namespace Microsoft.Web.RazorSingleFileGenerator {
+namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
     public class WebPageHost : WebPageRazorHost, IHostContext {
         public WebPageHost(string fileNamespace, string projectRelativePath, string fullPath)
             : base(GetVirtualPath(projectRelativePath), fullPath) {

@@ -10,8 +10,11 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 ***************************************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Razor;
 using Microsoft.VisualStudio.Shell;
@@ -33,6 +36,14 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
         //The name of this generator (use for 'Custom Tool' property of project item)
         internal static string name = "RazorGenerator";
 #pragma warning restore 0414
+        private static readonly Dictionary<string, Type> _razorHosts = GetRazorHosts();
+
+        private static Dictionary<string, Type> GetRazorHosts() {
+            return (from type in typeof(RazorGenerator).Assembly.GetExportedTypes()
+                        where type.Namespace.Equals(typeof(RazorGenerator).Namespace + ".RazorHost", StringComparison.Ordinal)
+                        select type).ToDictionary(p => p.Name.Replace("Host", null), StringComparer.Ordinal);
+        }
+
 
         /// <summary>
         /// Function that builds the contents of the generated file based on the contents of the input file
@@ -53,8 +64,15 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             catch (Exception ex) {
                 GenerateError(ex.Message);
             }
-
-            return null;
+            return Encoding.UTF8.GetBytes(String.Format(
+@" 
+/***********************************************************************************************************
+Could not precompile the input file contents. Ensure that a generator declaration exists in the cshtml file. 
+A generator declaration is the first line of your cshtml file and looks like this: 
+@* Generator: MvcHelper *@
+Valid host names: {0}
+************************************************************************************************************/
+", String.Join(", ", _razorHosts.Keys)));
         }
 
         private RazorEngineHost GetRazorHost() {
@@ -67,13 +85,14 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
         }
 
         private RazorEngineHost InstantiateGenerator(string generatorName) {
-            var type = GetType().Assembly.GetType(GetType().Namespace + "." + generatorName.Replace("Generator", "Host"), 
-                throwOnError: false);
-            if (type == null) {
+            // Generator name is the name of the RazorHost type without the suffix host e.g. Generator : WebPages
+             
+            Type hostType;
+            if (!_razorHosts.TryGetValue(generatorName, out hostType)) {
                 GenerateError(String.Format("Could not load generator \"{0}\".", generatorName));
                 return null;
             }
-            var constructor = type.GetConstructor(new []{ typeof(string), typeof(string), typeof(string) });
+            var constructor = hostType.GetConstructor(new[] { typeof(string), typeof(string), typeof(string) });
             return (RazorEngineHost)constructor.Invoke(new object[] { FileNameSpace, GetProjectRelativePath(), InputFilePath });
         }
 

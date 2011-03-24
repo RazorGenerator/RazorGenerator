@@ -68,7 +68,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
 
                     //Get the Encoding used by the writer. We're getting the WindowsCodePage encoding, 
                     //which may not work with all languages
-                    Encoding enc = Encoding.GetEncoding(writer.Encoding.WindowsCodePage);
+                    Encoding enc = Encoding.UTF8;
 
                     //Get the preamble (byte-order mark) for our encoding
                     byte[] preamble = enc.GetPreamble();
