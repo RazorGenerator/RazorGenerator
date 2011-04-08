@@ -107,6 +107,7 @@
     <Compile Include="BaseCodeGenerator.cs" />
     <Compile Include="BaseCodeGeneratorWithSite.cs" />
     <Compile Include="ISingleFileGenerator.cs" />
+    <Compile Include="RazorHost\TemplateHost.cs" />
     <Compile Include="RazorHost\WebPagesHelperHost.cs" />
     <Compile Include="RazorHost\WebPageHost.cs" />
     <Compile Include="RazorHost\MvcHelperHost.cs" />

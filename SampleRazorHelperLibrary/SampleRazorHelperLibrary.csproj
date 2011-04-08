@@ -51,6 +51,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MvcHelperSamples.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="PreProcessedTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PreProcessedTemplate.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="PreProcessedTemplatePartial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebPagesHelperSample.cs">
       <AutoGen>True</AutoGen>
@@ -74,6 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\Cake.jpg" />
+    <None Include="PreProcessedTemplate.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>PreProcessedTemplate.cs</LastGenOutput>
+    </None>
     <Content Include="WebPagesSample.cshtml">
       <Generator>RazorGenerator</Generator>
       <CustomToolNamespace>MyCustomNamespace</CustomToolNamespace>
