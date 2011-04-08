@@ -9,7 +9,7 @@ using System.Web;
 using System.Web.WebPages.Razor;
 
 namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
-    public class WebPagesHelperHost : WebCodeRazorHost, IHostContext {
+    public class WebPagesHelperHost : WebCodeRazorHost, ISingleFileGenerator {
         public WebPagesHelperHost(string fileNamespace, string projectRelativePath, string fullPath)
             : base(GetVirtualPath(projectRelativePath), fullPath) {
 
@@ -54,6 +54,10 @@ namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
             generatedClass.CustomAttributes.Add(new CodeAttributeDeclaration(typeof(GeneratedCodeAttribute).FullName,
                     new CodeAttributeArgument(new CodePrimitiveExpression("RazorSingleFileGenerator")),
                     new CodeAttributeArgument(new CodePrimitiveExpression(typeof(WebPageHost).Assembly.GetName().Version.ToString()))));
+        }
+
+        public virtual void PreCodeGeneration(RazorCodeGenerator codeGenerator, System.Collections.Generic.IDictionary<string, string> directives) {
+            // 
         }
     }
 }

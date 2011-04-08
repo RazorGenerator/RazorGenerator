@@ -117,55 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BadClassMemberName" xml:space="preserve">
-    <value>This generator only supports 'Constant' and 'Variable' child nodes for a 'Class' node. Found: {0}</value>
+  <data name="GeneratorError_UnknownGenerator" xml:space="preserve">
+    <value>Unknown generator "{0}". Type "{0}"Host could not be loaded.</value>
   </data>
-  <data name="BadTypeAccess" xml:space="preserve">
-    <value>For types, the access attribute must be 'public' or 'internal'. Found: {0}</value>
-  </data>
-  <data name="BadVariableAccess" xml:space="preserve">
-    <value>For 'Variable' nodes, the 'access' attribute must be 'public', 'protected', or 'private'. Found: {0}</value>
-  </data>
-  <data name="ClassMemberNoName" xml:space="preserve">
-    <value>'Constant' and 'Variable' child nodes of a 'Class' node must have a 'name' attribute</value>
-  </data>
-  <data name="ClassMemberNoType" xml:space="preserve">
-    <value>'Constant' and 'Variable' child nodes of a 'Class' node must have a 'type' attribute</value>
-  </data>
-  <data name="ClassNodeNoName" xml:space="preserve">
-    <value>Each 'Class' node must have a name attribute</value>
-  </data>
-  <data name="ConstantNoValue" xml:space="preserve">
-    <value>'Constant' nodes must have a 'value' attribute</value>
-  </data>
-  <data name="EnumInvalidChild" xml:space="preserve">
-    <value>'Enum' nodes can only have 'EnumMember' child nodes. Found: {0}</value>
-  </data>
-  <data name="EnumMemberNodeNoName" xml:space="preserve">
-    <value>Each 'EnumMember' node must have a name attribute</value>
-  </data>
-  <data name="EnumMemberValueMissing" xml:space="preserve">
-    <value>If 'Enum' node has flagsAttribute="true", each 'EnumMember' child must have a value attribute</value>
-  </data>
-  <data name="EnumNodeNoName" xml:space="preserve">
-    <value>Each 'Enum' node must have a name attribute</value>
-  </data>
-  <data name="EnumNoMembers" xml:space="preserve">
-    <value>'Enum' nodes must have at least one 'EnumMember' child node</value>
+  <data name="GeneratorFailureMessage" xml:space="preserve">
+    <value>@" 
+/***********************************************************************************************************
+Could not precompile the input file contents. Ensure that a generator declaration exists in the cshtml file. 
+A generator declaration is the first line of your cshtml file and looks like this: 
+@* Generator: MvcHelper *@
+Valid host names: {0}
+************************************************************************************************************/</value>
   </data>
   <data name="GetDefaultExtensionFailed" xml:space="preserve">
     <value>The call to GetDefaultExtension() has failed due to the exception:</value>
-  </data>
-  <data name="InvalidRoot" xml:space="preserve">
-    <value>Expected root element: 'Types'. Found: {0}  </value>
-  </data>
-  <data name="InvalidType" xml:space="preserve">
-    <value>The 'Types' root node should only contain 'Class' or 'Enum' child nodes. Found: {0}</value>
-  </data>
-  <data name="NoTypes" xml:space="preserve">
-    <value>The 'Types' root element must contain at least one 'Class' or 'Enum' child</value>
-  </data>
-  <data name="StaticConstant" xml:space="preserve">
-    <value>'Constant' nodes can not have the 'static' attribute</value>
   </data>
 </root>

@@ -15,6 +15,8 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
 
         public CodeCompletionEventHandler CompletionHandler { get; set; }
 
+        public bool GenerateStaticType { get; set; }
+
         private void OnGenerateError(uint errorCode, string errorMessage, uint lineNumber, uint columnNumber) {
             if (ErrorHandler != null) {
                 ErrorHandler(errorCode, errorMessage, lineNumber, columnNumber);
@@ -27,7 +29,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             }
         }
 
-        public byte[] GenerateCode(string inputFileContent, RazorEngineHost razorHost, IHostContext hostContext, CodeDomProvider codeDomProvider) {
+        public byte[] GenerateCode(string inputFileContent, RazorEngineHost razorHost, CodeDomProvider codeDomProvider) {
 
             // Create the host and engine
             RazorTemplateEngine engine = new RazorTemplateEngine(razorHost);
@@ -76,7 +78,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
 
                     //Convert the writer contents to a byte array
                     string codeContent = writer.ToString();
-                    if (hostContext != null && hostContext.GenerateStaticType) {
+                    if (GenerateStaticType) {
                         codeContent = codeContent.Replace("public class", "public static class");
                     }
                     byte[] body = enc.GetBytes(codeContent);

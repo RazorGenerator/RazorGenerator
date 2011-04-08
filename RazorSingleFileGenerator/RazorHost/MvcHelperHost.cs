@@ -1,5 +1,6 @@
 ﻿using System;
 using System.CodeDom;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Razor.Generator;
 
@@ -16,8 +17,8 @@ namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
             GenerateStaticType = true;
 
             // Replace the WriteTo and WriteLiteralTo methods 
-            GeneratedClassContext = new GeneratedClassContext(base.GeneratedClassContext.ExecuteMethodName, 
-                base.GeneratedClassContext.WriteMethodName, base.GeneratedClassContext.WriteLiteralMethodName, 
+            GeneratedClassContext = new GeneratedClassContext(base.GeneratedClassContext.ExecuteMethodName,
+                base.GeneratedClassContext.WriteMethodName, base.GeneratedClassContext.WriteLiteralMethodName,
                 WriteToMethodName, WriteLiteralToMethodName, base.GeneratedClassContext.TemplateTypeName);
         }
 
@@ -54,6 +55,10 @@ namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
             }
 
             return true;
+        }
+
+        public override void PreCodeGeneration(RazorCodeGenerator codeGenerator, IDictionary<string, string> directives) {
+            codeGenerator.GenerateStaticType = true;
         }
     }
 }

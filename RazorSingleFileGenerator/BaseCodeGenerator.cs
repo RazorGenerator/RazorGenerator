@@ -12,10 +12,10 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.Web.RazorSingleFileGenerator.Resources;
 
 namespace Microsoft.Web.RazorSingleFileGenerator
 {
@@ -47,7 +47,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator
             }
             catch (Exception e)
             {
-                Trace.WriteLine(Strings.GetDefaultExtensionFailed);
+                Trace.WriteLine(SingleFileResources.GetDefaultExtensionFailed);
                 Trace.WriteLine(e.ToString());
                 pbstrDefaultExtension = string.Empty;
                 return VSConstants.E_FAIL;

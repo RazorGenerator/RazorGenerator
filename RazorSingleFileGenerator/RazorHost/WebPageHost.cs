@@ -1,20 +1,17 @@
 ﻿using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.WebPages;
 using System.Web.WebPages.Razor;
 
 namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
-    public class WebPageHost : WebPageRazorHost, IHostContext {
+    public class WebPageHost : WebPageRazorHost, ISingleFileGenerator {
         public WebPageHost(string fileNamespace, string projectRelativePath, string fullPath)
             : base(GetVirtualPath(projectRelativePath), fullPath) {
 
             DefaultNamespace = fileNamespace;
-        }
-
-        public bool GenerateStaticType {
-            get; set;
         }
 
         protected static string GetVirtualPath(string projectRelativePath) {
@@ -59,6 +56,10 @@ namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
 
         private bool IsPageStart(CodeTypeDeclaration generatedClass) {
             return generatedClass.BaseTypes[0].BaseType == typeof(System.Web.WebPages.StartPage).FullName;
+        }
+
+        public virtual void PreCodeGeneration(RazorCodeGenerator codeGenerator, IDictionary<string, string> directives) {
+            
         }
     }
 }

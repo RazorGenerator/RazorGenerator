@@ -11,6 +11,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -18,6 +19,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Razor;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.Web.RazorSingleFileGenerator.Resources;
 using VSLangProj80;
 
 namespace Microsoft.Web.RazorSingleFileGenerator {
@@ -36,14 +38,10 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
         //The name of this generator (use for 'Custom Tool' property of project item)
         internal static string name = "RazorGenerator";
 #pragma warning restore 0414
-        private static readonly Dictionary<string, Type> _razorHosts = GetRazorHosts();
-
-        private static Dictionary<string, Type> GetRazorHosts() {
-            return (from type in typeof(RazorGenerator).Assembly.GetExportedTypes()
-                        where type.Namespace.Equals(typeof(RazorGenerator).Namespace + ".RazorHost", StringComparison.Ordinal)
-                        select type).ToDictionary(p => p.Name.Replace("Host", null), StringComparer.Ordinal);
-        }
-
+        private static readonly Dictionary<string, Type> _razorHosts = (from type in typeof(RazorGenerator).Assembly.GetExportedTypes()
+                                                                        where typeof(ISingleFileGenerator).IsAssignableFrom(type) && !type.IsInterface
+                                                                        select type
+                                                                        ).ToDictionary(p => p.Name.Replace("Host", null), StringComparer.Ordinal);
 
         /// <summary>
         /// Function that builds the contents of the generated file based on the contents of the input file
@@ -56,69 +54,52 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
                 codeGenerator.CompletionHandler = CodeGeneratorProgress.Progress;
             }
             try {
-                var generator = GetRazorHost();
-                if (generator != null) {
-                    return codeGenerator.GenerateCode(inputFileContent, generator, generator as IHostContext, GetCodeProvider());
+                var directives = ParseDirectives(inputFileContent);
+                RazorEngineHost host = GetRazorHost(directives);
+                if (host != null) {
+                    ISingleFileGenerator generator = (ISingleFileGenerator)host;
+                    generator.PreCodeGeneration(codeGenerator, directives);
+                    return codeGenerator.GenerateCode(inputFileContent, host, GetCodeProvider());
                 }
             }
             catch (Exception ex) {
                 GenerateError(ex.Message);
             }
-            return Encoding.UTF8.GetBytes(String.Format(
-@" 
-/***********************************************************************************************************
-Could not precompile the input file contents. Ensure that a generator declaration exists in the cshtml file. 
-A generator declaration is the first line of your cshtml file and looks like this: 
-@* Generator: MvcHelper *@
-Valid host names: {0}
-************************************************************************************************************/
-", String.Join(", ", _razorHosts.Keys)));
+            return Encoding.UTF8.GetBytes(String.Format(SingleFileResources.GeneratorFailureMessage, String.Join(", ", _razorHosts.Keys)));
         }
 
-        private RazorEngineHost GetRazorHost() {
-            var generatorDeclaration = ReadGeneratorDeclaration();
-            if (!String.IsNullOrEmpty(generatorDeclaration)) {
-                var generatorName = ParseGeneratorDeclaration(generatorDeclaration);
-                return InstantiateGenerator(generatorName);
-            }
-            return null;
-        }
+        private IDictionary<string, string> ParseDirectives(string inputFileContent) {
+            int index = inputFileContent.IndexOf("*@", StringComparison.OrdinalIgnoreCase);
+            var directives = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        private RazorEngineHost InstantiateGenerator(string generatorName) {
-            // Generator name is the name of the RazorHost type without the suffix host e.g. Generator : WebPages
-             
-            Type hostType;
-            if (!_razorHosts.TryGetValue(generatorName, out hostType)) {
-                GenerateError(String.Format("Could not load generator \"{0}\".", generatorName));
-                return null;
-            }
-            var constructor = hostType.GetConstructor(new[] { typeof(string), typeof(string), typeof(string) });
-            return (RazorEngineHost)constructor.Invoke(new object[] { FileNameSpace, GetProjectRelativePath(), InputFilePath });
-        }
+            if (inputFileContent.TrimStart().StartsWith("@*") && index != -1) {
+                string directivesLine = inputFileContent.Substring(0, index).TrimStart('*', '@');
 
-        private string ParseGeneratorDeclaration(string declaration) {
-            const string group = "generator";
-            var regex = new Regex(String.Format(@"^@\*\s*Generator\s*:\s*(?<{0}>\w+)", group));
-            var match = regex.Match(declaration);
-            if (!match.Success) {
-                GenerateError("No generator found");
-                return null;
-            }
-            else {
-                return match.Groups[group].Value;
-            }
-        }
+                var regex = new Regex(@"\b(?<Key>\w+)\s*:\s*(?<Value>\w+)\b");
+                foreach (Match item in regex.Matches(directivesLine)) {
+                    var key = item.Groups["Key"].Value;
+                    var value = item.Groups["Value"].Value;
 
-        private string ReadGeneratorDeclaration() {
-            try {
-                using (var reader = new StreamReader(File.Open(InputFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
-                    return reader.ReadLine();
+                    directives.Add(key, value);
                 }
             }
-            catch (IOException exception) {
-                GenerateError(exception.Message);
+            return directives;
+        }
+
+        private RazorEngineHost GetRazorHost(IDictionary<string, string> directives) {
+            string hostName;
+            Type hostType;
+            if (!directives.TryGetValue("Generator", out hostName)) {
+                return null;
             }
-            return null;
+
+            // Generator name is the name of the SingleFileGenerator type without the suffix "Host" e.g. Generator : WebPages
+            if (!_razorHosts.TryGetValue(hostName, out hostType)) {
+                GenerateError(String.Format(CultureInfo.CurrentCulture, SingleFileResources.GeneratorError_UnknownGenerator, hostName));
+                return null;
+            }
+            var constructor = hostType.GetConstructor(new[] { typeof(string), typeof(string), typeof(string) }) ?? hostType.GetConstructor(Type.EmptyTypes);
+            return (RazorEngineHost)constructor.Invoke(new object[] { FileNameSpace, GetProjectRelativePath(), InputFilePath });
         }
 
         private void GenerateError(string message) {
