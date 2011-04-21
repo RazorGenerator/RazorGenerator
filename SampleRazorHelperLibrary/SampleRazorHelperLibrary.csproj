@@ -46,6 +46,12 @@
     <Reference Include="WebMatrix.WebData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicSample.cs">
+      <DependentUpon>BasicSample.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="BasicSampleTemplateBaseClass.cs" />
     <Compile Include="MvcHelperSamples.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -70,6 +76,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BasicSample.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>BasicSample.cs</LastGenOutput>
+    </Content>
     <None Include="MvcHelperSamples.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>MvcHelperSamples.cs</LastGenOutput>
