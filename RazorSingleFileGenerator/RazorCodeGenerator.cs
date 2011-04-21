@@ -1,9 +1,12 @@
 ﻿using System;
+using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Web.Razor;
 using System.Web.Razor.Parser.SyntaxTree;
+using Microsoft.Web.RazorSingleFileGenerator.RazorHost;
 
 namespace Microsoft.Web.RazorSingleFileGenerator {
     public class RazorCodeGenerator {
@@ -40,6 +43,8 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
                 using (TextReader reader = new StringReader(inputFileContent)) {
                     results = engine.GenerateCode(reader);
                 }
+
+                AddGeneratedClassAttribute(results.GeneratedCode);
             }
             catch (Exception e) {
                 OnGenerateError(4, e.ToString(), 1, 1);
@@ -97,5 +102,26 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
                 return null;
             }
         }
+
+        private static void AddGeneratedClassAttribute(CodeCompileUnit generatedCode)
+        {
+            var generatedType =
+                generatedCode
+                    .Namespaces.Cast<CodeNamespace>()
+                    .SelectMany(x => x.Types.Cast<CodeTypeDeclaration>())
+                    .FirstOrDefault();
+
+            if (generatedType == null)
+                return;
+ 
+            generatedType.CustomAttributes.Add(
+                new CodeAttributeDeclaration(typeof(GeneratedCodeAttribute).FullName,
+                        new CodeAttributeArgument(new CodePrimitiveExpression("RazorSingleFileGenerator")),
+                        new CodeAttributeArgument(new CodePrimitiveExpression(typeof(WebPageHost).Assembly.GetName().Version.ToString()))));
+
+            string lastGeneratedTimestamp = string.Format("Last Generated Timestamp: {0:MM/dd/yyyy hh:mm tt}", DateTime.Now);
+            generatedType.Comments.Add(new CodeCommentStatement(lastGeneratedTimestamp));
+        }
+
     }
 }

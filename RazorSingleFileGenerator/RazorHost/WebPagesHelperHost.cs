@@ -49,11 +49,6 @@ namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
                 method.Text = Regex.Replace(method.Text, "public static System\\.Web\\.WebPages\\.HelperResult _",
                      "internal static System.Web.WebPages.HelperResult _");
             }
-
-            // Mark the result as generated code
-            generatedClass.CustomAttributes.Add(new CodeAttributeDeclaration(typeof(GeneratedCodeAttribute).FullName,
-                    new CodeAttributeArgument(new CodePrimitiveExpression("RazorSingleFileGenerator")),
-                    new CodeAttributeArgument(new CodePrimitiveExpression(typeof(WebPageHost).Assembly.GetName().Version.ToString()))));
         }
 
         public virtual void PreCodeGeneration(RazorCodeGenerator codeGenerator, System.Collections.Generic.IDictionary<string, string> directives) {

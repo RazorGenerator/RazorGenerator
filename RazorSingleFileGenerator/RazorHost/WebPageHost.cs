@@ -1,5 +1,4 @@
 ﻿using System.CodeDom;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -48,10 +47,6 @@ namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
             generatedClass.CustomAttributes.Add(
                 new CodeAttributeDeclaration(typeof(PageVirtualPathAttribute).FullName,
                     new CodeAttributeArgument(new CodePrimitiveExpression(VirtualPath))));
-
-            generatedClass.CustomAttributes.Add(new CodeAttributeDeclaration(typeof(GeneratedCodeAttribute).FullName,
-                    new CodeAttributeArgument(new CodePrimitiveExpression("RazorSingleFileGenerator")),
-                    new CodeAttributeArgument(new CodePrimitiveExpression(typeof(WebPageHost).Assembly.GetName().Version.ToString()))));
         }
 
         private bool IsPageStart(CodeTypeDeclaration generatedClass) {
