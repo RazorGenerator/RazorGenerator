@@ -121,7 +121,7 @@
     <value>Unknown generator "{0}". Type "{0}"Host could not be loaded.</value>
   </data>
   <data name="GeneratorFailureMessage" xml:space="preserve">
-    <value>@" 
+    <value>
 /***********************************************************************************************************
 Could not precompile the input file contents. Ensure that a generator declaration exists in the cshtml file. 
 A generator declaration is the first line of your cshtml file and looks like this: 

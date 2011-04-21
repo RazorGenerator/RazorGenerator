@@ -70,7 +70,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to @&quot; 
+        ///   Looks up a localized string similar to 
         ////***********************************************************************************************************
         ///Could not precompile the input file contents. Ensure that a generator declaration exists in the cshtml file. 
         ///A generator declaration is the first line of your cshtml file and looks like this: 
