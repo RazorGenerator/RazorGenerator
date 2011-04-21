@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -22,7 +21,8 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.Web.RazorSingleFileGenerator.Resources;
 using VSLangProj80;
 
-namespace Microsoft.Web.RazorSingleFileGenerator {
+namespace Microsoft.Web.RazorSingleFileGenerator
+{
     /// <summary>
     /// This is the generator class. 
     /// When setting the 'Custom Tool' property of a C#, VB, or J# project item to "XmlClassGenerator", 
@@ -33,50 +33,71 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
     [Guid("52B316AA-1997-4c81-9969-83604C09EEB4")]
     [CodeGeneratorRegistration(typeof(RazorGenerator), "C# Razor Generator", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true)]
     [ProvideObject(typeof(RazorGenerator))]
-    public class RazorGenerator : BaseCodeGeneratorWithSite {
+    public class RazorGenerator : BaseCodeGeneratorWithSite
+    {
 #pragma warning disable 0414
         //The name of this generator (use for 'Custom Tool' property of project item)
         internal static string name = "RazorGenerator";
 #pragma warning restore 0414
-        private static readonly Dictionary<string, Type> _razorHosts = (from type in typeof(RazorGenerator).Assembly.GetExportedTypes()
-                                                                        where typeof(ISingleFileGenerator).IsAssignableFrom(type) && !type.IsInterface
-                                                                        select type
-                                                                        ).ToDictionary(p => p.Name.Replace("Host", null), StringComparer.Ordinal);
+
+        protected IDictionary<string, Type> RazorHosts
+        {
+            get
+            {
+                if(_razorHosts == null)
+                {
+                    var locator = new RazorHostLocator(GetProject());
+                    _razorHosts = locator.GetRazorHostTypesByName();
+                }
+
+                return _razorHosts;
+            }
+        }
+        private IDictionary<string, Type> _razorHosts;
+
 
         /// <summary>
         /// Function that builds the contents of the generated file based on the contents of the input file
         /// </summary>
         /// <param name="inputFileContent">Content of the input file</param>
         /// <returns>Generated file as a byte array</returns>
-        protected override byte[] GenerateCode(string inputFileContent) {
+        protected override byte[] GenerateCode(string inputFileContent)
+        {
             var codeGenerator = new RazorCodeGenerator() { ErrorHandler = GeneratorError };
-            if (this.CodeGeneratorProgress != null) {
+            if (this.CodeGeneratorProgress != null)
+            {
                 codeGenerator.CompletionHandler = CodeGeneratorProgress.Progress;
             }
-            try {
+            try
+            {
                 var directives = ParseDirectives(inputFileContent);
                 RazorEngineHost host = GetRazorHost(directives);
-                if (host != null) {
+                if (host != null)
+                {
                     ISingleFileGenerator generator = (ISingleFileGenerator)host;
                     generator.PreCodeGeneration(codeGenerator, directives);
                     return codeGenerator.GenerateCode(inputFileContent, host, GetCodeProvider());
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 GenerateError(ex.Message);
             }
-            return Encoding.UTF8.GetBytes(String.Format(SingleFileResources.GeneratorFailureMessage, String.Join(", ", _razorHosts.Keys)));
+            return Encoding.UTF8.GetBytes(String.Format(SingleFileResources.GeneratorFailureMessage, String.Join(", ", RazorHosts.Keys)));
         }
 
-        private IDictionary<string, string> ParseDirectives(string inputFileContent) {
+        private IDictionary<string, string> ParseDirectives(string inputFileContent)
+        {
             int index = inputFileContent.IndexOf("*@", StringComparison.OrdinalIgnoreCase);
             var directives = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            if (inputFileContent.TrimStart().StartsWith("@*") && index != -1) {
+            if (inputFileContent.TrimStart().StartsWith("@*") && index != -1)
+            {
                 string directivesLine = inputFileContent.Substring(0, index).TrimStart('*', '@');
 
                 var regex = new Regex(@"\b(?<Key>\w+)\s*:\s*(?<Value>\w+)\b");
-                foreach (Match item in regex.Matches(directivesLine)) {
+                foreach (Match item in regex.Matches(directivesLine))
+                {
                     var key = item.Groups["Key"].Value;
                     var value = item.Groups["Value"].Value;
 
@@ -86,15 +107,18 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             return directives;
         }
 
-        private RazorEngineHost GetRazorHost(IDictionary<string, string> directives) {
+        private RazorEngineHost GetRazorHost(IDictionary<string, string> directives)
+        {
             string hostName;
             Type hostType;
-            if (!directives.TryGetValue("Generator", out hostName)) {
+            if (!directives.TryGetValue("Generator", out hostName))
+            {
                 return null;
             }
 
             // Generator name is the name of the SingleFileGenerator type without the suffix "Host" e.g. Generator : WebPages
-            if (!_razorHosts.TryGetValue(hostName, out hostType)) {
+            if (!RazorHosts.TryGetValue(hostName, out hostType))
+            {
                 GenerateError(String.Format(CultureInfo.CurrentCulture, SingleFileResources.GeneratorError_UnknownGenerator, hostName));
                 return null;
             }
@@ -102,11 +126,13 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             return (RazorEngineHost)constructor.Invoke(new object[] { FileNameSpace, GetProjectRelativePath(), InputFilePath });
         }
 
-        private void GenerateError(string message) {
+        private void GenerateError(string message)
+        {
             GeneratorError(4, message, 0, 0);
         }
 
-        private string GetProjectRelativePath() {
+        private string GetProjectRelativePath()
+        {
             // Get the root folder of the project
             var appRoot = Path.GetDirectoryName(GetProject().FullName);
 

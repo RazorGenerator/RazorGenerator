@@ -12,6 +12,7 @@
     <AssemblyName>SampleRazorHelperLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <RazorGeneratorAssemblies>C:\Code\Temp\extensiblerazorsinglefilegenerator\SampleRazorHelperLibrary\Stupid.dll</RazorGeneratorAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,9 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicSample.cs">
-      <DependentUpon>BasicSample.cshtml</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>BasicSample.cshtml</DependentUpon>
     </Compile>
     <Compile Include="BasicSampleTemplateBaseClass.cs" />
     <Compile Include="MvcHelperSamples.cs">

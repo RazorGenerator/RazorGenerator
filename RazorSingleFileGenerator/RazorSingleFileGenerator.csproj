@@ -107,6 +107,7 @@
     <Compile Include="BaseCodeGenerator.cs" />
     <Compile Include="BaseCodeGeneratorWithSite.cs" />
     <Compile Include="ISingleFileGenerator.cs" />
+    <Compile Include="RazorHostLocator.cs" />
     <Compile Include="RazorHost\BasicHost.cs" />
     <Compile Include="RazorHost\TemplateHost.cs" />
     <Compile Include="RazorHost\WebPagesHelperHost.cs" />
@@ -128,6 +129,7 @@
     <EmbeddedResource Include="Resources\SingleFileResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SingleFileResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Choose>
