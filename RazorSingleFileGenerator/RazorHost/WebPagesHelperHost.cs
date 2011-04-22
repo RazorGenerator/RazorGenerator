@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -9,8 +10,13 @@ using System.Web;
 using System.Web.WebPages.Razor;
 
 namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
+    [Export("WebPagesHelper", typeof(ISingleFileGenerator))]
     public class WebPagesHelperHost : WebCodeRazorHost, ISingleFileGenerator {
-        public WebPagesHelperHost(string fileNamespace, string projectRelativePath, string fullPath)
+        [ImportingConstructor]
+        public WebPagesHelperHost(
+                            [Import("fileNamespace")] string fileNamespace,
+                            [Import("projectRelativePath")] string projectRelativePath,
+                            [Import("fullPath")] string fullPath)
             : base(GetVirtualPath(projectRelativePath), fullPath) {
 
             DefaultNamespace = String.IsNullOrEmpty(fileNamespace) ? "ASP" : fileNamespace;

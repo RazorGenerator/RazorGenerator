@@ -1,13 +1,20 @@
 ﻿using System.CodeDom;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.WebPages;
 using System.Web.WebPages.Razor;
 
 namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
+    [Export("WebPage", typeof(ISingleFileGenerator))]
     public class WebPageHost : WebPageRazorHost, ISingleFileGenerator {
-        public WebPageHost(string fileNamespace, string projectRelativePath, string fullPath)
+
+        [ImportingConstructor]
+        public WebPageHost(
+                   [Import("fileNamespace")] string fileNamespace,
+                   [Import("projectRelativePath")] string projectRelativePath,
+                   [Import("fullPath")] string fullPath)
             : base(GetVirtualPath(projectRelativePath), fullPath) {
 
             DefaultNamespace = fileNamespace;
@@ -54,7 +61,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
         }
 
         public virtual void PreCodeGeneration(RazorCodeGenerator codeGenerator, IDictionary<string, string> directives) {
-            
+
         }
     }
 }

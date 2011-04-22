@@ -17,48 +17,30 @@ namespace SampleRazorHelperLibrary
     using System.Linq;
     using System.Net;
     using System.Web;
-    using System.Web.Helpers;
     using System.Web.Security;
-    using System.Web.UI;
-    using System.Web.WebPages;
-    using System.Web.WebPages.Html;
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorSingleFileGenerator", "0.6.0.0")]
-    public class WebPagesHelperSample : System.Web.WebPages.HelperPage
+    public class CustomHostSample : System.Web.WebPages.WebPage
     {
 #line hidden
-#line hidden
-public static System.Web.WebPages.HelperResult Header(){
-return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 
-
-                 
-    if (!Page.Header.IsEmpty()) {
-
-WriteLiteralTo(@__razor_helper_writer, "        <h1>\r\n            ");
-
-
-WriteTo(@__razor_helper_writer, Page.Header);
-
-WriteLiteralTo(@__razor_helper_writer, "\r\n        </h1>\r\n");
-
-
-    }
-
-});
-
-}
-
-
-        public WebPagesHelperSample()
+        public CustomHostSample()
         {
         }
-        protected static System.Web.HttpApplication ApplicationInstance
+        private string CustomProperty
         {
             get
             {
-                return ((System.Web.HttpApplication)(Context.ApplicationInstance));
+                return "Hello world";
             }
+        }
+        public override void Execute()
+        {
+
+
+WriteLiteral("\r\n\r\nThe output file should have a property called \"CustomProperty\"");
+
+
         }
     }
 }

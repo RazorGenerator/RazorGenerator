@@ -103,25 +103,18 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             }
         }
 
-        private static void AddGeneratedClassAttribute(CodeCompileUnit generatedCode)
-        {
-            var generatedType =
-                generatedCode
-                    .Namespaces.Cast<CodeNamespace>()
-                    .SelectMany(x => x.Types.Cast<CodeTypeDeclaration>())
-                    .FirstOrDefault();
-
-            if (generatedType == null)
+        private static void AddGeneratedClassAttribute(CodeCompileUnit generatedCode) {
+            var generatedType = generatedCode.Namespaces.Cast<CodeNamespace>()
+                                             .SelectMany(x => x.Types.Cast<CodeTypeDeclaration>())
+                                             .FirstOrDefault();
+            if (generatedType == null) {
                 return;
- 
+            }
+
             generatedType.CustomAttributes.Add(
                 new CodeAttributeDeclaration(typeof(GeneratedCodeAttribute).FullName,
                         new CodeAttributeArgument(new CodePrimitiveExpression("RazorSingleFileGenerator")),
                         new CodeAttributeArgument(new CodePrimitiveExpression(typeof(WebPageHost).Assembly.GetName().Version.ToString()))));
-
-            string lastGeneratedTimestamp = string.Format("Last Generated Timestamp: {0:MM/dd/yyyy hh:mm tt}", DateTime.Now);
-            generatedType.Comments.Add(new CodeCommentStatement(lastGeneratedTimestamp));
         }
-
     }
 }

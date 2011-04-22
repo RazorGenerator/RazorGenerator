@@ -21,6 +21,6 @@ using System.Resources;
 [assembly: AssemblyCopyright ("© 2005 Microsoft Corporation")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.6.0.0")]
 [assembly: AssemblyDelaySign(false)]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]

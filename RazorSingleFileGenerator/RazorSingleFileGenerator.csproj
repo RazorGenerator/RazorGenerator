@@ -75,6 +75,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -107,7 +108,6 @@
     <Compile Include="BaseCodeGenerator.cs" />
     <Compile Include="BaseCodeGeneratorWithSite.cs" />
     <Compile Include="ISingleFileGenerator.cs" />
-    <Compile Include="RazorHostLocator.cs" />
     <Compile Include="RazorHost\BasicHost.cs" />
     <Compile Include="RazorHost\TemplateHost.cs" />
     <Compile Include="RazorHost\WebPagesHelperHost.cs" />

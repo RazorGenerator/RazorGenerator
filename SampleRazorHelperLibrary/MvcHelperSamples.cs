@@ -24,7 +24,7 @@ namespace SampleRazorHelperLibrary
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorSingleFileGenerator", "1.0.0.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorSingleFileGenerator", "0.6.0.0")]
     public static class MvcHelperSamples
     {
 #line hidden

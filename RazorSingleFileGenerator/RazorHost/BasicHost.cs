@@ -1,77 +1,97 @@
 ﻿using System.CodeDom;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Razor;
+using System.Web.Razor.Generator;
 using System.Web.Razor.Parser;
+using System.Web.WebPages;
 using System.Web.WebPages.Razor;
+using System;
 
-namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost
-{
-    public class BasicHost : WebPageRazorHost, ISingleFileGenerator
-    {
-        public static readonly IEnumerable<string> ExcludedNamespaces = new[] {
-                "System.Web.Helpers",
-                "System.Web.WebPages",
-                "System.Web.WebPages.Html",
-            };
+namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
+    [Export("Basic", typeof(ISingleFileGenerator))]
+    public class BasicHost : RazorEngineHost, ISingleFileGenerator {
+        private static readonly IEnumerable<string> _defaultImports = new[] {
+            "System",
+            "System.Collections.Generic",
+            "System.IO",
+            "System.Linq",
+            "System.Net",
+            "System.Web",
+            "System.Web",
+            "System.Web.Security",
+        };
+        private string _defaultClassName;
 
 
-        public BasicHost(string fileNamespace, string projectRelativePath, string fullPath)
-            : base(GetVirtualPath(projectRelativePath), fullPath)
-        {
-            DefaultDebugCompilation = false;
-            DefaultNamespace = fileNamespace;
-            StaticHelpers = true;
+        public BasicHost()
+            : base(RazorCodeLanguage.GetLanguageByExtension(".cshtml")) {
+
+            GeneratedClassContext = new GeneratedClassContext(GeneratedClassContext.DefaultExecuteMethodName, GeneratedClassContext.DefaultWriteMethodName,
+                GeneratedClassContext.DefaultWriteLiteralMethodName, "WriteTo", "WriteLiteralTo", typeof(HelperResult).FullName, "DefineSection");
+            DefaultBaseClass = typeof(WebPage).FullName;
+            foreach (var import in _defaultImports) {
+                NamespaceImports.Add(import);
+            }
         }
 
+        [Import("fileNamespace")]
+        public string FileNamespace { get; set; }
 
-        public virtual void PreCodeGeneration(RazorCodeGenerator codeGenerator, IDictionary<string, string> directives)
-        {
+        [Import("projectRelativePath")]
+        public string ProjectRelativePath { get; set; }
+
+        [Import("fullPath")]
+        public string FullPath { get; set; }
+
+        public override string DefaultNamespace {
+            get {
+                return FileNamespace ?? "ASP";
+            }
+            set {
+                FileNamespace = value;
+            }
         }
 
-        public override void PostProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
-        {
+        public virtual IEnumerable<string> DefaultImports {
+            get {
+                return _defaultImports;
+            }
+        }
+
+        public override string DefaultClassName {
+            get {
+                _defaultClassName = _defaultClassName ?? GetClassName(GetVirtualPath(ProjectRelativePath));
+                return _defaultClassName;
+            }
+            set {
+                if (!String.Equals(value, "__CompiledTemplate", StringComparison.OrdinalIgnoreCase)) {
+                    //  By default RazorEngineHost assigns the name __CompiledTemplate. We'll ignore this assignment
+                    _defaultClassName = value;
+                }
+            }
+        }
+
+        public virtual void PreCodeGeneration(RazorCodeGenerator codeGenerator, IDictionary<string, string> directives) {
+            // Do nothing    
+        }
+
+        public override void PostProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod) {
             base.PostProcessGeneratedCode(codeCompileUnit, generatedNamespace, generatedClass, executeMethod);
-
-            RemoveExcludedNamespaces(generatedNamespace);
-
-            RemoveApplicationInstanceProperty(generatedClass);
+            generatedNamespace.Imports.AddRange((from s in _defaultImports
+                                                 select new CodeNamespaceImport(s)).ToArray());
         }
 
-        protected override string GetClassName(string virtualPath)
-        {
+        protected virtual string GetClassName(string virtualPath) {
             string filename = Path.GetFileNameWithoutExtension(virtualPath);
             return ParserHelpers.SanitizeClassName(filename);
         }
 
-        protected static string GetVirtualPath(string projectRelativePath)
-        {
+        protected static string GetVirtualPath(string projectRelativePath) {
             return VirtualPathUtility.ToAppRelative("~" + projectRelativePath);
-        }
-
-        protected virtual void RemoveApplicationInstanceProperty(CodeTypeDeclaration generatedClass)
-        {
-            CodeMemberProperty applicationInstanceProperty =
-                generatedClass.Members.OfType<CodeMemberProperty>().SingleOrDefault(
-                    p => "ApplicationInstance".Equals(p.Name));
-
-            if (applicationInstanceProperty != null)
-            {
-                generatedClass.Members.Remove(applicationInstanceProperty);
-            }
-        }
-
-        protected virtual void RemoveExcludedNamespaces(CodeNamespace codeNamespace)
-        {
-            List<CodeNamespaceImport> imports =
-                codeNamespace.Imports.OfType<CodeNamespaceImport>()
-                    .Where(import => !ExcludedNamespaces.Contains(import.Namespace))
-                    .ToList();
-
-            codeNamespace.Imports.Clear();
-
-            imports.ForEach(import => codeNamespace.Imports.Add(import));
         }
     }
 }

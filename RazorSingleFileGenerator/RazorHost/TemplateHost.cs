@@ -1,5 +1,6 @@
 ﻿using System.CodeDom;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ using System.Web.Razor.Generator;
 using System.Web.Razor.Parser;
 
 namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
+    [Export("Template", typeof(ISingleFileGenerator))]
     public class TemplateHost : RazorEngineHost, ISingleFileGenerator {
         private static readonly IEnumerable<string> _defaultNamespaces = new[] {
             typeof(System.String).Namespace,
@@ -20,7 +22,9 @@ namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
         private readonly string _projectRelativePath;
 
         // Need to have these parameters here because the RazorGenerator looks up. Need to refactor them so it isn't so ugly.
-        public TemplateHost(string fileNamespace, string projectRelativePath, string fullPath) {
+        [ImportingConstructor]
+        public TemplateHost([Import("fileNamespace")] string fileNamespace,
+                            [Import("projectRelativePath")] string projectRelativePath) {
             DefaultNamespace = fileNamespace;
             GeneratedClassContext = new GeneratedClassContext(GeneratedClassContext.DefaultExecuteMethodName,
                                                               GeneratedClassContext.DefaultWriteMethodName,

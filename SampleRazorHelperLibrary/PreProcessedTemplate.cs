@@ -16,6 +16,7 @@ namespace SampleRazorHelperLibrary
     using System.Linq;
     using System.Text;
     
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorSingleFileGenerator", "0.6.0.0")]
     public partial class PreProcessedTemplate : PreProcessedTemplateBase
     {
 #line hidden

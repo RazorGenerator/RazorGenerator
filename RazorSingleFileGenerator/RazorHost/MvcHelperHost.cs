@@ -1,15 +1,21 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Web.Razor.Generator;
 
 namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
+    [Export("MvcHelper", typeof(ISingleFileGenerator))]
     public class MvcHelperHost : WebPagesHelperHost {
         private const string WriteToMethodName = "WebViewPage.WriteTo";
         private const string WriteLiteralToMethodName = "WebViewPage.WriteLiteralTo";
 
-        public MvcHelperHost(string fileNamespace, string projectRelativePath, string fullPath)
+        [ImportingConstructor]
+        public MvcHelperHost(
+                   [Import("fileNamespace")] string fileNamespace,
+                   [Import("projectRelativePath")] string projectRelativePath,
+                   [Import("fullPath")] string fullPath)
             : base(fileNamespace, projectRelativePath, fullPath) {
             // Do not derive from HelperPage.
             DefaultBaseClass = String.Empty;
