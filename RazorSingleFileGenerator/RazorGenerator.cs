@@ -41,6 +41,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
         //The name of this generator (use for 'Custom Tool' property of project item)
         internal static string name = "RazorGenerator";
 #pragma warning restore 0414
+        private const string DefaultHost = "WebPage";
         private CompositionContainer _container;
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             try {
                 InitCompositionContainer();
                 var directives = ParseDirectives(inputFileContent);
-                RazorEngineHost host = GetRazorHost(directives);
+                RazorEngineHost host = GetRazorHost(directives) ?? GetRazorHost(DefaultHost);
                 if (host != null) {
                     ISingleFileGenerator generator = (ISingleFileGenerator)host;
                     generator.PreCodeGeneration(codeGenerator, directives);
@@ -92,10 +93,13 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
 
         private RazorEngineHost GetRazorHost(IDictionary<string, string> directives) {
             string hostName;
-            if (!directives.TryGetValue("Generator", out hostName)) {
-                return null;
+            if (directives.TryGetValue("Generator", out hostName)) {
+                return GetRazorHost(hostName);
             }
+            return null;
+        }
 
+        private RazorEngineHost GetRazorHost(string hostName) {
             var host = _container.GetExportedValue<ISingleFileGenerator>(hostName);
 
             if (host == null) {
