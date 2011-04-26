@@ -1,8 +1,11 @@
-﻿using System;
+﻿/** 
+ * This is based on PrecompiledViews written by Chris van de Steeg. 
+ * Code and discussions for Chris's changes are available at (http://www.chrisvandesteeg.nl/2010/11/22/embedding-pre-compiled-razor-views-in-your-dll/)
+ **/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Web.Mvc;
 using System.Web.WebPages;
 
