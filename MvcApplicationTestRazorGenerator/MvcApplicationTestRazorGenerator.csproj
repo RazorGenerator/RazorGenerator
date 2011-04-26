@@ -14,6 +14,7 @@
     <AssemblyName>MvcApplicationTestRazorGenerator</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -69,6 +70,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WebAppHelpers.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Views\_ViewStart.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>_ViewStart.cshtml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
@@ -80,7 +86,10 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Content\Site.css" />
-    <Content Include="Views\_ViewStart.cshtml" />
+    <None Include="Views\_ViewStart.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>_ViewStart.cs</LastGenOutput>
+    </None>
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
@@ -102,6 +111,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PrecompiledMvcView\Microsoft.Web.PrecompiledMvcView.csproj">
+      <Project>{ECA3FA91-06FB-421A-B5AC-2F985BAD12DE}</Project>
+      <Name>Microsoft.Web.PrecompiledMvcView</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SampleRazorHelperLibrary\SampleRazorHelperLibrary.csproj">
       <Project>{1B1DA7CD-BA37-47C3-AD30-2016659E2CDD}</Project>
       <Name>SampleRazorHelperLibrary</Name>

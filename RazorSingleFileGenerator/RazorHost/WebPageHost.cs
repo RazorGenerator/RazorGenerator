@@ -15,18 +15,13 @@ namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
                    [Import("fileNamespace")] string fileNamespace,
                    [Import("projectRelativePath")] string projectRelativePath,
                    [Import("fullPath")] string fullPath)
-            : base(GetVirtualPath(projectRelativePath), fullPath) {
+            : base(HostHelper.GetVirtualPath(projectRelativePath), fullPath) {
 
             DefaultNamespace = fileNamespace;
         }
 
-        protected static string GetVirtualPath(string projectRelativePath) {
-            return VirtualPathUtility.ToAppRelative("~" + projectRelativePath);
-        }
-
         protected override string GetClassName(string virtualPath) {
-            virtualPath = virtualPath.TrimStart('~', '/', '_');
-            return Regex.Replace(virtualPath, @"[\/.]", "_");
+            return HostHelper.GetClassName(virtualPath);
         }
 
         public override void PostProcessGeneratedCode(CodeCompileUnit codeCompileUnit,

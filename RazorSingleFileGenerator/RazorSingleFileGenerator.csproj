@@ -80,6 +80,7 @@
       <Name>System.Data</Name>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Razor">
       <HintPath>..\..\..\bin\$(Configuration)\System.Web.Razor.dll</HintPath>
     </Reference>
@@ -109,6 +110,8 @@
     <Compile Include="BaseCodeGeneratorWithSite.cs" />
     <Compile Include="ISingleFileGenerator.cs" />
     <Compile Include="RazorHost\BasicHost.cs" />
+    <Compile Include="RazorHost\HostHelper.cs" />
+    <Compile Include="RazorHost\MvcViewHost.cs" />
     <Compile Include="RazorHost\TemplateHost.cs" />
     <Compile Include="RazorHost\WebPagesHelperHost.cs" />
     <Compile Include="RazorHost\WebPageHost.cs" />
