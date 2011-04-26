@@ -61,7 +61,7 @@
   -->
   
   <Target Name="AfterBuild">
-    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="..\SampleRazorHelperLibrary\RazorHosts" />
+    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="..\RazorHosts" />
   </Target>
   
 </Project>

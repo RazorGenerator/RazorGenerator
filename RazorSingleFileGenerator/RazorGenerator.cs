@@ -16,7 +16,6 @@ using System.ComponentModel.Composition.Hosting;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -111,6 +110,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
                 foreach (var item in directoryCatalogs) {
                     item.Refresh();
                 }
+                return;
             }
 
             // Retrieve available hosts
@@ -118,9 +118,11 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
 
             // Add the folder RazorHosts under the project root
             var projectDirectory = Path.GetDirectoryName(GetProject().FullName);
+            AddCatalogIfDirectoryExists(catalog, projectDirectory);
 
-            var extensionsDirectory = Path.Combine(projectDirectory, "RazorHosts");
-            AddCatalogIfDirectoryExists(catalog, extensionsDirectory);
+            // Add RazorHosts directory under the solution
+            var solutionDirectory = Path.GetDirectoryName(GetProject().DTE.Solution.FullName);
+            AddCatalogIfDirectoryExists(catalog, solutionDirectory);
 
             _container = new CompositionContainer(catalog);
             _container.ComposeExportedValue("fileNamespace", FileNameSpace);
@@ -130,8 +132,9 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
         }
 
         private static void AddCatalogIfDirectoryExists(AggregateCatalog catalog, string directory) {
-            if (Directory.Exists(directory)) {
-                catalog.Catalogs.Add(new DirectoryCatalog(directory));
+            var extensionsDirectory = Path.Combine(directory, "RazorHosts");
+            if (Directory.Exists(extensionsDirectory)) {
+                catalog.Catalogs.Add(new DirectoryCatalog(extensionsDirectory));
             }
         }
 
