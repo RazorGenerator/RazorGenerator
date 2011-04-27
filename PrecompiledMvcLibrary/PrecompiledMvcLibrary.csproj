@@ -74,15 +74,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>About.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Home\Index.cs">
+    <Compile Include="Views\Home\ExternalPrecompiled.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Index.cshtml</DependentUpon>
+      <DependentUpon>ExternalPrecompiled.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Views\Shared\Error.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Error.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shared\Helper.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Helper.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Views\Shared\_Layout.cs">
       <AutoGen>True</AutoGen>
@@ -137,9 +142,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Home\Index.cshtml">
+    <None Include="Views\Home\ExternalPrecompiled.cshtml">
       <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Index.cs</LastGenOutput>
+      <LastGenOutput>ExternalPrecompiled.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +166,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\Shared\Helper.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Helper.cs</LastGenOutput>
+    </None>
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>

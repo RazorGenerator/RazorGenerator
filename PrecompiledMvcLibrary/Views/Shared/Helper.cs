@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PrecompiledMvcLibrary.Views.Home
+namespace PrecompiledMvcLibrary.Views.Shared
 {
     using System;
     using System.Collections.Generic;
@@ -24,44 +24,36 @@ namespace PrecompiledMvcLibrary.Views.Home
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
     
-    [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Home/Index.cshtml")]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorSingleFileGenerator", "0.6.0.0")]
-    public class _Page_Views_Home_Index_cshtml : System.Web.Mvc.WebViewPage<dynamic>
+    public static class Helper
     {
 #line hidden
-
-        public _Page_Views_Home_Index_cshtml()
-        {
-        }
-        protected System.Web.HttpApplication ApplicationInstance
-        {
-            get
-            {
-                return ((System.Web.HttpApplication)(Context.ApplicationInstance));
-            }
-        }
-        public override void Execute()
-        {
+#line hidden
+public static System.Web.WebPages.HelperResult ObjectInfo(this HtmlHelper helper, object instance) {
+return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 
 
-WriteLiteral("\r\n");
+                                                             
+
+WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    <p>\r\n        ");
 
 
-  
-    ViewBag.Title = "Home Page";
+WebViewPage.WriteTo(@__razor_helper_writer, instance.GetType().Assembly);
+
+WebViewPage.WriteLiteralTo(@__razor_helper_writer, " \r\n        <br />\r\n        ");
 
 
-WriteLiteral("\r\n<h2>");
+WebViewPage.WriteTo(@__razor_helper_writer, instance.GetType().FullName);
+
+WebViewPage.WriteLiteralTo(@__razor_helper_writer, "\r\n    </p>\r\n");
 
 
-Write(ViewBag.Message);
 
-WriteLiteral("</h2>\r\n<p>\r\n    To learn more about ASP.NET MVC visit <a href=\"http://asp.net/mvc" +
-"\" title=\"ASP.NET MVC Website\">http://asp.net/mvc</a>.\r\n    I\'m in an assembly!\r\n" +
-"</p>\r\n");
+});
+
+}
 
 
-        }
     }
 }
 #pragma warning restore 1591

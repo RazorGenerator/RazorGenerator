@@ -63,10 +63,22 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="PreApplicationStartCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\Home\InAppPrecompiled.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InAppPrecompiled.cshtml</DependentUpon>
+    </Compile>
+    <Content Include="Views\Home\InAppPrecompiled.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>InAppPrecompiled.cs</LastGenOutput>
+    </Content>
+    <Content Include="Views\Shared\_ViewTypes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -116,6 +128,13 @@
       <Project>{7737AB96-07CC-4940-A298-E949EC4B9EAA}</Project>
       <Name>PrecompiledMvcLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PrecompiledMvcView\Microsoft.Web.PrecompiledMvcView.csproj">
+      <Project>{ECA3FA91-06FB-421A-B5AC-2F985BAD12DE}</Project>
+      <Name>Microsoft.Web.PrecompiledMvcView</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
