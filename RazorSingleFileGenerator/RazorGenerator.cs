@@ -40,7 +40,6 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
         //The name of this generator (use for 'Custom Tool' property of project item)
         internal static string name = "RazorGenerator";
 #pragma warning restore 0414
-        private CompositionContainer _container;
 
         /// <summary>
         /// Function that builds the contents of the generated file based on the contents of the input file
@@ -53,22 +52,26 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
                 codeGenerator.CompletionHandler = CodeGeneratorProgress.Progress;
             }
 
-            try {
-                InitCompositionContainer();
-                var directives = ParseDirectives(inputFileContent);
-                RazorEngineHost host = GetRazorHost(directives);
-                if (host != null) {
-                    ISingleFileGenerator generator = (ISingleFileGenerator)host;
-                    generator.PreCodeGeneration(codeGenerator, directives);
-                    return codeGenerator.GenerateCode(inputFileContent, host, GetCodeProvider());
-                }
-            }
-            catch (Exception ex) {
-                GenerateError(ex.Message);
-            }
+            using (var compositionContainer = InitCompositionContainer()) {
+                try {
 
-            return Encoding.UTF8.GetBytes(String.Format(SingleFileResources.GeneratorFailureMessage,
-                String.Join(", ", GetAvailableHosts())));
+                    var directives = ParseDirectives(inputFileContent);
+                    RazorEngineHost host = GetRazorHost(compositionContainer, directives);
+                    if (host != null) {
+                        ISingleFileGenerator generator = (ISingleFileGenerator)host;
+                        generator.PreCodeGeneration(codeGenerator, directives);
+                        return codeGenerator.GenerateCode(inputFileContent, host, GetCodeProvider());
+                    }
+
+                }
+                catch (Exception ex) {
+                    GenerateError(ex.Message);
+                }
+
+                var availableHosts = GetAvailableHosts(compositionContainer);
+                return Encoding.UTF8.GetBytes(String.Format(SingleFileResources.GeneratorFailureMessage,
+                    String.Join(", ", availableHosts)));
+            }
         }
 
         private IDictionary<string, string> ParseDirectives(string inputFileContent) {
@@ -89,13 +92,13 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             return directives;
         }
 
-        private RazorEngineHost GetRazorHost(IDictionary<string, string> directives) {
+        private RazorEngineHost GetRazorHost(CompositionContainer container, IDictionary<string, string> directives) {
             string hostName;
             if (!directives.TryGetValue("Generator", out hostName)) {
                 return null;
             }
 
-            var host = _container.GetExportedValue<ISingleFileGenerator>(hostName);
+            var host = container.GetExportedValue<ISingleFileGenerator>(hostName);
 
             if (host == null) {
                 GenerateError(String.Format(CultureInfo.CurrentCulture, SingleFileResources.GeneratorError_UnknownGenerator, hostName));
@@ -104,15 +107,7 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             return (RazorEngineHost)host;
         }
 
-        private void InitCompositionContainer() {
-            if (_container != null) {
-                var directoryCatalogs = _container.Catalog.Parts.OfType<DirectoryCatalog>();
-                foreach (var item in directoryCatalogs) {
-                    item.Refresh();
-                }
-                return;
-            }
-
+        private CompositionContainer InitCompositionContainer() {
             // Retrieve available hosts
             var catalog = new AggregateCatalog(new AssemblyCatalog(GetType().Assembly));
 
@@ -124,11 +119,13 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             var solutionDirectory = Path.GetDirectoryName(GetProject().DTE.Solution.FullName);
             AddCatalogIfDirectoryExists(catalog, solutionDirectory);
 
-            _container = new CompositionContainer(catalog);
-            _container.ComposeExportedValue("fileNamespace", FileNameSpace);
-            _container.ComposeExportedValue("projectRelativePath", GetProjectRelativePath());
-            _container.ComposeExportedValue("fullPath", InputFilePath);
-            _container.ComposeParts();
+            var container = new CompositionContainer(catalog);
+            container.ComposeExportedValue("fileNamespace", FileNameSpace);
+            container.ComposeExportedValue("projectRelativePath", GetProjectRelativePath());
+            container.ComposeExportedValue("fullPath", InputFilePath);
+            container.ComposeParts();
+
+            return container;
         }
 
         private static void AddCatalogIfDirectoryExists(AggregateCatalog catalog, string directory) {
@@ -150,9 +147,9 @@ namespace Microsoft.Web.RazorSingleFileGenerator {
             return InputFilePath.Substring(appRoot.Length);
         }
 
-        private IEnumerable<string> GetAvailableHosts() {
+        private IEnumerable<string> GetAvailableHosts(CompositionContainer container) {
             // We need for a way to figure out what the exporting type is. This could return arbitrary exports that are not ISingleFileGenerators
-            return from part in _container.Catalog.Parts
+            return from part in container.Catalog.Parts
                    from export in part.ExportDefinitions
                    where !String.IsNullOrEmpty(export.ContractName)
                    select export.ContractName;
