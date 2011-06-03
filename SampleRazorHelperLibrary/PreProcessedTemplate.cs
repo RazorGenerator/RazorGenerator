@@ -25,99 +25,47 @@ namespace SampleRazorHelperLibrary
         {
 
 
-WriteLiteral("\r\n");
+WriteLiteral("\r\n\r\n<?xml version=\"1.0\" ?>\r\n<tests>\r\n");
 
 
+     foreach (var result in TestResults) { 
 
-WriteLiteral("\r\n\r\n");
-
-
-Write(Scope);
+WriteLiteral("        <test id=\"");
 
 
-        if (Shared) { 
-                  Write(" Shared");
+             Write(result.Id);
 
-                                   }
-
-                                      if (ReadOnly) { 
-                                                  Write(" ReadOnly");
-
-                                                                     }
-WriteLiteral(" Property ");
+WriteLiteral("\">\r\n            <name>");
 
 
-                                                                           Write(PropertyName);
+             Write(result.Name);
 
-WriteLiteral(" As ");
-
-
-                                                                                            Write(TypeName);
-
-WriteLiteral("\r\n    Get\r\n        Return ");
+WriteLiteral("</name>\r\n            <result>\r\n");
 
 
-          Write(BackingField);
+             if(result.Passed) {
 
-WriteLiteral("\r\n    End Get\r\n");
+WriteLiteral("                ");
 
-
- if(!ReadOnly) {
-    if (IsSetterPrivate) { 
-                       Write(" Private");
-
-                                         }
-WriteLiteral(" ");
-
-WriteLiteral("Set(ByVal value As ");
+WriteLiteral(" Success\r\n");
 
 
-                                                           Write(TypeName);
+            }
+            else{
 
-WriteLiteral(")\r\n");
+WriteLiteral("                ");
 
-
-
-    if (String.IsNullOrEmpty(RaisePropertyChangedMethodName)) {
-
-WriteLiteral("        ");
+WriteLiteral(" Failed\r\n");
 
 
-     Write(BackingField);
+            }
 
-WriteLiteral(" = value    \r\n");
-
-
-    }
-    else {
-
-WriteLiteral("        ");
-
-WriteLiteral("\r\n        ");
-
-
-   Write(BackingField);
-
-WriteLiteral(" = value    \r\n        ");
-
-
-   Write(String.Format(@"{0}(""{1}"")", RaisePropertyChangedMethodName, PropertyName));
-
-WriteLiteral("\r\n        ");
-
-WriteLiteral("\r\n");
+WriteLiteral("            </result>\r\n        </test>\r\n");
 
 
     }
 
-WriteLiteral("    ");
-
-WriteLiteral("End Set\r\n");
-
-
-}
-
-WriteLiteral("End Property\r\n");
+WriteLiteral("</test>\r\n");
 
 
         }

@@ -1,22 +1,18 @@
 ﻿@* Generator: Template *@
-@* Based on the preprocessed T4 template sample http://karlshifflett.wordpress.com/2009/10/30/t4-preprocessed-text-templates-in-visual-studio-2010/ *@
 
-@Scope @if (Shared) { @(" Shared") } @if (ReadOnly) { @(" ReadOnly") } Property @PropertyName As @TypeName
-    Get
-        Return @BackingField
-    End Get
-@if(!ReadOnly) {
-    if (IsSetterPrivate) { @(" Private") } @:Set(ByVal value As @TypeName)
-
-    if (String.IsNullOrEmpty(RaisePropertyChangedMethodName)) {
-        @:@BackingField = value    
+<?xml version="1.0" ?>
+<tests>
+    @foreach (var result in TestResults) { 
+        <test id="@result.Id">
+            <name>@result.Name</name>
+            <result>
+            @if(result.Passed) {
+                @: Success
+            }
+            else{
+                @: Failed
+            }
+            </result>
+        </test>
     }
-    else {
-        <text>
-        @BackingField = value    
-        @String.Format(@"{0}(""{1}"")", RaisePropertyChangedMethodName, PropertyName)
-        </text>
-    }
-    @:End Set
-}
-End Property
+</test>

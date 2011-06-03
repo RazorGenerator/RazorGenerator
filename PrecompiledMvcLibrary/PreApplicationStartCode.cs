@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
-using Microsoft.Web.PrecompiledMvcView;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.WebPages;
+using Microsoft.Web.PrecompiledMvcView;
 
 namespace PrecompiledMvcLibrary {
 
@@ -26,7 +21,5 @@ namespace PrecompiledMvcLibrary {
 
             _startMethodExecuted = true;
         }
-
-
     }
 }
