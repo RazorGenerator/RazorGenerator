@@ -69,6 +69,7 @@
       <DependentUpon>PreProcessedTemplate.cshtml</DependentUpon>
     </Compile>
     <Compile Include="PreProcessedTemplatePartial.cs" />
+    <Compile Include="PreProcessedTemplateUsage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebPagesHelperSample.cs">
       <AutoGen>True</AutoGen>
