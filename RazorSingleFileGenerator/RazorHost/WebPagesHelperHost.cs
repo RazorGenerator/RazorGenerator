@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.WebPages.Razor;
 
-namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
+namespace RazorGenerator.RazorHost {
     [Export("WebPagesHelper", typeof(ISingleFileGenerator))]
     public class WebPagesHelperHost : WebCodeRazorHost, ISingleFileGenerator {
         [ImportingConstructor]

@@ -23,7 +23,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Designer.Interfaces;
 
-namespace Microsoft.Web.RazorSingleFileGenerator
+namespace RazorGenerator
 {
     /// <summary>
     /// Base code generator with site implementation

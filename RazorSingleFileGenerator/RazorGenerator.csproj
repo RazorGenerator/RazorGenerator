@@ -5,8 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{461089E7-008E-4737-BA17-E1FCD1CC3D0E}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Microsoft.Web.RazorSingleFileGenerator</RootNamespace>
-    <AssemblyName>RazorSingleFileGenerator</AssemblyName>
+    <RootNamespace>RazorGenerator</RootNamespace>
+    <AssemblyName>RazorGenerator</AssemblyName>
     <VsSdkTargets>$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\VSSDK\Microsoft.VsSDK.targets</VsSdkTargets>
     <SccProjectName>
     </SccProjectName>
@@ -131,8 +131,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\SingleFileResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SingleFileResources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>SingleFileResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Choose>

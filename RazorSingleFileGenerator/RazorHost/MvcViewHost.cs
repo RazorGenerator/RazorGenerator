@@ -8,7 +8,7 @@ using System.Web.Mvc.Razor;
 using System.Web.Razor.Parser;
 using System.Web.WebPages;
 
-namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
+namespace RazorGenerator.RazorHost {
     [Export("MvcView", typeof(ISingleFileGenerator))]
     public class MvcViewHost : MvcWebPageRazorHost, ISingleFileGenerator {
 

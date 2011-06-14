@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
+namespace RazorGenerator.RazorHost {
     public static class HostHelper {
 
         public static string GetVirtualPath(string projectRelativePath) {

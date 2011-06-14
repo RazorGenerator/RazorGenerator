@@ -15,9 +15,9 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.Web.RazorSingleFileGenerator.Resources;
+using RazorGenerator.Resources;
 
-namespace Microsoft.Web.RazorSingleFileGenerator
+namespace RazorGenerator
 {
     /// <summary>
     /// A managed wrapper for VS's concept of an IVsSingleFileGenerator which is

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
-using Microsoft.Web.RazorSingleFileGenerator;
-using Microsoft.Web.RazorSingleFileGenerator.RazorHost;
+using RazorGenerator;
+using RazorGenerator.RazorHost;
 
 namespace HostExtensions {
     [Export("MyAwesomeHost", typeof(ISingleFileGenerator))]

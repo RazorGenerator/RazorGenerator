@@ -173,9 +173,9 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PrecompiledMvcView\Microsoft.Web.PrecompiledMvcView.csproj">
+    <ProjectReference Include="..\PrecompiledMvcView\PrecompiledMvcViewEngine.csproj">
       <Project>{ECA3FA91-06FB-421A-B5AC-2F985BAD12DE}</Project>
-      <Name>Microsoft.Web.PrecompiledMvcView</Name>
+      <Name>PrecompiledMvcViewEngine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

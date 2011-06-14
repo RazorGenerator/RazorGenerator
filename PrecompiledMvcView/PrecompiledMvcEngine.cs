@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Web.Mvc;
 using System.Web.WebPages;
 
-namespace Microsoft.Web.PrecompiledMvcView {
+namespace PrecompiledMvcViewEngine {
     public class PrecompiledMvcEngine : VirtualPathProviderViewEngine, IVirtualPathFactory {
         private readonly IDictionary<string, Type> _mappings;
         public PrecompiledMvcEngine(Assembly assembly) {
@@ -69,19 +69,17 @@ namespace Microsoft.Web.PrecompiledMvcView {
         }
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath) {
-            bool runViewStartPages = false;
             Type type;
             if (_mappings.TryGetValue(partialPath, out type)) {
-                return new PrecompiledMvcView(partialPath, type, runViewStartPages, base.FileExtensions);
+                return new PrecompiledMvcView(partialPath, type, false, base.FileExtensions);
             }
             return null;
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath) {
-            bool runViewStartPages = true;
             Type type;
             if (_mappings.TryGetValue(viewPath, out type)) {
-                return new PrecompiledMvcView(viewPath, type, runViewStartPages, base.FileExtensions);
+                return new PrecompiledMvcView(viewPath, type, true, base.FileExtensions);
             }
             return null;
         }

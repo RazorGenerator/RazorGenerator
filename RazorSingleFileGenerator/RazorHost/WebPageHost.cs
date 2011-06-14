@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.WebPages;
 using System.Web.WebPages.Razor;
 
-namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
+namespace RazorGenerator.RazorHost {
     [Export("WebPage", typeof(ISingleFileGenerator))]
     public class WebPageHost : WebPageRazorHost, ISingleFileGenerator {
 

@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 using System.Web.WebPages;
-using Microsoft.Web.PrecompiledMvcView;
+using PrecompiledMvcViewEngine;
 
 namespace PrecompiledMvcSample {
 

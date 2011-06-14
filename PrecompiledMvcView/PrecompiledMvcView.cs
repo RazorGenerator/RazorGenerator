@@ -9,7 +9,7 @@ using System.IO;
 using System.Web.Mvc;
 using System.Web.WebPages;
 
-namespace Microsoft.Web.PrecompiledMvcView {
+namespace PrecompiledMvcViewEngine {
     public class PrecompiledMvcView : IView {
         private readonly Type _type;
         private readonly string _virtualPath;

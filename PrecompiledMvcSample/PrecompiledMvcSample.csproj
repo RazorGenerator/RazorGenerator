@@ -128,9 +128,9 @@
       <Project>{7737AB96-07CC-4940-A298-E949EC4B9EAA}</Project>
       <Name>PrecompiledMvcLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PrecompiledMvcView\Microsoft.Web.PrecompiledMvcView.csproj">
+    <ProjectReference Include="..\PrecompiledMvcView\PrecompiledMvcViewEngine.csproj">
       <Project>{ECA3FA91-06FB-421A-B5AC-2F985BAD12DE}</Project>
-      <Name>Microsoft.Web.PrecompiledMvcView</Name>
+      <Name>PrecompiledMvcViewEngine</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

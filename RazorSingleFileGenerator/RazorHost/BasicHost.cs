@@ -11,7 +11,7 @@ using System.Web.WebPages;
 using System.Web.WebPages.Razor;
 using System;
 
-namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
+namespace RazorGenerator.RazorHost {
     [Export("Basic", typeof(ISingleFileGenerator))]
     public class BasicHost : RazorEngineHost, ISingleFileGenerator {
         private static readonly IEnumerable<string> _defaultImports = new[] {

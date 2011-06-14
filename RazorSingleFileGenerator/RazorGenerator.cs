@@ -21,10 +21,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Razor;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.Web.RazorSingleFileGenerator.Resources;
+using RazorGenerator.Resources;
 using VSLangProj80;
 
-namespace Microsoft.Web.RazorSingleFileGenerator {
+namespace RazorGenerator {
     /// <summary>
     /// This is the generator class. 
     /// When setting the 'Custom Tool' property of a C#, VB, or J# project item to "RazorGenerator", 

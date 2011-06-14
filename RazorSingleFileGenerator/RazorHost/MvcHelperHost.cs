@@ -5,7 +5,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Web.Razor.Generator;
 
-namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
+namespace RazorGenerator.RazorHost {
     [Export("MvcHelper", typeof(ISingleFileGenerator))]
     public class MvcHelperHost : WebPagesHelperHost {
         private const string WriteToMethodName = "WebViewPage.WriteTo";

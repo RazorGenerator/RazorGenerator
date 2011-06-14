@@ -8,4 +8,5 @@ glob:*.hg
 glob:*.sln.cache
 glob:*.orig
 glob:*.suo
+glob:*.nupkg
 glob:TestResults

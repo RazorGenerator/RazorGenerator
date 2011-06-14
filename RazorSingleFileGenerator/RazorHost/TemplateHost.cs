@@ -8,7 +8,7 @@ using System.Web.Razor;
 using System.Web.Razor.Generator;
 using System.Web.Razor.Parser;
 
-namespace Microsoft.Web.RazorSingleFileGenerator.RazorHost {
+namespace RazorGenerator.RazorHost {
     [Export("Template", typeof(ISingleFileGenerator))]
     public class TemplateHost : RazorEngineHost, ISingleFileGenerator {
         private static readonly IEnumerable<string> _defaultNamespaces = new[] {

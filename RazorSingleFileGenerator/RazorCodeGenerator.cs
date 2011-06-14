@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Web.Razor;
 using System.Web.Razor.Parser.SyntaxTree;
-using Microsoft.Web.RazorSingleFileGenerator.RazorHost;
+using RazorGenerator.RazorHost;
 
-namespace Microsoft.Web.RazorSingleFileGenerator {
+namespace RazorGenerator {
     public class RazorCodeGenerator {
         public delegate void RazorErrorEventHandler(uint errorCode, string errorMessage, uint lineNumber, uint columnNumber);
 
