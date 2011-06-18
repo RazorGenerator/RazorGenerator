@@ -1,0 +1,10 @@
+﻿@* Generator : WebPage *@
+
+<p>
+    @if (DateTime.Today.DayOfWeek == DayOfWeek.Friday) {
+        @: Friday! Friday! Friday!
+    }
+    else {
+        @: There's @(((DateTime.Today.DayOfWeek - DayOfWeek.Friday) + 7) % 7) days to go before Friday.
+    }
+</p>

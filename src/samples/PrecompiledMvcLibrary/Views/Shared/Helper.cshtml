@@ -1,0 +1,19 @@
+﻿@* Generator: MvcHelper *@
+
+@helper ObjectInfo(this HtmlHelper helper, object instance) {
+    <p>
+        @instance.GetType().Assembly 
+        <br />
+        @instance.GetType().FullName
+    </p>
+}
+
+@helper WriteList(this HtmlHelper helper, IEnumerable<string> items) {
+    <ul>
+        @foreach (var s in items) {
+            <li>
+                @s (From helper)
+            </li>
+        }
+    </ul>
+}

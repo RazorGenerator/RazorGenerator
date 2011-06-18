@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AF040852-112F-494D-B1D0-B50888928DB6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RazorGenerator.Core</RootNamespace>
+    <AssemblyName>RazorGenerator.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CodeTransformers\DefaultCodeTransformers.cs" />
+    <Compile Include="CodeTransformers\DirectivesBasedTransformers.cs" />
+    <Compile Include="EventArgs.cs" />
+    <Compile Include="ICodeGenerationEventProvider.cs" />
+    <Compile Include="IRazorCodeTransformer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="HostManager.cs" />
+    <Compile Include="ExportedTransformers\MvcHelperTransformer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExportedTransformers\MvcViewTransformer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExportedTransformers\TemplateTransformer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExportedTransformers\WebPagesHelperTransformer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExportedTransformers\WebPagesTransformer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RazorHost.cs" />
+    <Compile Include="CodeTransformers\RazorCodeTransformerBase.cs" />
+    <Compile Include="Resources\RazorGeneratorResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RazorGeneratorResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\RazorGeneratorResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RazorGeneratorResources.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RazorGenerator.Core</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CodeTransformers\AggregateCodeTransformer.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
