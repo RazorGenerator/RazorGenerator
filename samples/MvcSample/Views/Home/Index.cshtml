@@ -1,0 +1,16 @@
+﻿@* Generator : MvcView *@
+@using PrecompiledMvcLibrary.Views.Shared
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<h2>@ViewBag.Message</h2>
+<p>
+    To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
+</p>
+
+<h3>Precompiled helper sample</h3>
+@Html.ActionLink("Helper Demo", "HelperDemo", "Home") 
+
+<h3>Precompiled view sample: </h3>
+@RenderPage("~/Views/Shared/_ViewTypes.cshtml")

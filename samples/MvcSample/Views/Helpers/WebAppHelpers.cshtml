@@ -1,0 +1,15 @@
+﻿@* Generator : MvcHelper *@
+
+@helper WriteList(string[] items) {
+    <ul>
+        @foreach (var s in items) {
+            <li>
+                @s!  (from webapp)
+            </li>
+        }
+    </ul>
+}
+
+@helper RenderAboutLink(this HtmlHelper Html) {
+    @Html.ActionLink("About link from helper", "About", "Home");
+}

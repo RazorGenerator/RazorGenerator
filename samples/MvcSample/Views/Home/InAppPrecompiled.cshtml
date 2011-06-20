@@ -1,0 +1,14 @@
+﻿@* Generator: MvcView *@
+@using PrecompiledMvcLibrary.Views.Shared
+
+<h3>This is executing from @GetType().Assembly.Location.</h3>
+
+@using (Html.BeginForm()) {
+    
+    <label>@Html.CheckBox("executePrecompiledEngineFirst") <strong>Precompiled view engine executes first</strong>&nbsp;</label>
+
+    <input type="submit" value="Submit" />
+    
+}
+
+@RenderPage("~/Views/Shared/_ViewTypes.cshtml")
