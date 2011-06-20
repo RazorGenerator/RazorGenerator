@@ -1,0 +1,151 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <NuGetMSBuildPath Condition=" '$(NuGetMSBuildPath)' == '' ">$(MSBuildThisFileDirectory)\NuGet.MsBuild.dll</NuGetMSBuildPath>
+        <CleanNuGetPackages Condition="'$(CleanNuGetPackages)'==''">false</CleanNuGetPackages>
+        <SetupNuGetPackages Condition="'$(SetupNuGetPackages)'==''">false</SetupNuGetPackages>
+        <CreateNuGetPackage Condition="'$(CreateNuGetPackage)'==''">false</CreateNuGetPackage>
+
+        <NuSpecFileName Condition="'$(NuSpecFileName)'==''">package.nuspec</NuSpecFileName>
+        <NuSpecFilePath Condition="'$(NuSpecFilePath)'==''">$(MSBuildProjectDirectory)\$(NuSpecFileName)</NuSpecFilePath>
+
+        <PackageDirName Condition="'$(PackageDirName)'==''">Packages</PackageDirName>
+        <PackageDir Condition="'$(PackageDir)'==''">$(MSBuildProjectDirectory)\..\$(PackageDirName)</PackageDir>
+
+        <PublishPackageDir Condition=" '$(PublishPackageDir)' == '' ">$(OutputPath)</PublishPackageDir>
+
+        <PackageConfigName Condition="'$(PackageConfigName)'==''">packages.config</PackageConfigName>
+        <PackageConfigPath Condition="'$(PackageConfigPath)'==''">$(MSBuildProjectDirectory)\$(PackageConfigName)</PackageConfigPath>
+
+        <CreateOnly Condition="'$(CreateOnly)'==''">false</CreateOnly>
+    </PropertyGroup>
+
+
+    <!-- ======================================================
+       Dependencies and wiring
+       ====================================================== 
+       -->
+    <PropertyGroup>
+
+        <!-- if required insert clean packages task into the clean section-->
+        <CleanDependsOn Condition="'$(CleanNuGetPackages)'=='true'">
+            $(CleanDependsOn);
+            CleanNuGetPackageDirectory
+        </CleanDependsOn>
+
+        <!-- if required insert setup packages task into the pre-build section -->
+        <BuildDependsOn Condition="'$(SetupNuGetPackages)'=='true'">
+            DownloadNuGetDependencies;
+            $(BuildDependsOn)
+        </BuildDependsOn>
+
+        <BuildNuGetPackageDependsOn>
+            BeforeBuildNuGetPackage;
+            BuildNuGetPackageFromSpec;
+            AfterBuildNuGetPackage
+        </BuildNuGetPackageDependsOn>
+
+        <PublishNuGetPackageOnlyDependsOn>
+            BeforePublishNuGetPackage;
+            PublishNuGetPackageToFeed;
+            AfterPublishNuGetPackage
+        </PublishNuGetPackageOnlyDependsOn>
+
+        <!-- the publish package target always calls create package so no conditions here -->
+        <PublishNuGetPackageDependsOn>
+            $(BuildDependsOn);
+            $(BuildNuGetPackageDependsOn);
+            $(PublishNuGetPackageOnlyDependsOn)
+        </PublishNuGetPackageDependsOn>
+
+        <!-- if required insert create package task at the end of the post-build steps -->
+        <BuildDependsOn Condition="'$(CreateNuGetPackage)'=='true'">
+            $(BuildDependsOn);
+            $(BuildNuGetPackageDependsOn)
+        </BuildDependsOn>
+
+    </PropertyGroup>
+
+    <UsingTask AssemblyFile="$(NuGetMSBuildPath)"
+               TaskName="NuGet" />
+    <UsingTask AssemblyFile="$(NuGetMSBuildPath)"
+               TaskName="NuGetFetch" />
+    <UsingTask AssemblyFile="$(NuGetMSBuildPath)"
+               TaskName="NuGetPush" />
+
+    <!-- ========================================================= 
+       Publishing targets section
+       =========================================================
+       -->
+    <Target Name="PublishNuGetPackage"
+            DependsOnTargets="$(PublishNuGetPackageDependsOn)" />
+
+    <Target Name="PublishNuGetPackageOnly"
+            DependsOnTargets="$(PublishNuGetPackageOnlyDependsOn)" />
+
+    <!-- override this for custom actions before publishing the nuget package -->
+    <Target Name="BeforePublishNuGetPackage" />
+
+    <!-- override this for custom actions after building the nuget package -->
+    <Target Name="AfterPublishNuGetPackage" />
+
+    <Target Name="PublishNuGetPackageToFeed"
+            Condition="Exists('$(OutputPackagePath)')">
+
+        <!-- publish the package to the main nuget feed -->
+        <NuGetPush CreateOnly="$(CreateOnly)"
+                   Source="$(NuGetPublishUrl)"
+                   PackagePath="$(OutputPackagePath)"
+                   ApiKey="$(NuGetApiKey)" />
+
+    </Target>
+
+    <!-- ========================================================= 
+       Packaging targets section
+       =========================================================
+       -->
+
+    <Target Name="BuildNuGetPackage"
+            DependsOnTargets="$(BuildNuGetPackageDependsOn)" />
+
+    <!-- override this for custom actions before building the nuget package -->
+    <Target Name="BeforeBuildNuGetPackage" />
+
+    <!-- override this for custom actions after building the nuget package -->
+    <Target Name="AfterBuildNuGetPackage" />
+
+    <Target Name="BuildNuGetPackageFromSpec"
+            Condition="'$(CreateNuGetPackage)'=='true' Or ('$(CreateNuGetPackage)'=='' And Exists('$(NuSpecFilePath)'))"
+            Returns="$(OutputPackagePath)">
+
+        <MakeDir Directories="$(PublishPackageDir)"
+                Condition=" !Exists('$(PublishPackageDir)') " />
+
+        <!-- create the package from the spec file and return the path to the created package -->
+        <!-- the working directory is the output directory for the build, so the spec file needs to be copied to output directory -->
+        <NuGet SpecFile="$(NuspecFilePath)" PackageDir="$(PublishPackageDir)" Symbols="true">
+            <Output TaskParameter="OutputPackage"
+                  PropertyName="OutputPackagePath" />
+        </NuGet>
+
+    </Target>
+
+    <!-- ========================================================= 
+       Pre-build targets section
+       =========================================================
+       -->
+
+    <Target Name="CleanNuGetPackageDirectory">
+        <!-- clean the packages directory, which will mean all packages are downloaded afresh -->
+        <RemoveDir Directories="$(PackageDir)"
+                   Condition="Exists('$(PackageDir)')"/>
+
+    </Target>
+
+    <Target Name="DownloadNuGetDependencies">
+        <!-- download any packages specified in the packages.config file for this project -->
+        <NuGetFetch Condition="Exists('$(PackageConfigPath)')"
+                    PackageDir="$(PackageDir)"
+                    PackageConfigFile="$(PackageConfigPath)"
+                    Sources="@(NuGetSources)" />
+    </Target>
+</Project>

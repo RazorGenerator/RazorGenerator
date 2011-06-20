@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("PrecompiledMvcView")]
-[assembly: AssemblyDescription("Single File Generator for Razor files (.cshtml files)")]
+[assembly: AssemblyDescription("Mvc View engine that supports precompiled Mvc views")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("RazorGenerator contributors")]
 [assembly: AssemblyProduct("PrecompiledMvcView")]
