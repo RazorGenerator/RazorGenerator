@@ -61,6 +61,7 @@
     <None Include="WebPagesHelperSample.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>WebPagesHelperSample.cs</LastGenOutput>
+      <CustomToolNamespace>ASP</CustomToolNamespace>
     </None>
     <None Include="WebPagesSample.cshtml">
       <Generator>RazorGenerator</Generator>
