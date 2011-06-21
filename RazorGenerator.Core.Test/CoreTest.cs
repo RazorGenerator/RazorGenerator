@@ -34,6 +34,11 @@ namespace RazorGenerator.Core.Test {
             TestTransformerType();
         }
 
+        [TestMethod]
+        public void _ViewStart() {
+            TestTransformerType();
+        }
+
         private void TestTransformerType() {
             using (var razorGenerator = new HostManager(TestContext.TestDeploymentDir)) {
                 string inputFile = SaveInputFile(TestContext);

@@ -6,6 +6,7 @@ using System.IO;
 using System.Web.Mvc;
 using System.Web.Mvc.Razor;
 using System.Web.Razor;
+using System.Web.Razor.Parser.SyntaxTree;
 
 namespace RazorGenerator.Core {
     [Export("MvcView", typeof(IRazorCodeTransformer))]
@@ -17,7 +18,6 @@ namespace RazorGenerator.Core {
             new AddGeneratedClassAttribute(),
             new AddPageVirtualPathAttribute(),
             new SetImports(_namespaces, replaceExisting: false),
-            new SetBaseType(typeof(System.Web.Mvc.WebViewPage)),
         };
 
         internal static IEnumerable<string> MvcNamespaces {
@@ -30,8 +30,9 @@ namespace RazorGenerator.Core {
 
         public override void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
             base.Initialize(razorHost, projectRelativePath, directives);
-
+         
             razorHost.CodeGenerator = new MvcCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultNamespace, projectRelativePath, razorHost);
+            razorHost.CodeGenerator.GenerateLinePragmas = razorHost.EnableLinePragmas;
             razorHost.Parser = new MvcCSharpRazorCodeParser();
         }
 
@@ -41,27 +42,30 @@ namespace RazorGenerator.Core {
         /// </summary>
         private sealed class MvcCodeGenerator : MvcCSharpRazorCodeGenerator {
             private const string DefaultModelTypeName = "dynamic";
+            private const string ViewStartFileName = "_ViewStart";
 
             public MvcCodeGenerator(string className, string rootNamespaceName, string sourceFileName, RazorEngineHost host)
-                : base(className, rootNamespaceName, sourceFileName, host) {
-                if (!IsSpecialPage(sourceFileName)) {
-                    SetBaseType(DefaultModelTypeName);
+                    : base(className, rootNamespaceName, sourceFileName, host) {
+                string baseType;
+                
+                if (IsSpecialPage(sourceFileName)) {
+                    baseType = typeof(ViewStartPage).FullName;
                 }
+                else {
+                    baseType = Host.DefaultBaseClass + '<' + DefaultModelTypeName + '>';
+                }
+                SetBaseType(baseType);
             }
 
             private bool IsSpecialPage(string path) {
                 string fileName = Path.GetFileNameWithoutExtension(path);
-                return fileName.Equals(typeof(ViewStartPage).FullName, StringComparison.OrdinalIgnoreCase);
+                return fileName.Equals(ViewStartFileName, StringComparison.OrdinalIgnoreCase);
             }
 
-            private void SetBaseType(string modelTypeName) {
-                var baseType = new CodeTypeReference(Host.DefaultBaseClass + "<" + modelTypeName + ">");
+            private void SetBaseType(string name) {
+                var baseType = new CodeTypeReference(name);
                 GeneratedClass.BaseTypes.Clear();
                 GeneratedClass.BaseTypes.Add(baseType);
-            }
-
-            protected override bool TryVisitSpecialSpan(System.Web.Razor.Parser.SyntaxTree.Span span) {
-                return base.TryVisitSpecialSpan(span);
             }
         }
     }

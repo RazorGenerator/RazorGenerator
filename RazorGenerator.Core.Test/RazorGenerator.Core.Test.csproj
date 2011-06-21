@@ -78,6 +78,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TestFiles\Output\TemplateTest.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\Input\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\Output\_ViewStart.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

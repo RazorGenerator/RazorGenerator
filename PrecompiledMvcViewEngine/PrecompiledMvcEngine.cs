@@ -56,7 +56,7 @@ namespace PrecompiledMvcViewEngine {
                 "vbhtml"
             };
 
-            _mappings = (from type in assembly.GetExportedTypes()
+            _mappings = (from type in assembly.GetTypes()
                          where typeof(WebPageRenderingBase).IsAssignableFrom(type)
                          let pageVirtualPath = type.GetCustomAttributes(inherit: false).OfType<PageVirtualPathAttribute>().FirstOrDefault()
                          where pageVirtualPath != null
