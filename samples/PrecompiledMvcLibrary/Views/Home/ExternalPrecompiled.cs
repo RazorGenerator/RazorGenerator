@@ -33,7 +33,7 @@ namespace PrecompiledMvcLibrary.Views.Home
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Home/ExternalPrecompiled.cshtml")]
-    public class ExternalPrecompiled : System.Web.Mvc.WebViewPage<dynamic>
+    internal class ExternalPrecompiled : System.Web.Mvc.WebViewPage<dynamic>
     {
 #line hidden
 

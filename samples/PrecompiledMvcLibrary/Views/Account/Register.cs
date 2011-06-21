@@ -27,7 +27,7 @@ namespace PrecompiledMvcLibrary.Views.Account
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Account/Register.cshtml")]
-    public class Register : System.Web.Mvc.WebViewPage<MvcSample.Models.RegisterModel>
+    internal class Register : System.Web.Mvc.WebViewPage<MvcSample.Models.RegisterModel>
     {
 #line hidden
 

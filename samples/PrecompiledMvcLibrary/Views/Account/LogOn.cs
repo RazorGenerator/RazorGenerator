@@ -27,7 +27,7 @@ namespace PrecompiledMvcLibrary.Views.Account
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Account/LogOn.cshtml")]
-    public class LogOn : System.Web.Mvc.WebViewPage<MvcSample.Models.LogOnModel>
+    internal class LogOn : System.Web.Mvc.WebViewPage<MvcSample.Models.LogOnModel>
     {
 #line hidden
 

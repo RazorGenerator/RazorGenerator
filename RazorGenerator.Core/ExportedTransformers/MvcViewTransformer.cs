@@ -12,12 +12,13 @@ namespace RazorGenerator.Core {
     [Export("MvcView", typeof(IRazorCodeTransformer))]
     public class MvcViewTransformer : AggregateCodeTransformer {
         private static readonly IEnumerable<string> _namespaces = new[] { "System.Web.Mvc", "System.Web.Mvc.Html" };
-
-        private static readonly IEnumerable<IRazorCodeTransformer> _codeTransformers = new IRazorCodeTransformer[] { 
+        private static readonly IRazorCodeTransformer[] _codeTransformers = new IRazorCodeTransformer[] { 
             new DirectivesBasedTransformers(),
             new AddGeneratedClassAttribute(),
             new AddPageVirtualPathAttribute(),
             new SetImports(_namespaces, replaceExisting: false),
+            new SetBaseType(typeof(WebViewPage)),
+            new MakeTypeInternal(),
         };
 
         internal static IEnumerable<string> MvcNamespaces {
@@ -52,7 +53,7 @@ namespace RazorGenerator.Core {
                     baseType = typeof(ViewStartPage).FullName;
                 }
                 else {
-                    baseType = Host.DefaultBaseClass + '<' + DefaultModelTypeName + '>';
+                    baseType = host.DefaultBaseClass + '<' + DefaultModelTypeName + '>';
                 }
                 SetBaseType(baseType);
             }

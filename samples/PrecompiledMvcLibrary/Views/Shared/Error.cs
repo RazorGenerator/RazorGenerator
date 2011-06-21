@@ -27,7 +27,7 @@ namespace PrecompiledMvcLibrary.Views.Shared
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Shared/Error.cshtml")]
-    public class Error : System.Web.Mvc.WebViewPage<System.Web.Mvc.HandleErrorInfo>
+    internal class Error : System.Web.Mvc.WebViewPage<System.Web.Mvc.HandleErrorInfo>
     {
 #line hidden
 

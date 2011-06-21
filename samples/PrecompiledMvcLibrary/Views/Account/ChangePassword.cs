@@ -27,7 +27,7 @@ namespace PrecompiledMvcLibrary.Views.Account
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Account/ChangePassword.cshtml")]
-    public class ChangePassword : System.Web.Mvc.WebViewPage<MvcSample.Models.ChangePasswordModel>
+    internal class ChangePassword : System.Web.Mvc.WebViewPage<MvcSample.Models.ChangePasswordModel>
     {
 #line hidden
 
