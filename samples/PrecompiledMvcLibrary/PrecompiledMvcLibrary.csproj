@@ -114,6 +114,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>_ViewStart.cshtml</DependentUpon>
     </Compile>
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\_ViewStart.cshtml">
