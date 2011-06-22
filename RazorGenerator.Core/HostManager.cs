@@ -70,7 +70,7 @@ namespace RazorGenerator.Core {
             try {
                 codeTransformer = _container.GetExportedValue<IRazorCodeTransformer>(hostName);
             }
-            catch (CompositionException exception) {
+            catch (Exception exception) {
                 ThrowHostError(exception);
             }
 

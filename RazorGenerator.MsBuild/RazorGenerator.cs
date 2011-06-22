@@ -42,17 +42,23 @@ namespace RazorGenerator.MsBuild {
                     var host = hostManager.CreateHost(filePath, projectRelativePath);
                     host.DefaultNamespace = itemNamespace;
 
-                    if (!String.IsNullOrEmpty(itemNamespace)) {
-                        string outputPath = Path.Combine(TemporaryCodeGenDirectory, projectRelativePath) + ".cs";
-                        EnsureDirectory(outputPath);
-                        File.WriteAllText(outputPath, host.GenerateCode());
+                    string outputPath = Path.Combine(TemporaryCodeGenDirectory, projectRelativePath) + ".cs";
+                    EnsureDirectory(outputPath);
 
-                        var taskItem = new TaskItem(outputPath);
-                        taskItem.SetMetadata("AutoGen", "true");
-                        taskItem.SetMetadata("DependentUpon", "fileName");
-
-                        _generatedFiles.Add(taskItem);
+                    try {
+                        string result = host.GenerateCode();
+                        File.WriteAllText(outputPath, result);
                     }
+                    catch (Exception exception) {
+                        Log.LogError(exception.Message);
+                        return false;
+                    }
+
+                    var taskItem = new TaskItem(outputPath);
+                    taskItem.SetMetadata("AutoGen", "true");
+                    taskItem.SetMetadata("DependentUpon", "fileName");
+
+                    _generatedFiles.Add(taskItem);
                 }
             }
             return true;

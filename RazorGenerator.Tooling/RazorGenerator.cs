@@ -43,10 +43,14 @@ namespace RazorGenerator {
             try {
                 return GenerateFromHost();
             }
+            catch (InvalidOperationException exception) {
+                GeneratorError(0, exception.Message, 0, 0);
+                return ConvertToBytes(exception.Message);
+            }
             catch (Exception exception) {
                 GeneratorError(0, exception.Message, 0, 0);
-                return null;
             }
+            return null;
         }
 
         private byte[] GenerateFromHost() {
