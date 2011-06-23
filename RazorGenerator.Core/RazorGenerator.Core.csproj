@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="CodeTransformers\DefaultCodeTransformers.cs" />
     <Compile Include="CodeTransformers\DirectivesBasedTransformers.cs" />
+    <Compile Include="CodeTransformers\RemoveLineHiddenPragmas.cs" />
     <Compile Include="EventArgs.cs" />
     <Compile Include="ICodeGenerationEventProvider.cs" />
     <Compile Include="IRazorCodeTransformer.cs" />

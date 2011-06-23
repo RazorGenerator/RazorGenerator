@@ -42,6 +42,12 @@ namespace RazorGenerator.MsBuild {
                     var host = hostManager.CreateHost(filePath, projectRelativePath);
                     host.DefaultNamespace = itemNamespace;
 
+                    bool hasErrors = false;
+                    host.Error += (o, eventArgs) => {
+                        Log.LogError(eventArgs.ErrorMessage);
+                        hasErrors = true;
+                    };
+
                     string outputPath = Path.Combine(TemporaryCodeGenDirectory, projectRelativePath) + ".cs";
                     EnsureDirectory(outputPath);
 
@@ -51,6 +57,9 @@ namespace RazorGenerator.MsBuild {
                     }
                     catch (Exception exception) {
                         Log.LogError(exception.Message);
+                        return false;
+                    }
+                    if (hasErrors) {
                         return false;
                     }
 

@@ -34,7 +34,7 @@ return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 
 
 
-#line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledWebPagesLibrary\WebPagesHelperSample.cshtml"
+#line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledWebPagesLibrary\WebPagesHelperSample.cshtml"
                      
 
 #line default
@@ -44,7 +44,7 @@ WriteLiteralTo(@__razor_helper_writer, "    <span class=\"time\">The time is now
 
 
 
-#line 4 "D:\forks\razorsinglefilegenerator\samples\PrecompiledWebPagesLibrary\WebPagesHelperSample.cshtml"
+#line 2 "D:\forks\razorsinglefilegenerator\samples\PrecompiledWebPagesLibrary\WebPagesHelperSample.cshtml"
         WriteTo(@__razor_helper_writer, DateTime.Now.TimeOfDay);
 
 #line default
@@ -54,7 +54,7 @@ WriteLiteralTo(@__razor_helper_writer, "</span>\r\n");
 
 
 
-#line 5 "D:\forks\razorsinglefilegenerator\samples\PrecompiledWebPagesLibrary\WebPagesHelperSample.cshtml"
+#line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledWebPagesLibrary\WebPagesHelperSample.cshtml"
 
 #line default
 #line hidden

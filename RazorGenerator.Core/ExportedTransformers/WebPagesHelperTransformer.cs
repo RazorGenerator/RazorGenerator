@@ -13,6 +13,7 @@ namespace RazorGenerator.Core {
             new SetImports(new[] { "System.Web.WebPages.Html" }, replaceExisting: false),
             new SetBaseType(typeof(System.Web.WebPages.HelperPage)),
             new MakeTypeHelper(),
+            new RemoveLineHiddenPragmas(),
         };
 
         protected override IEnumerable<IRazorCodeTransformer> CodeTransformers {

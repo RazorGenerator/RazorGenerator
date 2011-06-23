@@ -29,8 +29,7 @@ namespace RazorGenerator.Core.Test
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     public static class MvcHelperTest
     {
-#line hidden
-#line hidden
+
 public static System.Web.WebPages.HelperResult GamerTag(this HtmlHelper helper, string gamerTag) {
 return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 

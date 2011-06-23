@@ -47,7 +47,7 @@ WriteLiteral("\r\n\r\n<ul>\r\n    <li>\r\n        This precompiled page was serv
 
 
             
-            #line 5 "D:\forks\razorsinglefilegenerator\PrecompiledWebPagesHelper\WebPagesSample.cshtml"
+            #line 5 "D:\forks\razorsinglefilegenerator\samples\PrecompiledWebPagesLibrary\WebPagesSample.cshtml"
                                               Write(DateTime.Now);
 
             
@@ -57,7 +57,7 @@ WriteLiteral("\r\n    </li>\r\n    <li>\r\n        <a href=\"");
 
 
             
-            #line 8 "D:\forks\razorsinglefilegenerator\PrecompiledWebPagesHelper\WebPagesSample.cshtml"
+            #line 8 "D:\forks\razorsinglefilegenerator\samples\PrecompiledWebPagesLibrary\WebPagesSample.cshtml"
             Write(Href("@/WebPagesSample"));
 
             
@@ -72,7 +72,7 @@ WriteLiteral(@""">Hyperlinks</a> inside ApplicationParts can be rooted to the ba
 
 
             
-            #line 13 "D:\forks\razorsinglefilegenerator\PrecompiledWebPagesHelper\WebPagesSample.cshtml"
+            #line 13 "D:\forks\razorsinglefilegenerator\samples\PrecompiledWebPagesLibrary\WebPagesSample.cshtml"
              Write(Href("@/Images/Cake.jpg"));
 
             

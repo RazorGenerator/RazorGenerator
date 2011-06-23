@@ -29,8 +29,6 @@ namespace RazorGenerator.Core.Test
     [System.Web.WebPages.PageVirtualPathAttribute("~/MvcViewTest.cshtml")]
     internal class MvcViewTest : System.Web.Mvc.WebViewPage<dynamic>
     {
-#line hidden
-
         public MvcViewTest()
         {
         }

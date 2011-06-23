@@ -29,8 +29,6 @@ namespace RazorGenerator.Core.Test
     [System.Web.WebPages.PageVirtualPathAttribute("~/_ViewStart.cshtml")]
     internal class _ViewStart : System.Web.Mvc.ViewStartPage
     {
-#line hidden
-
         public _ViewStart()
         {
         }

@@ -10,12 +10,13 @@ namespace RazorGenerator.Core {
     public class MvcHelperCodeTransformer : AggregateCodeTransformer {
         private const string WriteToMethodName = "WebViewPage.WriteTo";
         private const string WriteLiteralToMethodName = "WebViewPage.WriteLiteralTo";
-        private static readonly IEnumerable<IRazorCodeTransformer> _transformers = new IRazorCodeTransformer[] {
+        private static readonly IRazorCodeTransformer[] _transformers = new IRazorCodeTransformer[] {
             new SetImports(MvcViewTransformer.MvcNamespaces, replaceExisting: false),
             new AddGeneratedClassAttribute(),
             new DirectivesBasedTransformers(),
             new MakeTypeStatic(),
             new MakeTypeHelper(),
+            new RemoveLineHiddenPragmas(),
         };
 
         protected override IEnumerable<IRazorCodeTransformer> CodeTransformers {

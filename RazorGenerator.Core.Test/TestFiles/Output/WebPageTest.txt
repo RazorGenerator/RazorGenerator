@@ -28,7 +28,6 @@ namespace RazorGenerator.Core.Test
     [System.Web.WebPages.PageVirtualPathAttribute("~/WebPageTest.cshtml")]
     public class WebPageTest : System.Web.WebPages.WebPage
     {
-#line hidden
 
                 // Resolve package relative syntax
                 // Also, if it comes from a static embedded resource, change the path accordingly

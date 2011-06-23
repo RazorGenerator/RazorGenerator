@@ -6,7 +6,6 @@ using System.IO;
 using System.Web.Mvc;
 using System.Web.Mvc.Razor;
 using System.Web.Razor;
-using System.Web.Razor.Parser.SyntaxTree;
 
 namespace RazorGenerator.Core {
     [Export("MvcView", typeof(IRazorCodeTransformer))]
@@ -19,6 +18,7 @@ namespace RazorGenerator.Core {
             new SetImports(_namespaces, replaceExisting: false),
             new SetBaseType(typeof(WebViewPage)),
             new MakeTypeInternal(),
+            new RemoveLineHiddenPragmas(),
         };
 
         internal static IEnumerable<string> MvcNamespaces {

@@ -8,9 +8,10 @@ namespace RazorGenerator.Core {
     [Export("WebPage", typeof(IRazorCodeTransformer))]
     public class WebPageTransformer : AggregateCodeTransformer {
         private static readonly IList<IRazorCodeTransformer> _transformers = new List<IRazorCodeTransformer> { 
-            new DirectivesBasedTransformers(), 
+            new DirectivesBasedTransformers(),
             new AddGeneratedClassAttribute(),
             new AddPageVirtualPathAttribute(),
+            new RemoveLineHiddenPragmas(),
             new SetImports(new[] { "System.Web.WebPages.Html" }, replaceExisting: false),
         };
 

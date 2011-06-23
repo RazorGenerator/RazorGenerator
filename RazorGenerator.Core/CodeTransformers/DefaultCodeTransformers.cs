@@ -1,12 +1,11 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
-using System.Web.Razor;
-using System.Diagnostics;
 
 namespace RazorGenerator.Core {
     public class AddGeneratedClassAttribute : RazorCodeTransformerBase {
