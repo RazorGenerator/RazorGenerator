@@ -37,15 +37,11 @@ namespace PrecompiledMvcLibrary.Views.Account
         public override void Execute()
         {
 
-
-WriteLiteral("\r\n");
-
-
 WriteLiteral("\r\n");
 
 
             
-            #line 4 "\Views\Account\Register.cshtml"
+            #line 3 "\Views\Account\Register.cshtml"
   
     ViewBag.Title = "Register";
 
@@ -58,7 +54,7 @@ WriteLiteral("\r\n<h2>Create a New Account</h2>\r\n<p>\r\n    Use the form below
 
 
             
-            #line 13 "\Views\Account\Register.cshtml"
+            #line 12 "\Views\Account\Register.cshtml"
                                          Write(ViewBag.PasswordLength);
 
             
@@ -68,7 +64,7 @@ WriteLiteral(" characters in length.\r\n</p>\r\n\r\n<script src=\"");
 
 
             
-            #line 16 "\Views\Account\Register.cshtml"
+            #line 15 "\Views\Account\Register.cshtml"
         Write(Url.Content("~/Scripts/jquery.validate.min.js"));
 
             
@@ -78,7 +74,7 @@ WriteLiteral("\" type=\"text/javascript\"></script>\r\n<script src=\"");
 
 
             
-            #line 17 "\Views\Account\Register.cshtml"
+            #line 16 "\Views\Account\Register.cshtml"
         Write(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"));
 
             
@@ -88,21 +84,21 @@ WriteLiteral("\" type=\"text/javascript\"></script>\r\n\r\n");
 
 
             
-            #line 19 "\Views\Account\Register.cshtml"
+            #line 18 "\Views\Account\Register.cshtml"
  using (Html.BeginForm()) {
     
             
             #line default
             #line hidden
             
-            #line 20 "\Views\Account\Register.cshtml"
+            #line 19 "\Views\Account\Register.cshtml"
 Write(Html.ValidationSummary(true, "Account creation was unsuccessful. Please correct the errors and try again."));
 
             
             #line default
             #line hidden
             
-            #line 20 "\Views\Account\Register.cshtml"
+            #line 19 "\Views\Account\Register.cshtml"
                                                                                                                 
 
             
@@ -113,7 +109,7 @@ WriteLiteral("    <div>\r\n        <fieldset>\r\n            <legend>Account Inf
 
 
             
-            #line 26 "\Views\Account\Register.cshtml"
+            #line 25 "\Views\Account\Register.cshtml"
            Write(Html.LabelFor(m => m.UserName));
 
             
@@ -123,7 +119,7 @@ WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">
 
 
             
-            #line 29 "\Views\Account\Register.cshtml"
+            #line 28 "\Views\Account\Register.cshtml"
            Write(Html.TextBoxFor(m => m.UserName));
 
             
@@ -133,7 +129,7 @@ WriteLiteral("\r\n                ");
 
 
             
-            #line 30 "\Views\Account\Register.cshtml"
+            #line 29 "\Views\Account\Register.cshtml"
            Write(Html.ValidationMessageFor(m => m.UserName));
 
             
@@ -143,7 +139,7 @@ WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-labe
 
 
             
-            #line 34 "\Views\Account\Register.cshtml"
+            #line 33 "\Views\Account\Register.cshtml"
            Write(Html.LabelFor(m => m.Email));
 
             
@@ -153,7 +149,7 @@ WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">
 
 
             
-            #line 37 "\Views\Account\Register.cshtml"
+            #line 36 "\Views\Account\Register.cshtml"
            Write(Html.TextBoxFor(m => m.Email));
 
             
@@ -163,7 +159,7 @@ WriteLiteral("\r\n                ");
 
 
             
-            #line 38 "\Views\Account\Register.cshtml"
+            #line 37 "\Views\Account\Register.cshtml"
            Write(Html.ValidationMessageFor(m => m.Email));
 
             
@@ -173,7 +169,7 @@ WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-labe
 
 
             
-            #line 42 "\Views\Account\Register.cshtml"
+            #line 41 "\Views\Account\Register.cshtml"
            Write(Html.LabelFor(m => m.Password));
 
             
@@ -183,7 +179,7 @@ WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">
 
 
             
-            #line 45 "\Views\Account\Register.cshtml"
+            #line 44 "\Views\Account\Register.cshtml"
            Write(Html.PasswordFor(m => m.Password));
 
             
@@ -193,7 +189,7 @@ WriteLiteral("\r\n                ");
 
 
             
-            #line 46 "\Views\Account\Register.cshtml"
+            #line 45 "\Views\Account\Register.cshtml"
            Write(Html.ValidationMessageFor(m => m.Password));
 
             
@@ -203,7 +199,7 @@ WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-labe
 
 
             
-            #line 50 "\Views\Account\Register.cshtml"
+            #line 49 "\Views\Account\Register.cshtml"
            Write(Html.LabelFor(m => m.ConfirmPassword));
 
             
@@ -213,7 +209,7 @@ WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">
 
 
             
-            #line 53 "\Views\Account\Register.cshtml"
+            #line 52 "\Views\Account\Register.cshtml"
            Write(Html.PasswordFor(m => m.ConfirmPassword));
 
             
@@ -223,7 +219,7 @@ WriteLiteral("\r\n                ");
 
 
             
-            #line 54 "\Views\Account\Register.cshtml"
+            #line 53 "\Views\Account\Register.cshtml"
            Write(Html.ValidationMessageFor(m => m.ConfirmPassword));
 
             
@@ -234,7 +230,7 @@ WriteLiteral("\r\n            </div>\r\n\r\n            <p>\r\n                <
 
 
             
-            #line 62 "\Views\Account\Register.cshtml"
+            #line 61 "\Views\Account\Register.cshtml"
 }
 
             

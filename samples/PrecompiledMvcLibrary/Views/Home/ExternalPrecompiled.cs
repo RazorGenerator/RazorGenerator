@@ -25,7 +25,7 @@ namespace PrecompiledMvcLibrary.Views.Home
     using System.Web.UI;
     using System.Web.WebPages;
     
-    #line 2 "\Views\Home\ExternalPrecompiled.cshtml"
+    #line 1 "\Views\Home\ExternalPrecompiled.cshtml"
     using PrecompiledMvcLibrary.Views.Shared;
     
     #line default
@@ -43,15 +43,11 @@ namespace PrecompiledMvcLibrary.Views.Home
         public override void Execute()
         {
 
-
-WriteLiteral("\r\n");
-
-
 WriteLiteral("\r\n");
 
 
             
-            #line 4 "\Views\Home\ExternalPrecompiled.cshtml"
+            #line 3 "\Views\Home\ExternalPrecompiled.cshtml"
   
     ViewBag.Title = "Home Page";
 
@@ -63,7 +59,7 @@ WriteLiteral("\r\n<h2>");
 
 
             
-            #line 8 "\Views\Home\ExternalPrecompiled.cshtml"
+            #line 7 "\Views\Home\ExternalPrecompiled.cshtml"
 Write(ViewBag.Message);
 
             
@@ -75,7 +71,7 @@ WriteLiteral("</h2>\r\n<p>\r\n    To learn more about ASP.NET MVC visit <a href=
 
 
             
-            #line 17 "\Views\Home\ExternalPrecompiled.cshtml"
+            #line 16 "\Views\Home\ExternalPrecompiled.cshtml"
 Write(Html.ObjectInfo(this));
 
             
@@ -85,7 +81,7 @@ WriteLiteral("\r\n\r\n");
 
 
             
-            #line 19 "\Views\Home\ExternalPrecompiled.cshtml"
+            #line 18 "\Views\Home\ExternalPrecompiled.cshtml"
 Write(RenderPage("~/Views/Shared/_ViewTypes.cshtml"));
 
             

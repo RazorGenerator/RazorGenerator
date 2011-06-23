@@ -37,12 +37,8 @@ namespace PrecompiledMvcLibrary.Views.Shared
         public override void Execute()
         {
 
-
-WriteLiteral("\r\n");
-
-
             
-            #line 2 "\Views\Shared\_LogOnPartial.cshtml"
+            #line 1 "\Views\Shared\_LogOnPartial.cshtml"
  if(Request.IsAuthenticated) {
 
             
@@ -54,7 +50,7 @@ WriteLiteral("Welcome <b>");
 
 
             
-            #line 3 "\Views\Shared\_LogOnPartial.cshtml"
+            #line 2 "\Views\Shared\_LogOnPartial.cshtml"
                 Write(Context.User.Identity.Name);
 
             
@@ -64,7 +60,7 @@ WriteLiteral("</b>!\r\n    [ ");
 
 
             
-            #line 4 "\Views\Shared\_LogOnPartial.cshtml"
+            #line 3 "\Views\Shared\_LogOnPartial.cshtml"
  Write(Html.ActionLink("Log Off", "LogOff", "Account"));
 
             
@@ -76,7 +72,7 @@ WriteLiteral("\r\n");
 
 
             
-            #line 5 "\Views\Shared\_LogOnPartial.cshtml"
+            #line 4 "\Views\Shared\_LogOnPartial.cshtml"
 }
 else {
 
@@ -89,7 +85,7 @@ WriteLiteral("[ ");
 
 
             
-            #line 7 "\Views\Shared\_LogOnPartial.cshtml"
+            #line 6 "\Views\Shared\_LogOnPartial.cshtml"
    Write(Html.ActionLink("Log On", "LogOn", "Account"));
 
             
@@ -99,7 +95,7 @@ WriteLiteral(" ]\r\n");
 
 
             
-            #line 8 "\Views\Shared\_LogOnPartial.cshtml"
+            #line 7 "\Views\Shared\_LogOnPartial.cshtml"
 }
 
             

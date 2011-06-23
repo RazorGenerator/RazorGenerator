@@ -37,12 +37,8 @@ namespace PrecompiledMvcLibrary.Views.Home
         public override void Execute()
         {
 
-
-WriteLiteral("\r\n");
-
-
             
-            #line 2 "\Views\Home\About.cshtml"
+            #line 1 "\Views\Home\About.cshtml"
   
     ViewBag.Title = "About Us";
 

@@ -35,7 +35,7 @@ return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 
 
 
-#line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
+#line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
                                                              
 
 #line default
@@ -45,7 +45,7 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    <p>\r\n        ");
 
 
 
-#line 5 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
+#line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
 WebViewPage.WriteTo(@__razor_helper_writer, instance.GetType().Assembly);
 
 #line default
@@ -55,7 +55,7 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, " \r\n        <br />\r\n     
 
 
 
-#line 7 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
+#line 5 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
 WebViewPage.WriteTo(@__razor_helper_writer, instance.GetType().FullName);
 
 #line default
@@ -65,7 +65,7 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, "\r\n    </p>\r\n");
 
 
 
-#line 9 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
+#line 7 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
 
 #line default
 #line hidden
@@ -80,7 +80,7 @@ return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 
 
 
-#line 11 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
+#line 9 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
                                                                       
 
 #line default
@@ -90,7 +90,7 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    <ul>\r\n");
 
 
 
-#line 13 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
+#line 11 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
          foreach (var s in items) {
 
 #line default
@@ -100,7 +100,7 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, "            <li>\r\n        
 
 
 
-#line 15 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
+#line 13 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
 WebViewPage.WriteTo(@__razor_helper_writer, s);
 
 #line default
@@ -110,7 +110,7 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, " (From helper)\r\n          
 
 
 
-#line 17 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
+#line 15 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
         }
 
 #line default
@@ -120,7 +120,7 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    </ul>\r\n");
 
 
 
-#line 19 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
+#line 17 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Helper.cshtml"
 
 #line default
 #line hidden

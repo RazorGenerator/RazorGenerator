@@ -37,12 +37,8 @@ namespace PrecompiledMvcLibrary.Views.Account
         public override void Execute()
         {
 
-
-WriteLiteral("\r\n");
-
-
             
-            #line 2 "\Views\Account\ChangePasswordSuccess.cshtml"
+            #line 1 "\Views\Account\ChangePasswordSuccess.cshtml"
   
     ViewBag.Title = "Change Password";
 

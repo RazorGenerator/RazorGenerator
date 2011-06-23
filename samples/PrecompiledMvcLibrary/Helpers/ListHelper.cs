@@ -35,7 +35,7 @@ return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 
 
 
-#line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Helpers\ListHelper.cshtml"
+#line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Helpers\ListHelper.cshtml"
                                                                      
 
 #line default
@@ -45,7 +45,7 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    <ul>\r\n");
 
 
 
-#line 5 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Helpers\ListHelper.cshtml"
+#line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Helpers\ListHelper.cshtml"
      foreach(var item in list) {
 
 #line default
@@ -55,7 +55,7 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, "        <li>");
 
 
 
-#line 6 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Helpers\ListHelper.cshtml"
+#line 4 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Helpers\ListHelper.cshtml"
 WebViewPage.WriteTo(@__razor_helper_writer, item);
 
 #line default
@@ -65,7 +65,7 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, "</li>\r\n");
 
 
 
-#line 7 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Helpers\ListHelper.cshtml"
+#line 5 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Helpers\ListHelper.cshtml"
     }
 
 #line default
@@ -75,7 +75,7 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    </ul>    \r\n");
 
 
 
-#line 9 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Helpers\ListHelper.cshtml"
+#line 7 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Helpers\ListHelper.cshtml"
 
 #line default
 #line hidden

@@ -36,13 +36,11 @@ namespace PrecompiledMvcLibrary.Views.Shared
         }
         public override void Execute()
         {
-
-
-WriteLiteral("\r\n<!DOCTYPE html>\r\n<html>\r\n<head>\r\n    <title>");
+WriteLiteral("<!DOCTYPE html>\r\n<html>\r\n<head>\r\n    <title>");
 
 
             
-            #line 5 "\Views\Shared\_Layout.cshtml"
+            #line 4 "\Views\Shared\_Layout.cshtml"
       Write(ViewBag.Title);
 
             
@@ -52,7 +50,7 @@ WriteLiteral("</title>\r\n    <link href=\"");
 
 
             
-            #line 6 "\Views\Shared\_Layout.cshtml"
+            #line 5 "\Views\Shared\_Layout.cshtml"
            Write(Url.Content("~/Content/Site.css"));
 
             
@@ -62,7 +60,7 @@ WriteLiteral("\" rel=\"stylesheet\" type=\"text/css\" />\r\n    <script src=\"")
 
 
             
-            #line 7 "\Views\Shared\_Layout.cshtml"
+            #line 6 "\Views\Shared\_Layout.cshtml"
             Write(Url.Content("~/Scripts/jquery-1.4.4.min.js"));
 
             
@@ -84,7 +82,7 @@ WriteLiteral(@""" type=""text/javascript""></script>
 
 
             
-            #line 19 "\Views\Shared\_Layout.cshtml"
+            #line 18 "\Views\Shared\_Layout.cshtml"
            Write(Html.Partial("_LogOnPartial"));
 
             
@@ -95,7 +93,7 @@ WriteLiteral("\r\n            </div>\r\n\r\n            <div id=\"menucontainer\
 
 
             
-            #line 25 "\Views\Shared\_Layout.cshtml"
+            #line 24 "\Views\Shared\_Layout.cshtml"
                    Write(Html.ActionLink("Home", "Index", "Home"));
 
             
@@ -105,7 +103,7 @@ WriteLiteral("</li>\r\n                    <li>");
 
 
             
-            #line 26 "\Views\Shared\_Layout.cshtml"
+            #line 25 "\Views\Shared\_Layout.cshtml"
                    Write(Html.ActionLink("About", "About", "Home"));
 
             
@@ -116,7 +114,7 @@ WriteLiteral("</li>\r\n                </ul>\r\n\r\n            </div>\r\n      
 
 
             
-            #line 33 "\Views\Shared\_Layout.cshtml"
+            #line 32 "\Views\Shared\_Layout.cshtml"
        Write(RenderBody());
 
             

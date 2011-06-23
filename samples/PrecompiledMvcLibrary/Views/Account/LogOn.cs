@@ -37,15 +37,11 @@ namespace PrecompiledMvcLibrary.Views.Account
         public override void Execute()
         {
 
-
-WriteLiteral("\r\n");
-
-
 WriteLiteral("\r\n");
 
 
             
-            #line 4 "\Views\Account\LogOn.cshtml"
+            #line 3 "\Views\Account\LogOn.cshtml"
   
     ViewBag.Title = "Log On";
 
@@ -57,7 +53,7 @@ WriteLiteral("\r\n<h2>Log On</h2>\r\n<p>\r\n    Please enter your username and p
 
 
             
-            #line 10 "\Views\Account\LogOn.cshtml"
+            #line 9 "\Views\Account\LogOn.cshtml"
                                         Write(Html.ActionLink("Register", "Register"));
 
             
@@ -67,7 +63,7 @@ WriteLiteral(" if you don\'t have an account.\r\n</p>\r\n\r\n<script src=\"");
 
 
             
-            #line 13 "\Views\Account\LogOn.cshtml"
+            #line 12 "\Views\Account\LogOn.cshtml"
         Write(Url.Content("~/Scripts/jquery.validate.min.js"));
 
             
@@ -77,7 +73,7 @@ WriteLiteral("\" type=\"text/javascript\"></script>\r\n<script src=\"");
 
 
             
-            #line 14 "\Views\Account\LogOn.cshtml"
+            #line 13 "\Views\Account\LogOn.cshtml"
         Write(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"));
 
             
@@ -87,7 +83,7 @@ WriteLiteral("\" type=\"text/javascript\"></script>\r\n\r\n");
 
 
             
-            #line 16 "\Views\Account\LogOn.cshtml"
+            #line 15 "\Views\Account\LogOn.cshtml"
 Write(Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again."));
 
             
@@ -97,7 +93,7 @@ WriteLiteral("\r\n\r\n");
 
 
             
-            #line 18 "\Views\Account\LogOn.cshtml"
+            #line 17 "\Views\Account\LogOn.cshtml"
  using (Html.BeginForm()) {
 
             
@@ -108,7 +104,7 @@ WriteLiteral("    <div>\r\n        <fieldset>\r\n            <legend>Account Inf
 
 
             
-            #line 24 "\Views\Account\LogOn.cshtml"
+            #line 23 "\Views\Account\LogOn.cshtml"
            Write(Html.LabelFor(m => m.UserName));
 
             
@@ -118,7 +114,7 @@ WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">
 
 
             
-            #line 27 "\Views\Account\LogOn.cshtml"
+            #line 26 "\Views\Account\LogOn.cshtml"
            Write(Html.TextBoxFor(m => m.UserName));
 
             
@@ -128,7 +124,7 @@ WriteLiteral("\r\n                ");
 
 
             
-            #line 28 "\Views\Account\LogOn.cshtml"
+            #line 27 "\Views\Account\LogOn.cshtml"
            Write(Html.ValidationMessageFor(m => m.UserName));
 
             
@@ -138,7 +134,7 @@ WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-labe
 
 
             
-            #line 32 "\Views\Account\LogOn.cshtml"
+            #line 31 "\Views\Account\LogOn.cshtml"
            Write(Html.LabelFor(m => m.Password));
 
             
@@ -148,7 +144,7 @@ WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">
 
 
             
-            #line 35 "\Views\Account\LogOn.cshtml"
+            #line 34 "\Views\Account\LogOn.cshtml"
            Write(Html.PasswordFor(m => m.Password));
 
             
@@ -158,7 +154,7 @@ WriteLiteral("\r\n                ");
 
 
             
-            #line 36 "\Views\Account\LogOn.cshtml"
+            #line 35 "\Views\Account\LogOn.cshtml"
            Write(Html.ValidationMessageFor(m => m.Password));
 
             
@@ -168,7 +164,7 @@ WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-labe
 
 
             
-            #line 40 "\Views\Account\LogOn.cshtml"
+            #line 39 "\Views\Account\LogOn.cshtml"
            Write(Html.CheckBoxFor(m => m.RememberMe));
 
             
@@ -178,7 +174,7 @@ WriteLiteral("\r\n                ");
 
 
             
-            #line 41 "\Views\Account\LogOn.cshtml"
+            #line 40 "\Views\Account\LogOn.cshtml"
            Write(Html.LabelFor(m => m.RememberMe));
 
             
@@ -189,7 +185,7 @@ WriteLiteral("\r\n            </div>\r\n\r\n            <p>\r\n                <
 
 
             
-            #line 49 "\Views\Account\LogOn.cshtml"
+            #line 48 "\Views\Account\LogOn.cshtml"
 }
 
             

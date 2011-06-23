@@ -12,6 +12,7 @@ using Microsoft.CSharp;
 namespace RazorGenerator.Core {
     public class HostManager : IDisposable {
         private readonly CompositionContainer _container;
+        private readonly string _baseDirectory;
 
         public HostManager(string baseDirectory)
             : this(baseDirectory, loadExtensions : false) {
@@ -19,6 +20,7 @@ namespace RazorGenerator.Core {
 
         public HostManager(string baseDirectory, bool loadExtensions) {
             _container = InitCompositionContainer(baseDirectory, loadExtensions);
+            _baseDirectory = baseDirectory;
         }
 
         private IEnumerable<string> GetAvailableHosts() {
@@ -36,7 +38,7 @@ namespace RazorGenerator.Core {
 
         public RazorHost CreateHost(string fullPath, string projectRelativePath, CodeDomProvider codeDomProvider) {
             var directives = ParseDirectives(fullPath);
-            var codeTransformer = GetRazorCodeTransformer(directives);
+            var codeTransformer = GetRazorCodeTransformer(projectRelativePath, directives);
             return new RazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
         }
 
@@ -59,11 +61,11 @@ namespace RazorGenerator.Core {
             return directives;
         }
 
-        private IRazorCodeTransformer GetRazorCodeTransformer(IDictionary<string, string> directives) {
+        private IRazorCodeTransformer GetRazorCodeTransformer(string projectRelativePath, IDictionary<string, string> directives) {
             string hostName;
 
             if (!directives.TryGetValue("Generator", out hostName)) {
-                ThrowHostError();                
+                hostName = GuessHost(_baseDirectory, projectRelativePath);
             }
             
             IRazorCodeTransformer codeTransformer = null;
@@ -100,6 +102,37 @@ namespace RazorGenerator.Core {
             container.ComposeParts();
 
             return container;
+        }
+
+        internal static string GuessHost(string projectRoot, string projectRelativePath) {
+            var mvcHelperRegex = new Regex(@"(^|\\)Views(\\.*)+Helpers?", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
+            if (mvcHelperRegex.IsMatch(projectRelativePath)) {
+                return "MvcHelper";
+            }
+            var mvcViewRegex = new Regex(@"(^|\\)Views\\", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
+            if (mvcViewRegex.IsMatch(projectRelativePath)) {
+                return "MvcView";
+            }
+            if (Path.GetFileNameWithoutExtension(projectRelativePath).Contains("Helper")) {
+                bool? isMvcProject = IsMvcProject(projectRoot);
+                if (isMvcProject.HasValue) {
+                    return isMvcProject.Value ? "MvcHelper" : "WebPagesHelper";
+                }
+            }
+            return null;
+        }
+
+        private static bool? IsMvcProject(string projectRoot) {
+            try {
+                var projectFile = Directory.EnumerateFiles(projectRoot, "*.csproj").FirstOrDefault();
+                if (projectFile != null) {
+                    var content = File.ReadAllText(projectFile);
+                    return content.IndexOf("System.Web.Mvc", StringComparison.OrdinalIgnoreCase) != -1;
+                }
+            }
+            catch {
+            }
+            return null;
         }
 
         private static void AddCatalogIfHostsDirectoryExists(AggregateCatalog catalog, string directory) {

@@ -47,6 +47,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HostManagerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CoreTest.cs" />
     <EmbeddedResource Include="TestFiles\Input\MvcHelperTest.cshtml" />
