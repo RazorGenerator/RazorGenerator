@@ -60,9 +60,16 @@ namespace RazorGenerator {
             using (var hostManager = new HostManager(projectDirectory)) {
                 var host = hostManager.CreateHost(InputFilePath, projectRelativePath, GetCodeProvider());
                 host.DefaultNamespace = FileNameSpace;
+                host.Error += (o, eventArgs) => {
+                    GeneratorError(0, eventArgs.ErrorMessage, eventArgs.LineNumber, eventArgs.ColumnNumber);
+                };
+                host.Progress += (o, eventArgs) => {
+                    if (CodeGeneratorProgress != null) {
+                        CodeGeneratorProgress.Progress(eventArgs.Completed, eventArgs.Total);
+                    }
+                };
 
                 var content = host.GenerateCode();
-
                 return ConvertToBytes(content);
             }
         }
