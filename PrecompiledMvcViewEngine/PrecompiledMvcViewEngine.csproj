@@ -13,7 +13,6 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -50,7 +49,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="NuGet\Content\App_Start\PrecompiledMvcViewEngineStart.cs.pp" />
-    <None Include="Properties\PrecompiledMvcViewEngine.nuspec" />
+    <None Include="NuGet\Content\Views\Home\Test.cshtml">
+      <SubType>Code</SubType>
+    </None>
+    <None Include="NuGet\Content\Views\Web.config" />
+    <None Include="NuGet\Content\Web.config" />
+    <None Include="NuGet\Tools\install.ps1" />
+    <None Include="PrecompiledMvcViewEngine.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NuGet\Tools\Content\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
