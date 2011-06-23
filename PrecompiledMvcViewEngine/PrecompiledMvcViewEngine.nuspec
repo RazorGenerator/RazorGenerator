@@ -9,7 +9,7 @@
     <projectUrl>http://razorgenerator.codeplex.com/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <tags>razor</tags>
+    <tags>mvc razor</tags>
     <dependencies>
       <dependency id="WebActivator" version="1.4" />
     </dependencies>
