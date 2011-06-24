@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Web.Razor;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RazorGenerator.Core {
     public class DirectivesBasedTransformers : AggregateCodeTransformer {
-        public static readonly string MakeTypeInternalKey = "MakeTypeInternal";
+        public static readonly string TypeVisibilityKey = "TypeVisibility";
         public static readonly string DisableLinePragmasKey = "DisableLinePragmas";
         private readonly List<IRazorCodeTransformer> _transformers = new List<IRazorCodeTransformer>();
 
@@ -12,15 +12,25 @@ namespace RazorGenerator.Core {
         }
 
         public override void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
-            if (directives.ContainsKey(MakeTypeInternalKey)) {
-                _transformers.Add(new MakeTypeInternal());
+            if (directives.ContainsKey(TypeVisibilityKey)) {
+                _transformers.Add(new SetTypeVisibility(directives[TypeVisibilityKey]));
             }
 
-            if (directives.ContainsKey(DisableLinePragmasKey)) {
+            if (IsSwitchEnabled(directives, DisableLinePragmasKey) == true) {
                 razorHost.EnableLinePragmas = false;
             }
 
             base.Initialize(razorHost, projectRelativePath, directives);
+        }
+
+        private static bool? IsSwitchEnabled(IDictionary<string, string> directives, string key) {
+            string value;
+            bool switchValue;
+
+            if (directives.TryGetValue(key, out value) && Boolean.TryParse(value, out switchValue)) {
+                return switchValue;
+            }
+            return null;
         }
     }
 }

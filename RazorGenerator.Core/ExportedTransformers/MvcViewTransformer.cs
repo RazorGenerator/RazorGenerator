@@ -17,7 +17,6 @@ namespace RazorGenerator.Core {
             new AddPageVirtualPathAttribute(),
             new SetImports(_namespaces, replaceExisting: false),
             new SetBaseType(typeof(WebViewPage)),
-            new MakeTypeInternal(),
             new RemoveLineHiddenPragmas(),
         };
 

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Web;
 
 namespace RazorGenerator.Core {
@@ -73,12 +72,6 @@ namespace RazorGenerator.Core {
                 }
                 return 1;
             }
-        }
-    }
-
-    public class MakeTypeInternal : RazorCodeTransformerBase {
-        public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod) {
-            generatedClass.TypeAttributes ^= TypeAttributes.Public | TypeAttributes.NestedFamORAssem;
         }
     }
 
