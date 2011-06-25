@@ -27,10 +27,8 @@ namespace PrecompiledMvcLibrary.Views.Shared
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Shared/_LogOnPartial.cshtml")]
-    internal class _LogOnPartial : System.Web.Mvc.WebViewPage<dynamic>
+    public class _LogOnPartial : System.Web.Mvc.WebViewPage<dynamic>
     {
-#line hidden
-
         public _LogOnPartial()
         {
         }
@@ -38,7 +36,7 @@ namespace PrecompiledMvcLibrary.Views.Shared
         {
 
             
-            #line 1 "\Views\Shared\_LogOnPartial.cshtml"
+            #line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
  if(Request.IsAuthenticated) {
 
             
@@ -50,7 +48,7 @@ WriteLiteral("Welcome <b>");
 
 
             
-            #line 2 "\Views\Shared\_LogOnPartial.cshtml"
+            #line 2 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
                 Write(Context.User.Identity.Name);
 
             
@@ -60,7 +58,7 @@ WriteLiteral("</b>!\r\n    [ ");
 
 
             
-            #line 3 "\Views\Shared\_LogOnPartial.cshtml"
+            #line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
  Write(Html.ActionLink("Log Off", "LogOff", "Account"));
 
             
@@ -72,7 +70,7 @@ WriteLiteral("\r\n");
 
 
             
-            #line 4 "\Views\Shared\_LogOnPartial.cshtml"
+            #line 4 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
 }
 else {
 
@@ -85,7 +83,7 @@ WriteLiteral("[ ");
 
 
             
-            #line 6 "\Views\Shared\_LogOnPartial.cshtml"
+            #line 6 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
    Write(Html.ActionLink("Log On", "LogOn", "Account"));
 
             
@@ -95,7 +93,7 @@ WriteLiteral(" ]\r\n");
 
 
             
-            #line 7 "\Views\Shared\_LogOnPartial.cshtml"
+            #line 7 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
 }
 
             

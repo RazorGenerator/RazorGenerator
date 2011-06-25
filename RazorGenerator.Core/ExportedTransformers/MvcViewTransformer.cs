@@ -31,7 +31,7 @@ namespace RazorGenerator.Core {
         public override void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
             base.Initialize(razorHost, projectRelativePath, directives);
          
-            razorHost.CodeGenerator = new MvcCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultNamespace, projectRelativePath, razorHost);
+            razorHost.CodeGenerator = new MvcCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultNamespace, razorHost.FullPath, razorHost);
             razorHost.CodeGenerator.GenerateLinePragmas = razorHost.EnableLinePragmas;
             razorHost.Parser = new MvcCSharpRazorCodeParser();
         }

@@ -73,6 +73,14 @@ namespace RazorGenerator.Core {
             }
         }
 
+        public string ProjectRelativePath {
+            get { return _baseRelativePath; }
+        }
+
+        public string FullPath {
+            get { return _fullPath; }
+        }
+
         public event EventHandler<GeneratorErrorEventArgs> Error;
 
         public event EventHandler<ProgressEventArgs> Progress;
@@ -178,7 +186,5 @@ namespace RazorGenerator.Core {
             string filename = Path.GetFileNameWithoutExtension(_baseRelativePath);
             return ParserHelpers.SanitizeClassName(filename);
         }
-
-        
     }
 }

@@ -28,8 +28,7 @@ namespace PrecompiledMvcLibrary.Views.Shared
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     public static class Helper
     {
-#line hidden
-#line hidden
+
 public static System.Web.WebPages.HelperResult ObjectInfo(this HtmlHelper helper, object instance) {
 return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 
@@ -74,7 +73,7 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, "\r\n    </p>\r\n");
 
 }
 
-#line hidden
+
 public static System.Web.WebPages.HelperResult WriteList(this HtmlHelper helper, IEnumerable<string> items) {
 return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 

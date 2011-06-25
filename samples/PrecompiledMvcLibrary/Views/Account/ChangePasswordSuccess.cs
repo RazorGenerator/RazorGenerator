@@ -27,10 +27,8 @@ namespace PrecompiledMvcLibrary.Views.Account
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Account/ChangePasswordSuccess.cshtml")]
-    internal class ChangePasswordSuccess : System.Web.Mvc.WebViewPage<dynamic>
+    public class ChangePasswordSuccess : System.Web.Mvc.WebViewPage<dynamic>
     {
-#line hidden
-
         public ChangePasswordSuccess()
         {
         }
@@ -38,7 +36,7 @@ namespace PrecompiledMvcLibrary.Views.Account
         {
 
             
-            #line 1 "\Views\Account\ChangePasswordSuccess.cshtml"
+            #line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePasswordSuccess.cshtml"
   
     ViewBag.Title = "Change Password";
 

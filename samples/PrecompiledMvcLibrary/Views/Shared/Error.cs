@@ -27,10 +27,8 @@ namespace PrecompiledMvcLibrary.Views.Shared
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Shared/Error.cshtml")]
-    internal class Error : System.Web.Mvc.WebViewPage<System.Web.Mvc.HandleErrorInfo>
+    public class Error : System.Web.Mvc.WebViewPage<System.Web.Mvc.HandleErrorInfo>
     {
-#line hidden
-
         public Error()
         {
         }
@@ -41,7 +39,7 @@ WriteLiteral("\r\n");
 
 
             
-            #line 3 "\Views\Shared\Error.cshtml"
+            #line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Error.cshtml"
   
     ViewBag.Title = "Error";
 

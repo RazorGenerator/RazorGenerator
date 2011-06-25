@@ -27,10 +27,8 @@ namespace PrecompiledMvcLibrary.Views.Shared
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Shared/_Layout.cshtml")]
-    internal class _Layout : System.Web.Mvc.WebViewPage<dynamic>
+    public class _Layout : System.Web.Mvc.WebViewPage<dynamic>
     {
-#line hidden
-
         public _Layout()
         {
         }
@@ -40,7 +38,7 @@ WriteLiteral("<!DOCTYPE html>\r\n<html>\r\n<head>\r\n    <title>");
 
 
             
-            #line 4 "\Views\Shared\_Layout.cshtml"
+            #line 4 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_Layout.cshtml"
       Write(ViewBag.Title);
 
             
@@ -50,7 +48,7 @@ WriteLiteral("</title>\r\n    <link href=\"");
 
 
             
-            #line 5 "\Views\Shared\_Layout.cshtml"
+            #line 5 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_Layout.cshtml"
            Write(Url.Content("~/Content/Site.css"));
 
             
@@ -60,7 +58,7 @@ WriteLiteral("\" rel=\"stylesheet\" type=\"text/css\" />\r\n    <script src=\"")
 
 
             
-            #line 6 "\Views\Shared\_Layout.cshtml"
+            #line 6 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_Layout.cshtml"
             Write(Url.Content("~/Scripts/jquery-1.4.4.min.js"));
 
             
@@ -82,7 +80,7 @@ WriteLiteral(@""" type=""text/javascript""></script>
 
 
             
-            #line 18 "\Views\Shared\_Layout.cshtml"
+            #line 18 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_Layout.cshtml"
            Write(Html.Partial("_LogOnPartial"));
 
             
@@ -93,7 +91,7 @@ WriteLiteral("\r\n            </div>\r\n\r\n            <div id=\"menucontainer\
 
 
             
-            #line 24 "\Views\Shared\_Layout.cshtml"
+            #line 24 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_Layout.cshtml"
                    Write(Html.ActionLink("Home", "Index", "Home"));
 
             
@@ -103,7 +101,7 @@ WriteLiteral("</li>\r\n                    <li>");
 
 
             
-            #line 25 "\Views\Shared\_Layout.cshtml"
+            #line 25 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_Layout.cshtml"
                    Write(Html.ActionLink("About", "About", "Home"));
 
             
@@ -114,7 +112,7 @@ WriteLiteral("</li>\r\n                </ul>\r\n\r\n            </div>\r\n      
 
 
             
-            #line 32 "\Views\Shared\_Layout.cshtml"
+            #line 32 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_Layout.cshtml"
        Write(RenderBody());
 
             

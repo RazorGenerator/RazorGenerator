@@ -27,10 +27,8 @@ namespace PrecompiledMvcLibrary.Views.Account
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Account/ChangePassword.cshtml")]
-    internal class ChangePassword : System.Web.Mvc.WebViewPage<MvcSample.Models.ChangePasswordModel>
+    public class ChangePassword : System.Web.Mvc.WebViewPage<MvcSample.Models.ChangePasswordModel>
     {
-#line hidden
-
         public ChangePassword()
         {
         }
@@ -41,7 +39,7 @@ WriteLiteral("\r\n");
 
 
             
-            #line 3 "\Views\Account\ChangePassword.cshtml"
+            #line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
   
     ViewBag.Title = "Change Password";
 
@@ -54,7 +52,7 @@ WriteLiteral("\r\n<h2>Change Password</h2>\r\n<p>\r\n    Use the form below to c
 
 
             
-            #line 12 "\Views\Account\ChangePassword.cshtml"
+            #line 12 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
                                              Write(ViewBag.PasswordLength);
 
             
@@ -64,7 +62,7 @@ WriteLiteral(" characters in length.\r\n</p>\r\n\r\n<script src=\"");
 
 
             
-            #line 15 "\Views\Account\ChangePassword.cshtml"
+            #line 15 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
         Write(Url.Content("~/Scripts/jquery.validate.min.js"));
 
             
@@ -74,7 +72,7 @@ WriteLiteral("\" type=\"text/javascript\"></script>\r\n<script src=\"");
 
 
             
-            #line 16 "\Views\Account\ChangePassword.cshtml"
+            #line 16 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
         Write(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"));
 
             
@@ -84,21 +82,21 @@ WriteLiteral("\" type=\"text/javascript\"></script>\r\n\r\n");
 
 
             
-            #line 18 "\Views\Account\ChangePassword.cshtml"
+            #line 18 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
  using (Html.BeginForm()) {
     
             
             #line default
             #line hidden
             
-            #line 19 "\Views\Account\ChangePassword.cshtml"
+            #line 19 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
 Write(Html.ValidationSummary(true, "Password change was unsuccessful. Please correct the errors and try again."));
 
             
             #line default
             #line hidden
             
-            #line 19 "\Views\Account\ChangePassword.cshtml"
+            #line 19 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
                                                                                                                
 
             
@@ -109,7 +107,7 @@ WriteLiteral("    <div>\r\n        <fieldset>\r\n            <legend>Account Inf
 
 
             
-            #line 25 "\Views\Account\ChangePassword.cshtml"
+            #line 25 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
            Write(Html.LabelFor(m => m.OldPassword));
 
             
@@ -119,7 +117,7 @@ WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">
 
 
             
-            #line 28 "\Views\Account\ChangePassword.cshtml"
+            #line 28 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
            Write(Html.PasswordFor(m => m.OldPassword));
 
             
@@ -129,7 +127,7 @@ WriteLiteral("\r\n                ");
 
 
             
-            #line 29 "\Views\Account\ChangePassword.cshtml"
+            #line 29 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
            Write(Html.ValidationMessageFor(m => m.OldPassword));
 
             
@@ -139,7 +137,7 @@ WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-labe
 
 
             
-            #line 33 "\Views\Account\ChangePassword.cshtml"
+            #line 33 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
            Write(Html.LabelFor(m => m.NewPassword));
 
             
@@ -149,7 +147,7 @@ WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">
 
 
             
-            #line 36 "\Views\Account\ChangePassword.cshtml"
+            #line 36 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
            Write(Html.PasswordFor(m => m.NewPassword));
 
             
@@ -159,7 +157,7 @@ WriteLiteral("\r\n                ");
 
 
             
-            #line 37 "\Views\Account\ChangePassword.cshtml"
+            #line 37 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
            Write(Html.ValidationMessageFor(m => m.NewPassword));
 
             
@@ -169,7 +167,7 @@ WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-labe
 
 
             
-            #line 41 "\Views\Account\ChangePassword.cshtml"
+            #line 41 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
            Write(Html.LabelFor(m => m.ConfirmPassword));
 
             
@@ -179,7 +177,7 @@ WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">
 
 
             
-            #line 44 "\Views\Account\ChangePassword.cshtml"
+            #line 44 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
            Write(Html.PasswordFor(m => m.ConfirmPassword));
 
             
@@ -189,7 +187,7 @@ WriteLiteral("\r\n                ");
 
 
             
-            #line 45 "\Views\Account\ChangePassword.cshtml"
+            #line 45 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
            Write(Html.ValidationMessageFor(m => m.ConfirmPassword));
 
             
@@ -200,7 +198,7 @@ WriteLiteral("\r\n            </div>\r\n\r\n            <p>\r\n                <
 
 
             
-            #line 53 "\Views\Account\ChangePassword.cshtml"
+            #line 53 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePassword.cshtml"
 }
 
             

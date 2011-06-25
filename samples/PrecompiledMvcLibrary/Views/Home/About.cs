@@ -27,10 +27,8 @@ namespace PrecompiledMvcLibrary.Views.Home
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Home/About.cshtml")]
-    internal class About : System.Web.Mvc.WebViewPage<dynamic>
+    public class About : System.Web.Mvc.WebViewPage<dynamic>
     {
-#line hidden
-
         public About()
         {
         }
@@ -38,7 +36,7 @@ namespace PrecompiledMvcLibrary.Views.Home
         {
 
             
-            #line 1 "\Views\Home\About.cshtml"
+            #line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Home\About.cshtml"
   
     ViewBag.Title = "About Us";
 

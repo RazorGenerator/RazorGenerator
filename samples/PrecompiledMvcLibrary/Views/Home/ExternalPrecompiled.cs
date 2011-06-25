@@ -25,7 +25,7 @@ namespace PrecompiledMvcLibrary.Views.Home
     using System.Web.UI;
     using System.Web.WebPages;
     
-    #line 1 "\Views\Home\ExternalPrecompiled.cshtml"
+    #line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
     using PrecompiledMvcLibrary.Views.Shared;
     
     #line default
@@ -33,10 +33,8 @@ namespace PrecompiledMvcLibrary.Views.Home
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Home/ExternalPrecompiled.cshtml")]
-    internal class ExternalPrecompiled : System.Web.Mvc.WebViewPage<dynamic>
+    public class ExternalPrecompiled : System.Web.Mvc.WebViewPage<dynamic>
     {
-#line hidden
-
         public ExternalPrecompiled()
         {
         }
@@ -47,7 +45,7 @@ WriteLiteral("\r\n");
 
 
             
-            #line 3 "\Views\Home\ExternalPrecompiled.cshtml"
+            #line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
   
     ViewBag.Title = "Home Page";
 
@@ -59,7 +57,7 @@ WriteLiteral("\r\n<h2>");
 
 
             
-            #line 7 "\Views\Home\ExternalPrecompiled.cshtml"
+            #line 7 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
 Write(ViewBag.Message);
 
             
@@ -71,7 +69,7 @@ WriteLiteral("</h2>\r\n<p>\r\n    To learn more about ASP.NET MVC visit <a href=
 
 
             
-            #line 16 "\Views\Home\ExternalPrecompiled.cshtml"
+            #line 16 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
 Write(Html.ObjectInfo(this));
 
             
@@ -81,7 +79,7 @@ WriteLiteral("\r\n\r\n");
 
 
             
-            #line 18 "\Views\Home\ExternalPrecompiled.cshtml"
+            #line 18 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
 Write(RenderPage("~/Views/Shared/_ViewTypes.cshtml"));
 
             

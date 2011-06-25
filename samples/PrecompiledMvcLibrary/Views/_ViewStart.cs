@@ -27,10 +27,8 @@ namespace PrecompiledMvcLibrary.Views
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/_ViewStart.cshtml")]
-    internal class _ViewStart : System.Web.Mvc.ViewStartPage
+    public class _ViewStart : System.Web.Mvc.ViewStartPage
     {
-#line hidden
-
         public _ViewStart()
         {
         }
@@ -42,7 +40,7 @@ WriteLiteral("\r\n");
 
 
             
-            #line 2 "\Views\_ViewStart.cshtml"
+            #line 2 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\_ViewStart.cshtml"
   
     Layout = "~/Views/Shared/_Layout.cshtml";
 
