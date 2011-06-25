@@ -25,7 +25,7 @@ namespace PrecompiledMvcLibrary.Views.Home
     using System.Web.UI;
     using System.Web.WebPages;
     
-    #line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
+    #line 1 "D:\Code\Codeplex\RazorGenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
     using PrecompiledMvcLibrary.Views.Shared;
     
     #line default
@@ -45,7 +45,7 @@ WriteLiteral("\r\n");
 
 
             
-            #line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
+            #line 3 "D:\Code\Codeplex\RazorGenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
   
     ViewBag.Title = "Home Page";
 
@@ -57,7 +57,7 @@ WriteLiteral("\r\n<h2>");
 
 
             
-            #line 7 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
+            #line 7 "D:\Code\Codeplex\RazorGenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
 Write(ViewBag.Message);
 
             
@@ -69,7 +69,7 @@ WriteLiteral("</h2>\r\n<p>\r\n    To learn more about ASP.NET MVC visit <a href=
 
 
             
-            #line 16 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
+            #line 16 "D:\Code\Codeplex\RazorGenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
 Write(Html.ObjectInfo(this));
 
             
@@ -79,8 +79,8 @@ WriteLiteral("\r\n\r\n");
 
 
             
-            #line 18 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
-Write(RenderPage("~/Views/Shared/_ViewTypes.cshtml"));
+            #line 18 "D:\Code\Codeplex\RazorGenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
+Write(Html.Partial("~/Views/Shared/_ViewTypes.cshtml"));
 
             
             #line default

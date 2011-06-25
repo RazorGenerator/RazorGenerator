@@ -10,3 +10,4 @@ glob:*.orig
 glob:*.suo
 glob:*.nupkg
 glob:TestResults
+glob:packages
