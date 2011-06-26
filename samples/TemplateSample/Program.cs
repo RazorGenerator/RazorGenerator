@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Linq;
 
-namespace ConsoleApplicationPreProcessedRazorTemplate {
+namespace TemplateSample {
     class Program {
         static void Main(string[] args)
         {
-            var preprocessedTemplate = new PreProcessedTemplate {
-                TestResults =
-                    from i in Enumerable.Range(0, 40)
-                    select new TestResult {
-                        Id = Guid.NewGuid(),
-                        Name = "Test" + i,
-                        Passed = i%2 == 0
-                    }
-            };
+            // Create the template
+            var preprocessedTemplate = new PreProcessedTemplate();
 
+            // Give it some input data
+            preprocessedTemplate.TestResults =
+                from i in Enumerable.Range(0, 40)
+                select new TestResult {
+                    Id = Guid.NewGuid(),
+                    Name = "Test" + i,
+                    Passed = i % 2 == 0
+                };
+
+            // Run it
             Console.WriteLine(preprocessedTemplate.TransformText());
         }
     }

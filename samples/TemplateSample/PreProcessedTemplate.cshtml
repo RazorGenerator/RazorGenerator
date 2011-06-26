@@ -1,5 +1,9 @@
 ﻿@* Generator: Template *@
 
+@functions {
+    public IEnumerable<TemplateSample.TestResult> TestResults { get; set; }
+}
+
 <?xml version="1.0" ?>
 <tests>
     @foreach (var result in TestResults) { 

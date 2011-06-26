@@ -8,8 +8,8 @@
     <ProjectGuid>{20E2F666-4B98-4176-8C6A-B58E6258537E}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConsoleApplicationPreProcessedRazorTemplate</RootNamespace>
-    <AssemblyName>ConsoleApplicationPreProcessedRazorTemplate</AssemblyName>
+    <RootNamespace>TemplateSample</RootNamespace>
+    <AssemblyName>TemplateSample</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -47,7 +47,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PreProcessedTemplate.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="PreProcessedTemplatePartial.cs" />
+    <Compile Include="TestResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

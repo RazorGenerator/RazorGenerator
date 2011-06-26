@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ConsoleApplicationPreProcessedRazorTemplate {
-    public partial class PreProcessedTemplate {
-        public IEnumerable<TestResult> TestResults { get; set; }
-    }
-
+namespace TemplateSample {
     public class TestResult {
         public Guid Id { get; set; }
 
