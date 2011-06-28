@@ -10,7 +10,7 @@ namespace RazorGenerator.Core {
     public class MvcHelperCodeTransformer : AggregateCodeTransformer {
         private const string WriteToMethodName = "WebViewPage.WriteTo";
         private const string WriteLiteralToMethodName = "WebViewPage.WriteLiteralTo";
-        private static readonly IRazorCodeTransformer[] _transformers = new IRazorCodeTransformer[] {
+        private readonly IRazorCodeTransformer[] _transformers = new IRazorCodeTransformer[] {
             new SetImports(MvcViewTransformer.MvcNamespaces, replaceExisting: false),
             new AddGeneratedClassAttribute(),
             new DirectivesBasedTransformers(),
@@ -23,8 +23,8 @@ namespace RazorGenerator.Core {
             get { return _transformers; }
         }
 
-        public override void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
-            base.Initialize(razorHost, projectRelativePath, directives);
+        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
+            base.Initialize(razorHost, directives);
             razorHost.DefaultBaseClass = String.Empty;
             
             razorHost.GeneratedClassContext = new GeneratedClassContext(

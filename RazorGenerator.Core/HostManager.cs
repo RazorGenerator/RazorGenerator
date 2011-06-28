@@ -42,7 +42,7 @@ namespace RazorGenerator.Core {
             return new RazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
         }
 
-        private IDictionary<string, string> ParseDirectives(string filePath) {
+        private static IDictionary<string, string> ParseDirectives(string filePath) {
             var inputFileContent = File.ReadAllText(filePath);
             int index = inputFileContent.IndexOf("*@", StringComparison.OrdinalIgnoreCase);
             var directives = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);

@@ -11,7 +11,7 @@ namespace RazorGenerator.Core {
             get { return _transformers; }
         }
 
-        public override void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
+        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
             if (directives.ContainsKey(TypeVisibilityKey)) {
                 _transformers.Add(new SetTypeVisibility(directives[TypeVisibilityKey]));
             }
@@ -20,7 +20,7 @@ namespace RazorGenerator.Core {
                 razorHost.EnableLinePragmas = false;
             }
 
-            base.Initialize(razorHost, projectRelativePath, directives);
+            base.Initialize(razorHost, directives);
         }
 
         private static bool? IsSwitchEnabled(IDictionary<string, string> directives, string key) {

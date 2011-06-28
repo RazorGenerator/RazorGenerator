@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace RazorGenerator.Core {
     [Export("WebPagesHelper", typeof(IRazorCodeTransformer))]
     public class WebPagesHelperTransformer : AggregateCodeTransformer {
-        private IEnumerable<IRazorCodeTransformer> _codeTransformers = new IRazorCodeTransformer[] {
+        private readonly IRazorCodeTransformer[] _codeTransformers = new IRazorCodeTransformer[] {
             new DirectivesBasedTransformers(),
             new AddGeneratedClassAttribute(),
             new SetImports(new[] { "System.Web.WebPages.Html" }, replaceExisting: false),

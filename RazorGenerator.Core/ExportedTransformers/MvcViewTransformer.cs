@@ -11,7 +11,7 @@ namespace RazorGenerator.Core {
     [Export("MvcView", typeof(IRazorCodeTransformer))]
     public class MvcViewTransformer : AggregateCodeTransformer {
         private static readonly IEnumerable<string> _namespaces = new[] { "System.Web.Mvc", "System.Web.Mvc.Html" };
-        private static readonly IRazorCodeTransformer[] _codeTransformers = new IRazorCodeTransformer[] { 
+        private readonly IRazorCodeTransformer[] _codeTransformers = new IRazorCodeTransformer[] { 
             new DirectivesBasedTransformers(),
             new AddGeneratedClassAttribute(),
             new AddPageVirtualPathAttribute(),
@@ -28,8 +28,8 @@ namespace RazorGenerator.Core {
             get { return _codeTransformers; }
         }
 
-        public override void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
-            base.Initialize(razorHost, projectRelativePath, directives);
+        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
+            base.Initialize(razorHost, directives);
          
             razorHost.CodeGenerator = new MvcCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultNamespace, razorHost.FullPath, razorHost);
             razorHost.CodeGenerator.GenerateLinePragmas = razorHost.EnableLinePragmas;

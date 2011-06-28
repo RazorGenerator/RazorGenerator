@@ -7,7 +7,7 @@ using System.IO;
 namespace RazorGenerator.Core {
     [Export("WebPage", typeof(IRazorCodeTransformer))]
     public class WebPageTransformer : AggregateCodeTransformer {
-        private static readonly IList<IRazorCodeTransformer> _transformers = new List<IRazorCodeTransformer> { 
+        private readonly List<IRazorCodeTransformer> _transformers = new List<IRazorCodeTransformer> { 
             new DirectivesBasedTransformers(),
             new AddGeneratedClassAttribute(),
             new AddPageVirtualPathAttribute(),
@@ -21,12 +21,12 @@ namespace RazorGenerator.Core {
             }
         }
 
-        public override void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
-            base.Initialize(razorHost, projectRelativePath, directives);
+        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
+            base.Initialize(razorHost, directives);
 
             // Remove the extension and replace path separator slashes with underscores
-            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(projectRelativePath);
-            var pathWithoutExtenstion = Path.Combine(Path.GetDirectoryName(projectRelativePath), fileNameWithoutExtension);
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(razorHost.ProjectRelativePath);
+            var pathWithoutExtenstion = Path.Combine(Path.GetDirectoryName(razorHost.ProjectRelativePath), fileNameWithoutExtension);
             string className = pathWithoutExtenstion.TrimStart(Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '_');
 
             // If its a PageStart page, set the base type to StartPage.

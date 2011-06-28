@@ -22,8 +22,8 @@ namespace RazorGenerator.Core {
     public class AddPageVirtualPathAttribute : RazorCodeTransformerBase {
         private string _projectRelativePath;
 
-        public override void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
-            _projectRelativePath = projectRelativePath;
+        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
+            _projectRelativePath = razorHost.ProjectRelativePath;
         }
 
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod) {
@@ -87,13 +87,13 @@ namespace RazorGenerator.Core {
             _type = type;
         }
 
-        public override void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
+        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
             razorHost.DefaultBaseClass = _type.FullName;
         }
     }
 
     public class MakeTypeHelper : RazorCodeTransformerBase {
-        public override void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
+        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
             razorHost.StaticHelpers = true;
         }
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod) {

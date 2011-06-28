@@ -8,9 +8,9 @@ namespace RazorGenerator.Core {
             get;
         }
 
-        public virtual void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
+        public virtual void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
             foreach (var transformer in CodeTransformers) {
-                transformer.Initialize(razorHost, projectRelativePath, directives);
+                transformer.Initialize(razorHost, directives);
             }
         }
 

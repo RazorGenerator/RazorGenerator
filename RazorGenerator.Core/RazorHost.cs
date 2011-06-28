@@ -104,7 +104,7 @@ namespace RazorGenerator.Core {
         public bool EnableLinePragmas { get; set; }
 
         public string GenerateCode() {
-            _codeTransformer.Initialize(this, _baseRelativePath, _directives);
+            _codeTransformer.Initialize(this, _directives);
 
             // Create the engine
             RazorTemplateEngine engine = new RazorTemplateEngine(this);

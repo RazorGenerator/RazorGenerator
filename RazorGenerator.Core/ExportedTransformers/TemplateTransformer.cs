@@ -15,7 +15,7 @@ namespace RazorGenerator.Core {
             "System.Linq",
             "System.Text"
         };
-        private static readonly IEnumerable<IRazorCodeTransformer> _codeTransforms = new IRazorCodeTransformer[] {
+        private readonly IRazorCodeTransformer[] _codeTransforms = new IRazorCodeTransformer[] {
             new SetImports(_defaultImports),
             new AddGeneratedClassAttribute(),
         };
@@ -24,8 +24,8 @@ namespace RazorGenerator.Core {
             get { return _codeTransforms; }
         }
 
-        public override void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
-            base.Initialize(razorHost, projectRelativePath, directives);
+        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
+            base.Initialize(razorHost, directives);
             razorHost.DefaultBaseClass = razorHost.DefaultClassName + "Base";
         }
 

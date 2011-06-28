@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RazorGenerator.Core {
     public class RazorCodeTransformerBase : IRazorCodeTransformer {
-        public virtual void Initialize(RazorHost razorHost, string projectRelativePath, IDictionary<string, string> directives) {
+        public virtual void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
             // do nothing
         }
 
