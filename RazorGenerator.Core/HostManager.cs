@@ -32,8 +32,9 @@ namespace RazorGenerator.Core {
         }
 
         public RazorHost CreateHost(string fullPath, string projectRelativePath) {
-            var codeDomProvider = new CSharpCodeProvider();
-            return CreateHost(fullPath, projectRelativePath, codeDomProvider);
+            using (var codeDomProvider = new CSharpCodeProvider()) {
+                return CreateHost(fullPath, projectRelativePath, codeDomProvider);
+            }
         }
 
         public RazorHost CreateHost(string fullPath, string projectRelativePath, CodeDomProvider codeDomProvider) {
@@ -100,7 +101,6 @@ namespace RazorGenerator.Core {
 
             var container = new CompositionContainer(catalog);
             container.ComposeParts();
-
             return container;
         }
 

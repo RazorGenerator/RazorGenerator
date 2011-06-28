@@ -54,10 +54,10 @@ namespace RazorGenerator.Core {
             _fullPath = fullPath;
             _codeDomProvider = codeDomProvider;
             _directives = directives;
-            DefaultNamespace = "ASP";
+            base.DefaultNamespace = "ASP";
             EnableLinePragmas = true;
 
-            GeneratedClassContext = new GeneratedClassContext(
+            base.GeneratedClassContext = new GeneratedClassContext(
                     executeMethodName: GeneratedClassContext.DefaultExecuteMethodName,
                     writeMethodName: GeneratedClassContext.DefaultWriteMethodName,
                     writeLiteralMethodName: GeneratedClassContext.DefaultWriteLiteralMethodName,
@@ -67,9 +67,9 @@ namespace RazorGenerator.Core {
                     defineSectionMethodName: "DefineSection"
             );
 
-            DefaultBaseClass = typeof(WebPage).FullName;
+            base.DefaultBaseClass = typeof(WebPage).FullName;
             foreach (var import in _defaultImports) {
-                NamespaceImports.Add(import);
+                base.NamespaceImports.Add(import);
             }
         }
 
@@ -112,9 +112,11 @@ namespace RazorGenerator.Core {
             // Generate code 
             GeneratorResults results = null;
             try {
-                using (TextReader reader = new StreamReader(File.OpenRead(_fullPath))) {
+                Stream stream = File.OpenRead(_fullPath);
+                using (var reader = new StreamReader(stream)) {
                     results = engine.GenerateCode(reader, className: DefaultClassName, rootNamespace: DefaultNamespace, sourceFileName: _fullPath);
                 }
+                
             }
             catch (Exception e) {
                 OnGenerateError(4, e.ToString(), 1, 1);

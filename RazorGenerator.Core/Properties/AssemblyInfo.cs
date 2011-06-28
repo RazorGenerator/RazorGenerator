@@ -5,7 +5,6 @@ using System.Security;
 
 [assembly: AssemblyTitle("RazorGenerator.Core")]
 [assembly: ComVisible(false)]
-[assembly: SecurityTransparent]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: AssemblyProduct("RazorGenerator")]
