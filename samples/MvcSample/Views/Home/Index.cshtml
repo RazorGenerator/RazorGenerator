@@ -14,3 +14,6 @@
 
 <h3>Precompiled view sample: </h3>
 @RenderPage("~/Views/Shared/_ViewTypes.cshtml")
+
+<h3>Pluggable area</h3>
+@Html.ActionLink("Pluggable area", "Index", "Foo", new { area = "MyPluggableArea" }, null) 

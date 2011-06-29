@@ -46,11 +46,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\MyPluggableArea\Views\Foo\Index.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>Index.cs</LastGenOutput>
+    </Content>
+    <Content Include="Areas\MyPluggableArea\Views\Web.config" />
     <None Include="Helpers\ListHelper.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ListHelper.cs</LastGenOutput>
       <CustomToolNamespace>ASP</CustomToolNamespace>
     </None>
+    <Compile Include="Areas\MyPluggableArea\Controllers\FooController.cs" />
+    <Compile Include="Areas\MyPluggableArea\MyAreaAreaRegistration.cs" />
+    <Compile Include="Areas\MyPluggableArea\Views\Foo\Index.cs">
+      <DependentUpon>Index.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Helpers\ListHelper.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -189,6 +201,7 @@
       <Name>PrecompiledMvcViewEngine</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
