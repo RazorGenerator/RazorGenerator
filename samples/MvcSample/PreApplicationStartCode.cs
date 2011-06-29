@@ -14,7 +14,7 @@ namespace MvcSample {
 
             var engine = new PrecompiledMvcEngine(typeof(MvcSample.PreApplicationStartCode).Assembly);
 
-            ViewEngines.Engines.Add(engine);
+            ViewEngines.Engines.Insert(0, engine);
 
             // StartPage lookups are done by WebPages. 
             VirtualPathFactoryManager.RegisterVirtualPathFactory(engine);
