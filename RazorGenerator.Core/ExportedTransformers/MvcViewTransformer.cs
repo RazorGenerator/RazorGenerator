@@ -10,7 +10,12 @@ using System.Web.Razor;
 namespace RazorGenerator.Core {
     [Export("MvcView", typeof(IRazorCodeTransformer))]
     public class MvcViewTransformer : AggregateCodeTransformer {
-        private static readonly IEnumerable<string> _namespaces = new[] { "System.Web.Mvc", "System.Web.Mvc.Html" };
+        private static readonly IEnumerable<string> _namespaces = new[] { 
+            "System.Web.Mvc", 
+            "System.Web.Mvc.Html",
+            "System.Web.Mvc.Ajax",
+            "System.Web.Routing",
+        };
         private readonly IRazorCodeTransformer[] _codeTransformers = new IRazorCodeTransformer[] { 
             new DirectivesBasedTransformers(),
             new AddGeneratedClassAttribute(),
