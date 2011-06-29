@@ -3,18 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{1B1EA4C3-DE93-437E-AE87-31F1D9312435}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Core", "RazorGenerator.Core\RazorGenerator.Core.csproj", "{AF040852-112F-494D-B1D0-B50888928DB6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Core.Test", "RazorGenerator.Core.Test\RazorGenerator.Core.Test.csproj", "{31008D4B-EF1A-43B9-8908-B35818324FFC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Tooling", "RazorGenerator.Tooling\RazorGenerator.Tooling.csproj", "{461089E7-008E-4737-BA17-E1FCD1CC3D0E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.MsBuild", "RazorGenerator.MsBuild\RazorGenerator.MsBuild.csproj", "{A229A158-CFD5-4D05-945D-A3192F5C895B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateSample", "samples\TemplateSample\TemplateSample.csproj", "{20E2F666-4B98-4176-8C6A-B58E6258537E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A229A158-CFD5-4D05-945D-A3192F5C895B} = {A229A158-CFD5-4D05-945D-A3192F5C895B}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrecompiledMvcLibrary", "samples\PrecompiledMvcLibrary\PrecompiledMvcLibrary.csproj", "{7737AB96-07CC-4940-A298-E949EC4B9EAA}"
 EndProject
@@ -22,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrecompiledMvcViewEngine", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcSample", "samples\MvcSample\MvcSample.csproj", "{B451EEF4-D35B-4D1D-96B5-0ED6057CCF07}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebPagesSample", "samples\WebPagesSample", "{C7FD3E94-FBF9-4F4A-A326-DE76108C3C77}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebPagesSample", "samples\WebPagesSample\", "{C7FD3E94-FBF9-4F4A-A326-DE76108C3C77}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		ProjectReferences = "{6F63B0CA-5614-43BB-86CE-D39F10DED1DF}|PrecompiledWebPagesHelper.dll;"
@@ -58,13 +47,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02862DB9-C9C5-45A1-BED9-4FDC9AF34795}"
 	ProjectSection(SolutionItems) = preProject
 		Local.testsettings = Local.testsettings
-		RazorGenerator.vsmdi = RazorGenerator.vsmdi
+		RazorGenerator.Runtime.vsmdi = RazorGenerator.Runtime.vsmdi
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = RazorGenerator.vsmdi
+		CategoryFile = RazorGenerator.Runtime.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,46 +64,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AF040852-112F-494D-B1D0-B50888928DB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF040852-112F-494D-B1D0-B50888928DB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF040852-112F-494D-B1D0-B50888928DB6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{AF040852-112F-494D-B1D0-B50888928DB6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{AF040852-112F-494D-B1D0-B50888928DB6}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AF040852-112F-494D-B1D0-B50888928DB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF040852-112F-494D-B1D0-B50888928DB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF040852-112F-494D-B1D0-B50888928DB6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{AF040852-112F-494D-B1D0-B50888928DB6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{AF040852-112F-494D-B1D0-B50888928DB6}.Release|x86.ActiveCfg = Release|Any CPU
-		{31008D4B-EF1A-43B9-8908-B35818324FFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31008D4B-EF1A-43B9-8908-B35818324FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31008D4B-EF1A-43B9-8908-B35818324FFC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{31008D4B-EF1A-43B9-8908-B35818324FFC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{31008D4B-EF1A-43B9-8908-B35818324FFC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{31008D4B-EF1A-43B9-8908-B35818324FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31008D4B-EF1A-43B9-8908-B35818324FFC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{31008D4B-EF1A-43B9-8908-B35818324FFC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{31008D4B-EF1A-43B9-8908-B35818324FFC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{31008D4B-EF1A-43B9-8908-B35818324FFC}.Release|x86.ActiveCfg = Release|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{461089E7-008E-4737-BA17-E1FCD1CC3D0E}.Release|x86.ActiveCfg = Release|Any CPU
-		{A229A158-CFD5-4D05-945D-A3192F5C895B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A229A158-CFD5-4D05-945D-A3192F5C895B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A229A158-CFD5-4D05-945D-A3192F5C895B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{A229A158-CFD5-4D05-945D-A3192F5C895B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{A229A158-CFD5-4D05-945D-A3192F5C895B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A229A158-CFD5-4D05-945D-A3192F5C895B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A229A158-CFD5-4D05-945D-A3192F5C895B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A229A158-CFD5-4D05-945D-A3192F5C895B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{A229A158-CFD5-4D05-945D-A3192F5C895B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A229A158-CFD5-4D05-945D-A3192F5C895B}.Release|x86.ActiveCfg = Release|Any CPU
 		{20E2F666-4B98-4176-8C6A-B58E6258537E}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{20E2F666-4B98-4176-8C6A-B58E6258537E}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{20E2F666-4B98-4176-8C6A-B58E6258537E}.Debug|Mixed Platforms.Build.0 = Debug|x86
