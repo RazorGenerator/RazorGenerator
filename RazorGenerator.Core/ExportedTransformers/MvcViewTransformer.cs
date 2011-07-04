@@ -23,6 +23,7 @@ namespace RazorGenerator.Core {
             new SetImports(_namespaces, replaceExisting: false),
             new SetBaseType(typeof(WebViewPage)),
             new RemoveLineHiddenPragmas(),
+            new AddWebConfigNamespaces(),
         };
 
         internal static IEnumerable<string> MvcNamespaces {

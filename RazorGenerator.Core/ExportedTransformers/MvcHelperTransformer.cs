@@ -7,7 +7,7 @@ using System.Web.Razor.Generator;
 
 namespace RazorGenerator.Core {
     [Export("MvcHelper", typeof(IRazorCodeTransformer))]
-    public class MvcHelperCodeTransformer : AggregateCodeTransformer {
+    public class MvcHelperTransformer : AggregateCodeTransformer {
         private const string WriteToMethodName = "WebViewPage.WriteTo";
         private const string WriteLiteralToMethodName = "WebViewPage.WriteLiteralTo";
         private readonly IRazorCodeTransformer[] _transformers = new IRazorCodeTransformer[] {
@@ -17,6 +17,7 @@ namespace RazorGenerator.Core {
             new MakeTypeStatic(),
             new MakeTypeHelper(),
             new RemoveLineHiddenPragmas(),
+            new AddWebConfigNamespaces(),
         };
 
         protected override IEnumerable<IRazorCodeTransformer> CodeTransformers {

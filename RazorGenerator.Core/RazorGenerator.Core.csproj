@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -46,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeTransformers\AddWebConfigNamespaces.cs" />
     <Compile Include="CodeTransformers\DefaultCodeTransformers.cs" />
     <Compile Include="CodeTransformers\DirectivesBasedTransformers.cs" />
     <Compile Include="CodeTransformers\RemoveLineHiddenPragmas.cs" />
