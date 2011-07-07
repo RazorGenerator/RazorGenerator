@@ -52,6 +52,7 @@
     <Compile Include="CodeTransformers\DirectivesBasedTransformers.cs" />
     <Compile Include="CodeTransformers\RemoveLineHiddenPragmas.cs" />
     <Compile Include="CodeTransformers\SetTypeVisibility.cs" />
+    <Compile Include="DirectivesParser.cs" />
     <Compile Include="EventArgs.cs" />
     <Compile Include="ICodeGenerationEventProvider.cs" />
     <Compile Include="IRazorCodeTransformer.cs" />

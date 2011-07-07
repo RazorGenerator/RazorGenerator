@@ -38,28 +38,9 @@ namespace RazorGenerator.Core {
         }
 
         public RazorHost CreateHost(string fullPath, string projectRelativePath, CodeDomProvider codeDomProvider) {
-            var directives = ParseDirectives(fullPath);
+            var directives = DirectivesParser.ParseDirectives(_baseDirectory, fullPath);
             var codeTransformer = GetRazorCodeTransformer(projectRelativePath, directives);
             return new RazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
-        }
-
-        private static IDictionary<string, string> ParseDirectives(string filePath) {
-            var inputFileContent = File.ReadAllText(filePath);
-            int index = inputFileContent.IndexOf("*@", StringComparison.OrdinalIgnoreCase);
-            var directives = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-            if (inputFileContent.TrimStart().StartsWith("@*") && index != -1) {
-                string directivesLine = inputFileContent.Substring(0, index).TrimStart('*', '@');
-
-                var regex = new Regex(@"\b(?<Key>\w+)\s*:\s*(?<Value>\w+)\b");
-                foreach (Match item in regex.Matches(directivesLine)) {
-                    var key = item.Groups["Key"].Value;
-                    var value = item.Groups["Value"].Value;
-
-                    directives.Add(key, value);
-                }
-            }
-            return directives;
         }
 
         private IRazorCodeTransformer GetRazorCodeTransformer(string projectRelativePath, IDictionary<string, string> directives) {
