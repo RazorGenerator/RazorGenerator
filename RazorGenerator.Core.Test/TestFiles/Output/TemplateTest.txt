@@ -83,8 +83,6 @@ WriteLiteral("</test>\r\n");
     public class TemplateTestBase
     {
         private System.Text.StringBuilder _generatingEnvironment = new System.Text.StringBuilder();
-        private System.Text.StringBuilder _currentIndent = new System.Text.StringBuilder();
-        private bool _endsWithNewline;
         protected System.Text.StringBuilder GenerationEnvironment
         {
             get
@@ -96,55 +94,16 @@ WriteLiteral("</test>\r\n");
                 this._generatingEnvironment = value;
             }
         }
-        public virtual System.Text.StringBuilder CurrentIndent
-        {
-            get
-            {
-                return this._currentIndent;
-            }
-            set
-            {
-                this._currentIndent = value;
-            }
-        }
         public virtual void Execute()
         {
         }
         public void WriteLiteral(string textToAppend)
         {
             
-        if (string.IsNullOrEmpty(textToAppend)) {
-            return;
+        if (String.IsNullOrEmpty(textToAppend)) {
+            return; 
         }
-        // If we're starting off, or if the previous text ended with a newline,
-        // we have to append the current indent first.
-        if (((this.GenerationEnvironment.Length == 0)
-                    || this._endsWithNewline)) {
-            this.GenerationEnvironment.Append(this._currentIndent);
-            this._endsWithNewline = false;
-        }
-        // Check if the current text ends with a newline
-        if (textToAppend.EndsWith(global::System.Environment.NewLine, global::System.StringComparison.CurrentCulture)) {
-            this._endsWithNewline = true;
-        }
-        // This is an optimization. If the current indent is ", then we don't have to do any
-        // of the more complex stuff further down.
-        if ((this._currentIndent.Length == 0)) {
-            this.GenerationEnvironment.Append(textToAppend);
-            return;
-        }
-        // Everywhere there is a newline in the text, add an indent after it
-        textToAppend = textToAppend.Replace(global::System.Environment.NewLine, (global::System.Environment.NewLine + this._currentIndent));
-        // If the text ends with a newline, then we should strip off the indent added at the very end
-        // because the appropriate indent will be added when the next time Write() is called
-        if (this._endsWithNewline) {
-            this.GenerationEnvironment.Append(textToAppend, 0, (textToAppend.Length - this._currentIndent.Length));
-        }
-        else {
-            this.GenerationEnvironment.Append(textToAppend);
-        }
-
-            ;
+        this.GenerationEnvironment.Append(textToAppend);;
         }
         public void Write(object value)
         {

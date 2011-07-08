@@ -70,8 +70,6 @@ namespace RazorGenerator.Core {
 
             ProvideExecuteMethod(baseType);
             ProvideGenerationEnvironmentProperty(baseType);
-            ProvideCurrentIndentProperty(baseType);
-            ProvideEndsWithNewLineField(baseType);
             ProvideWriteLiteralMethod(baseType);
             ProvideWriteMethod(baseType);
             return baseType;
@@ -108,40 +106,6 @@ namespace RazorGenerator.Core {
             property.SetStatements.Add(new CodeAssignStatement(fieldReference, new CodePropertySetValueReferenceExpression()));
 
             baseType.Members.Add(property);
-        }
-
-        private static void ProvideCurrentIndentProperty(CodeTypeDeclaration baseType) {
-            var builderType = new CodeTypeReference(typeof(StringBuilder));
-            var backingField = new CodeMemberField {
-                Type = builderType,
-                Name = "_currentIndent",
-                Attributes = MemberAttributes.Private,
-                InitExpression = new CodeObjectCreateExpression(builderType)
-            };
-
-            baseType.Members.Add(backingField);
-
-            var property = new CodeMemberProperty {
-                Name = "CurrentIndent",
-                Type = builderType,
-                Attributes = MemberAttributes.Public,
-            };
-
-            var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "_currentIndent");
-            property.GetStatements.Add(new CodeMethodReturnStatement(fieldReference));
-            property.SetStatements.Add(new CodeAssignStatement(fieldReference, new CodePropertySetValueReferenceExpression()));
-
-            baseType.Members.Add(property);
-        }
-
-        private static void ProvideEndsWithNewLineField(CodeTypeDeclaration baseType) {
-            var field = new CodeMemberField {
-                Type = new CodeTypeReference(typeof(bool)),
-                Name = "_endsWithNewline",
-                Attributes = MemberAttributes.Private
-            };
-
-            baseType.Members.Add(field);
         }
 
         // The body of the following two methods were stolen from T4 templates
@@ -182,38 +146,10 @@ namespace RazorGenerator.Core {
 
 
             method.Statements.Add(new CodeSnippetExpression(@"
-        if (string.IsNullOrEmpty(textToAppend)) {
-            return;
+        if (String.IsNullOrEmpty(textToAppend)) {
+            return; 
         }
-        // If we're starting off, or if the previous text ended with a newline,
-        // we have to append the current indent first.
-        if (((this.GenerationEnvironment.Length == 0)
-                    || this._endsWithNewline)) {
-            this.GenerationEnvironment.Append(this._currentIndent);
-            this._endsWithNewline = false;
-        }
-        // Check if the current text ends with a newline
-        if (textToAppend.EndsWith(global::System.Environment.NewLine, global::System.StringComparison.CurrentCulture)) {
-            this._endsWithNewline = true;
-        }
-        // This is an optimization. If the current indent is "", then we don't have to do any
-        // of the more complex stuff further down.
-        if ((this._currentIndent.Length == 0)) {
-            this.GenerationEnvironment.Append(textToAppend);
-            return;
-        }
-        // Everywhere there is a newline in the text, add an indent after it
-        textToAppend = textToAppend.Replace(global::System.Environment.NewLine, (global::System.Environment.NewLine + this._currentIndent));
-        // If the text ends with a newline, then we should strip off the indent added at the very end
-        // because the appropriate indent will be added when the next time Write() is called
-        if (this._endsWithNewline) {
-            this.GenerationEnvironment.Append(textToAppend, 0, (textToAppend.Length - this._currentIndent.Length));
-        }
-        else {
-            this.GenerationEnvironment.Append(textToAppend);
-        }
-
-            "));
+        this.GenerationEnvironment.Append(textToAppend);"));
 
             baseType.Members.Add(method);
         }
