@@ -40,17 +40,23 @@ namespace RazorGenerator.Core {
         private readonly IEnumerable<string> _imports;
         private readonly bool _replaceExisting;
 
-        public SetImports(IEnumerable<string> imports, bool replaceExisting = true) {
+        public SetImports(IEnumerable<string> imports, bool replaceExisting = false) {
             _imports = imports;
             _replaceExisting = replaceExisting;
         }
 
-        public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod) {
-            var imports = new List<CodeNamespaceImport>();
-            if (!_replaceExisting) {
-                imports.AddRange(generatedNamespace.Imports.Cast<CodeNamespaceImport>());
+        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
+            if (_replaceExisting) {
+                razorHost.NamespaceImports.Clear();
             }
-            imports.AddRange(_imports.Select(n => new CodeNamespaceImport(n)));
+            foreach(var import in _imports) {
+                razorHost.NamespaceImports.Add(import);
+            }
+        }
+
+        public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod) {
+            // Sort imports.
+            var imports = new List<CodeNamespaceImport>(generatedNamespace.Imports.OfType<CodeNamespaceImport>());
             generatedNamespace.Imports.Clear();
             generatedNamespace.Imports.AddRange(imports.OrderBy(c => c.Namespace, NamespaceComparer.Instance).ToArray());
         }

@@ -27,7 +27,7 @@ namespace RazorGenerator.Core.Test
     using System.Web.UI;
     using System.Web.WebPages;
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "v.v.v.v")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/MvcViewTest.cshtml")]
     public class MvcViewTest : System.Web.Mvc.WebViewPage<dynamic>
     {

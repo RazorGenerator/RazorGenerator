@@ -25,7 +25,7 @@ namespace RazorGenerator.Core.Test
     using System.Web.WebPages.Html;
     using Resources;
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "v.v.v.v")]
     public class WebPageHelperTest : System.Web.WebPages.HelperPage
     {
 

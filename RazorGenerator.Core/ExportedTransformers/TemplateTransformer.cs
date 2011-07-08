@@ -16,8 +16,9 @@ namespace RazorGenerator.Core {
             "System.Text"
         };
         private readonly IRazorCodeTransformer[] _codeTransforms = new IRazorCodeTransformer[] {
-            new SetImports(_defaultImports),
+            new SetImports(_defaultImports, replaceExisting: true),
             new AddGeneratedClassAttribute(),
+            new DirectivesBasedTransformers(),
         };
 
         protected override IEnumerable<IRazorCodeTransformer> CodeTransformers {

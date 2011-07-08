@@ -13,10 +13,11 @@ namespace RazorGenerator.Core.Test
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "v.v.v.v")]
     public partial class TemplateTest : TemplateTestBase
     {
 #line hidden
@@ -25,7 +26,10 @@ namespace RazorGenerator.Core.Test
         {
 
 
-WriteLiteral("\r\n\r\n<?xml version=\"1.0\" ?>\r\n<tests>\r\n");
+WriteLiteral("\r\n\r\n");
+
+
+WriteLiteral("\r\n<?xml version=\"1.0\" ?>\r\n<tests>\r\n");
 
 
      foreach (var result in TestResults) { 
