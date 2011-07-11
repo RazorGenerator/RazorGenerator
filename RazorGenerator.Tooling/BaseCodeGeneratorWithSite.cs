@@ -126,7 +126,7 @@ namespace RazorGenerator {
             Debug.Assert(codeDom != null, "CodeDomProvider is NULL.");
             string extension = codeDom.FileExtension;
             if (extension != null && extension.Length > 0) {
-                extension = ".Generated." + extension.TrimStart(".".ToCharArray());
+                extension = ".generated." + extension.TrimStart(".".ToCharArray());
             }
             return extension;
         }
