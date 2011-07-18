@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Web.Compilation;
 using System.Web.Mvc;
 using System.Web.WebPages;
 
@@ -64,6 +65,13 @@ namespace PrecompiledMvcViewEngine {
                          ).ToDictionary(t => t.Key, t => t.Value, StringComparer.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Determines if IVirtualPathFactory lookups returns files from assembly regardless of whether physical files are available for the virtual path.
+        /// </summary>
+        public bool PreemptPhysicalFiles {
+            get; set;
+        }
+
         protected override bool FileExists(ControllerContext controllerContext, string virtualPath) {
             return Exists(virtualPath);
         }
@@ -86,6 +94,11 @@ namespace PrecompiledMvcViewEngine {
 
         public object CreateInstance(string virtualPath) {
             Type type;
+
+            if (!PreemptPhysicalFiles && VirtualPathProvider.FileExists(virtualPath)) {
+                // If we aren't pre-empting physical files, use the BuildManager to create _ViewStart instances if the file exists on disk. 
+                return BuildManager.CreateInstanceFromVirtualPath(virtualPath, typeof(WebPageRenderingBase));
+            }
             if (_mappings.TryGetValue(virtualPath, out type)) {
                 return Activator.CreateInstance(type);
             }
