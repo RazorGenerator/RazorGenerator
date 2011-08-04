@@ -8,6 +8,7 @@ using System.Web.Razor.Generator;
 using System.Web.Razor.Parser;
 using System.Web.Razor.Parser.SyntaxTree;
 using System.Web.WebPages;
+using System.Text;
 
 namespace RazorGenerator.Core {
     public class RazorHost : RazorEngineHost, ICodeGenerationEventProvider {
@@ -113,10 +114,9 @@ namespace RazorGenerator.Core {
             GeneratorResults results = null;
             try {
                 Stream stream = File.OpenRead(_fullPath);
-                using (var reader = new StreamReader(stream)) {
+                using (var reader = new StreamReader(stream, Encoding.Default, detectEncodingFromByteOrderMarks: true)) {
                     results = engine.GenerateCode(reader, className: DefaultClassName, rootNamespace: DefaultNamespace, sourceFileName: _fullPath);
                 }
-                
             }
             catch (Exception e) {
                 OnGenerateError(4, e.ToString(), 1, 1);
