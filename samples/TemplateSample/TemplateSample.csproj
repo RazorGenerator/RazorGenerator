@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PreProcessedTemplate.cs">
+    <Compile Include="PreProcessedTemplate.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PreProcessedTemplate.cshtml</DependentUpon>
@@ -53,8 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PreProcessedTemplate.cshtml">
-      <LastGenOutput>PreProcessedTemplate.cs</LastGenOutput>
       <Generator>RazorGenerator</Generator>
+      <LastGenOutput>PreProcessedTemplate.generated.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

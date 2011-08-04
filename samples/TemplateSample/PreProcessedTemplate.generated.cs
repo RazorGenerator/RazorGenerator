@@ -16,12 +16,12 @@ namespace TemplateSample
     using System.Linq;
     using System.Text;
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.1.0.0")]
     public partial class PreProcessedTemplate : PreProcessedTemplateBase
     {
 #line hidden
 
-        #line 3 "D:\Code\Codeplex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+        #line 3 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
 
     public IEnumerable<TemplateSample.TestResult> TestResults { get; set; }
 
@@ -39,7 +39,7 @@ WriteLiteral("\r\n\r\n<?xml version=\"1.0\" ?>\r\n<tests>\r\n");
 
 
             
-            #line 9 "D:\Code\Codeplex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 9 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
      foreach (var result in TestResults) { 
 
             
@@ -49,7 +49,7 @@ WriteLiteral("        <test id=\"");
 
 
             
-            #line 10 "D:\Code\Codeplex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 10 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
              Write(result.Id);
 
             
@@ -59,7 +59,7 @@ WriteLiteral("\">\r\n            <name>");
 
 
             
-            #line 11 "D:\Code\Codeplex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 11 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
              Write(result.Name);
 
             
@@ -69,7 +69,7 @@ WriteLiteral("</name>\r\n            <result>\r\n");
 
 
             
-            #line 13 "D:\Code\Codeplex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 13 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
              if(result.Passed) {
 
             
@@ -81,7 +81,7 @@ WriteLiteral(" Success\r\n");
 
 
             
-            #line 15 "D:\Code\Codeplex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 15 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
             }
             else{
 
@@ -94,7 +94,7 @@ WriteLiteral(" Failed\r\n");
 
 
             
-            #line 18 "D:\Code\Codeplex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 18 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
             }
 
             
@@ -104,7 +104,7 @@ WriteLiteral("            </result>\r\n        </test>\r\n");
 
 
             
-            #line 21 "D:\Code\Codeplex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 21 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
     }
 
             
@@ -124,8 +124,6 @@ WriteLiteral("</test>\r\n");
     public class PreProcessedTemplateBase
     {
         private System.Text.StringBuilder _generatingEnvironment = new System.Text.StringBuilder();
-        private System.Text.StringBuilder _currentIndent = new System.Text.StringBuilder();
-        private bool _endsWithNewline;
         protected System.Text.StringBuilder GenerationEnvironment
         {
             get
@@ -137,64 +135,25 @@ WriteLiteral("</test>\r\n");
                 this._generatingEnvironment = value;
             }
         }
-        public virtual System.Text.StringBuilder CurrentIndent
-        {
-            get
-            {
-                return this._currentIndent;
-            }
-            set
-            {
-                this._currentIndent = value;
-            }
-        }
         public virtual void Execute()
         {
         }
         public void WriteLiteral(string textToAppend)
         {
             
-        if (string.IsNullOrEmpty(textToAppend)) {
-            return;
+        if (String.IsNullOrEmpty(textToAppend)) {
+            return; 
         }
-        // If we're starting off, or if the previous text ended with a newline,
-        // we have to append the current indent first.
-        if (((this.GenerationEnvironment.Length == 0)
-                    || this._endsWithNewline)) {
-            this.GenerationEnvironment.Append(this._currentIndent);
-            this._endsWithNewline = false;
-        }
-        // Check if the current text ends with a newline
-        if (textToAppend.EndsWith(global::System.Environment.NewLine, global::System.StringComparison.CurrentCulture)) {
-            this._endsWithNewline = true;
-        }
-        // This is an optimization. If the current indent is ", then we don't have to do any
-        // of the more complex stuff further down.
-        if ((this._currentIndent.Length == 0)) {
-            this.GenerationEnvironment.Append(textToAppend);
-            return;
-        }
-        // Everywhere there is a newline in the text, add an indent after it
-        textToAppend = textToAppend.Replace(global::System.Environment.NewLine, (global::System.Environment.NewLine + this._currentIndent));
-        // If the text ends with a newline, then we should strip off the indent added at the very end
-        // because the appropriate indent will be added when the next time Write() is called
-        if (this._endsWithNewline) {
-            this.GenerationEnvironment.Append(textToAppend, 0, (textToAppend.Length - this._currentIndent.Length));
-        }
-        else {
-            this.GenerationEnvironment.Append(textToAppend);
-        }
-
-            ;
+        this.GenerationEnvironment.Append(textToAppend);;
         }
         public void Write(object value)
         {
 
-                string stringValue;
                 if ((value == null))
                 {
-                    throw new global::System.ArgumentNullException("value");
+                    return;
                 }
+                string stringValue;
                 System.Type t = value.GetType();
                 System.Reflection.MethodInfo method = t.GetMethod("ToString", new System.Type[] {
                             typeof(System.IFormatProvider)});

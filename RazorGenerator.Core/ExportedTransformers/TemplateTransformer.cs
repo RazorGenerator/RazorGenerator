@@ -117,11 +117,11 @@ namespace RazorGenerator.Core {
             method.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(object)), "value"));
 
             method.Statements.Add(new CodeSnippetStatement(@"
-                string stringValue;
                 if ((value == null))
                 {
-                    throw new global::System.ArgumentNullException(""value"");
+                    return;
                 }
+                string stringValue;
                 System.Type t = value.GetType();
                 System.Reflection.MethodInfo method = t.GetMethod(""ToString"", new System.Type[] {
                             typeof(System.IFormatProvider)});
