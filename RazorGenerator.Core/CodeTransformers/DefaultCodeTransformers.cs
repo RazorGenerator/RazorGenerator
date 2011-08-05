@@ -88,13 +88,17 @@ namespace RazorGenerator.Core {
     }
 
     public class SetBaseType : RazorCodeTransformerBase {
-        private readonly Type _type;
-        public SetBaseType(Type type) {
-            _type = type;
+        private readonly string _typeName;
+        public SetBaseType(string typeName) {
+            _typeName = typeName;
+        }
+
+        public SetBaseType(Type type)
+            : this(type.FullName) {
         }
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
-            razorHost.DefaultBaseClass = _type.FullName;
+            razorHost.DefaultBaseClass = _typeName;
         }
     }
 

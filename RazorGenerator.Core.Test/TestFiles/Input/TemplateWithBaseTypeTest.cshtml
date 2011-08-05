@@ -1,0 +1,21 @@
+﻿@* Generator: Template *@
+
+@inherits CustomType
+@using System.Globalization
+
+<?xml version="1.0" ?>
+<tests>
+    @foreach (var result in TestResults) { 
+        <test id="@result.Id">
+            <name>@result.Name</name>
+            <result>
+            @if (result.Passed) {
+                @: Success
+            }
+            else {
+                @: Failed
+            }
+            </result>
+        </test>
+    }
+</test>
