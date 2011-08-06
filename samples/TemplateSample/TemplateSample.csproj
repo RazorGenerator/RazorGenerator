@@ -42,11 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ANSIFileWithExtendedCharacters.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ANSIFileWithExtendedCharacters.cshtml</DependentUpon>
-    </Compile>
     <Compile Include="PreProcessedTemplate.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -57,10 +52,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ANSIFileWithExtendedCharacters.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ANSIFileWithExtendedCharacters.generated.cs</LastGenOutput>
-    </None>
     <None Include="PreProcessedTemplate.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>PreProcessedTemplate.generated.cs</LastGenOutput>
