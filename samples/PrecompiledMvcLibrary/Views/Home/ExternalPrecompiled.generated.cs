@@ -20,7 +20,9 @@ namespace PrecompiledMvcLibrary.Views.Home
     using System.Web;
     using System.Web.Helpers;
     using System.Web.Mvc;
+    using System.Web.Mvc.Ajax;
     using System.Web.Mvc.Html;
+    using System.Web.Routing;
     using System.Web.Security;
     using System.Web.UI;
     using System.Web.WebPages;
@@ -31,7 +33,7 @@ namespace PrecompiledMvcLibrary.Views.Home
     #line default
     #line hidden
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.1.2.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Home/ExternalPrecompiled.cshtml")]
     public class ExternalPrecompiled : System.Web.Mvc.WebViewPage<dynamic>
     {
@@ -48,6 +50,7 @@ WriteLiteral("\r\n");
             #line 3 "D:\Code\Codeplex\RazorGenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
   
     ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
 
             
@@ -57,7 +60,7 @@ WriteLiteral("\r\n<h2>");
 
 
             
-            #line 7 "D:\Code\Codeplex\RazorGenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
+            #line 8 "D:\Code\Codeplex\RazorGenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
 Write(ViewBag.Message);
 
             
@@ -69,7 +72,7 @@ WriteLiteral("</h2>\r\n<p>\r\n    To learn more about ASP.NET MVC visit <a href=
 
 
             
-            #line 16 "D:\Code\Codeplex\RazorGenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
+            #line 17 "D:\Code\Codeplex\RazorGenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
 Write(Html.ObjectInfo(this));
 
             
@@ -79,7 +82,7 @@ WriteLiteral("\r\n\r\n");
 
 
             
-            #line 18 "D:\Code\Codeplex\RazorGenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
+            #line 19 "D:\Code\Codeplex\RazorGenerator\samples\PrecompiledMvcLibrary\Views\Home\ExternalPrecompiled.cshtml"
 Write(Html.Partial("~/Views/Shared/_ViewTypes.cshtml"));
 
             

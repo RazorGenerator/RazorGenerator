@@ -96,7 +96,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>About.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Home\ExternalPrecompiled.cs">
+    <Compile Include="Views\Home\ExternalPrecompiled.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ExternalPrecompiled.cshtml</DependentUpon>
@@ -167,7 +167,7 @@
   <ItemGroup>
     <None Include="Views\Home\ExternalPrecompiled.cshtml">
       <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ExternalPrecompiled.cs</LastGenOutput>
+      <LastGenOutput>ExternalPrecompiled.generated.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

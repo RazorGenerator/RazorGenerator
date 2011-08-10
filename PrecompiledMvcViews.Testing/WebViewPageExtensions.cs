@@ -1,12 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Specialized;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.WebPages;
+using DynUnit;
 using HtmlAgilityPack;
-using System;
 
 namespace PrecompiledMvcViews.Testing {
     public static class WebViewPageExtensions {
@@ -17,11 +18,17 @@ namespace PrecompiledMvcViews.Testing {
 
             view.ViewData.Model = model;
 
-            view.ExecutePageHierarchy(
-                new WebPageContext(view.ViewContext.HttpContext, page: null, model: null),
-                view.ViewContext.Writer);
+            var webPageContext = new WebPageContext(view.ViewContext.HttpContext, page: null, model: null);
+            var writer = new StringWriter();
 
-            return view.ViewContext.Writer.ToString();
+            // Using private reflection to access some internals
+            // Note: ideally we would not have to do this!
+            view.AsDynamic().PageContext = webPageContext;
+            webPageContext.AsDynamic().OutputStack.Push(writer);
+
+            view.Execute();
+
+            return writer.ToString();
         }
 
         public static HtmlDocument RenderAsHtml<TModel>(this WebViewPage<TModel> view, TModel model = default(TModel)) {
