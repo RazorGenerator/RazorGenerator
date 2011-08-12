@@ -11,7 +11,7 @@
     <UsingTask AssemblyFile="$(RazorGeneratorMsBuildPath)" TaskName="RazorCodeGen" />
     <Target Name="PrecompileRazorFiles" Returns="@(FilesGenerated)">
         <ItemGroup>
-            <RazorSrcFiles Include="@(None)" Condition=" '%(None.Generator)' == 'RazorGenerator' " />
+            <RazorSrcFiles Include="**\*.cshtml" />
         </ItemGroup>
         <RazorCodeGen ProjectRoot="$(MsBuildProjectDirectory)" FilesToPrecompile="@(RazorSrcFiles)" RootNamespace="$(RootNamespace)">
             <Output TaskParameter="GeneratedFiles" ItemName="FilesGenerated" />

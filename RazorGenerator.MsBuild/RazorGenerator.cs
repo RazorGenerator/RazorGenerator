@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using RazorGenerator.Core;
@@ -26,6 +27,10 @@ namespace RazorGenerator.MsBuild {
         public string TemporaryCodeGenDirectory { get; set; }
 
         public override bool Execute() {
+            if (FilesToPrecompile == null || !FilesToPrecompile.Any()) {
+                return true;
+            }
+
             string projectRoot = String.IsNullOrEmpty(ProjectRoot) ? Directory.GetCurrentDirectory() : ProjectRoot;
             TemporaryCodeGenDirectory = Path.Combine(projectRoot, "obj", "CodeGen");
 
@@ -35,7 +40,7 @@ namespace RazorGenerator.MsBuild {
                     if (String.IsNullOrEmpty(itemNamespace)) {
                         itemNamespace = RootNamespace;
                     }
-                    string filePath = file.ItemSpec;
+                    string filePath = file.GetMetadata("FullPath");
                     string fileName = Path.GetFileName(filePath);
                     var projectRelativePath = GetProjectRelativePath(filePath, projectRoot);
 
