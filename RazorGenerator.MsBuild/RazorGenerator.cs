@@ -12,9 +12,9 @@ namespace RazorGenerator.MsBuild {
 
         public ITaskItem[] FilesToPrecompile { get; set; }
 
-        public string RootNamespace { get; set; }
-
         public string ProjectRoot { get; set; }
+
+        public string RootNamespace { get; set; }
 
         [Output]
         public ITaskItem[] GeneratedFiles {
@@ -36,13 +36,10 @@ namespace RazorGenerator.MsBuild {
 
             using (var hostManager = new HostManager(projectRoot)) {
                 foreach (var file in FilesToPrecompile) {
-                    string itemNamespace = file.GetMetadata("CustomToolNamespace");
-                    if (String.IsNullOrEmpty(itemNamespace)) {
-                        itemNamespace = RootNamespace;
-                    }
                     string filePath = file.GetMetadata("FullPath");
                     string fileName = Path.GetFileName(filePath);
                     var projectRelativePath = GetProjectRelativePath(filePath, projectRoot);
+                    string itemNamespace = GetNamespace(file, projectRelativePath);
 
                     var host = hostManager.CreateHost(filePath, projectRelativePath);
                     host.DefaultNamespace = itemNamespace;
@@ -76,6 +73,21 @@ namespace RazorGenerator.MsBuild {
                 }
             }
             return true;
+        }
+
+        private string GetNamespace(ITaskItem file, string projectRelativePath) {
+            string itemNamespace = file.GetMetadata("CustomToolNamespace");
+            if (!String.IsNullOrEmpty(itemNamespace)) {
+                return itemNamespace;
+            }
+            projectRelativePath = Path.GetDirectoryName(projectRelativePath);
+            // To keep the namespace consistent with VS, need to generate a namespace based on the folder path if no namespace is specified.
+            itemNamespace = projectRelativePath.Trim(Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '.');
+
+            if (!String.IsNullOrEmpty(RootNamespace)) {
+                itemNamespace = RootNamespace + '.' + itemNamespace;
+            }
+            return itemNamespace;
         }
 
         private static string GetProjectRelativePath(string filePath, string projectRoot) {
