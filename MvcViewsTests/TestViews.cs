@@ -7,6 +7,23 @@ namespace MvcViewsTests {
     [TestClass]
     public class TestViews {
         [TestMethod]
+        public void TestMethodWithPlainString() {
+            const string message = "Some unit test message!";
+
+            // Instantiate the view directly
+            var view = new ExternalPrecompiled();
+
+            // Set up the data that needs to be access by the view
+            view.ViewBag.Message = message;
+
+            // Render it in an HtmlDocument
+            var output = view.Render();
+
+            // Verify that it looks correct
+            Assert.IsTrue(output.Contains(message));
+        }
+
+        [TestMethod]
         public void TestMethodWithAgilityPack() {
             const string message = "Some unit test message!";
 
