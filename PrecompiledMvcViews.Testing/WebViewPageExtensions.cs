@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Web;
@@ -22,9 +23,20 @@ namespace PrecompiledMvcViews.Testing {
             var writer = new StringWriter();
 
             // Using private reflection to access some internals
-            // Note: ideally we would not have to do this!
-            view.AsDynamic().PageContext = webPageContext;
+            // Note: ideally we would not have to do this, but WebPages is just not mockable enough :(
+
+            var dynamicView = view.AsDynamic();
+            dynamicView.PageContext = webPageContext;
             webPageContext.AsDynamic().OutputStack.Push(writer);
+
+            // Push some section writer dictionary onto the stack. We need two, because the logic in WebPageBase.RenderBody
+            // checks that as a way to make sure the layout page is not called directly
+            var sectionWriters = new Dictionary<string, SectionWriter>(StringComparer.OrdinalIgnoreCase);
+            dynamicView.SectionWritersStack.Push(sectionWriters);
+            dynamicView.SectionWritersStack.Push(sectionWriters);
+
+            // Set the body delegate to do nothing
+            dynamicView._body = (Action<TextWriter>)(w => { });
 
             view.Execute();
 

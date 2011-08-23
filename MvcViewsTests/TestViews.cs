@@ -7,7 +7,7 @@ namespace MvcViewsTests {
     [TestClass]
     public class TestViews {
         [TestMethod]
-        public void TestMethodWithPlainString() {
+        public void TestRenderPlainText() {
             const string message = "Some unit test message!";
 
             // Instantiate the view directly
@@ -16,7 +16,7 @@ namespace MvcViewsTests {
             // Set up the data that needs to be access by the view
             view.ViewBag.Message = message;
 
-            // Render it in an HtmlDocument
+            // Render it as a string
             var output = view.Render();
 
             // Verify that it looks correct
@@ -24,7 +24,7 @@ namespace MvcViewsTests {
         }
 
         [TestMethod]
-        public void TestMethodWithAgilityPack() {
+        public void TestRenderAsHtml() {
             const string message = "Some unit test message!";
 
             // Instantiate the view directly
@@ -39,6 +39,24 @@ namespace MvcViewsTests {
             // Verify that it looks correct
             HtmlNode node = doc.DocumentNode.Element("h2");
             Assert.AreEqual(message, node.InnerHtml.Trim());
+        }
+
+
+        [TestMethod]
+        public void TestLayout() {
+            const string title = "Some unit test title!";
+
+            // Instantiate the view directly
+            var view = new PrecompiledMvcLibrary.Views.Shared._Layout();
+
+            // Set up the data that needs to be access by the view
+            view.ViewBag.Title = title;
+
+            // Render it as a string
+            var output = view.Render();
+
+            // Verify that it looks correct
+            Assert.IsTrue(output.Contains(title));
         }
     }
 }
