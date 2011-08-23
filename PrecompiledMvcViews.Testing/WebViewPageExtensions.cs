@@ -6,8 +6,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.WebPages;
-using DynUnit;
 using HtmlAgilityPack;
+using ReflectionMagic;
 
 namespace PrecompiledMvcViews.Testing {
     public static class WebViewPageExtensions {
