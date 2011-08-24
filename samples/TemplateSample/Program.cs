@@ -3,8 +3,12 @@ using System.Linq;
 
 namespace TemplateSample {
     class Program {
-        static void Main(string[] args)
-        {
+        static void Main(string[] args) {
+            RenderTestTemplate();
+            RenderMailTemplate();
+        }
+
+        private static void RenderTestTemplate() {
             // Create the template
             var preprocessedTemplate = new PreProcessedTemplate();
 
@@ -16,6 +20,18 @@ namespace TemplateSample {
                     Name = "Test" + i,
                     Passed = i % 2 == 0
                 };
+
+            // Run it
+            Console.WriteLine(preprocessedTemplate.TransformText());
+        }
+
+        private static void RenderMailTemplate() {
+            // Create the template
+            var preprocessedTemplate = new MailTemplate() {
+                Layout = new MyLayout()
+            };
+
+            // Give it some input data
 
             // Run it
             Console.WriteLine(preprocessedTemplate.TransformText());

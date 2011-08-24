@@ -1,6 +1,6 @@
 using System.Web.Mvc;
 using System.Web.WebPages;
-using PrecompiledMvcViewEngine;
+using RazorGenerator.Mvc;
 
 [assembly: WebActivator.PreApplicationStartMethod(typeof($rootnamespace$.App_Start.PrecompiledMvcViewEngineStart), "Start")]
 

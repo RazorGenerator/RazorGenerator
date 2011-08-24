@@ -16,12 +16,12 @@ namespace TemplateSample
     using System.Linq;
     using System.Text;
     
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.1.0.0")]
-    public partial class PreProcessedTemplate : PreProcessedTemplateBase
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.2.0.0")]
+    public partial class PreProcessedTemplate : RazorGenerator.Templating.RazorTemplateBase
     {
 #line hidden
 
-        #line 3 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+        #line 3 "D:\Code\CodePlex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
 
     public IEnumerable<TemplateSample.TestResult> TestResults { get; set; }
 
@@ -39,7 +39,7 @@ WriteLiteral("\r\n\r\n<?xml version=\"1.0\" ?>\r\n<tests>\r\n");
 
 
             
-            #line 9 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 9 "D:\Code\CodePlex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
      foreach (var result in TestResults) { 
 
             
@@ -49,7 +49,7 @@ WriteLiteral("        <test id=\"");
 
 
             
-            #line 10 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 10 "D:\Code\CodePlex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
              Write(result.Id);
 
             
@@ -59,7 +59,7 @@ WriteLiteral("\">\r\n            <name>");
 
 
             
-            #line 11 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 11 "D:\Code\CodePlex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
              Write(result.Name);
 
             
@@ -69,7 +69,7 @@ WriteLiteral("</name>\r\n            <result>\r\n");
 
 
             
-            #line 13 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 13 "D:\Code\CodePlex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
              if(result.Passed) {
 
             
@@ -81,7 +81,7 @@ WriteLiteral(" Success\r\n");
 
 
             
-            #line 15 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 15 "D:\Code\CodePlex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
             }
             else{
 
@@ -94,7 +94,7 @@ WriteLiteral(" Failed\r\n");
 
 
             
-            #line 18 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 18 "D:\Code\CodePlex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
             }
 
             
@@ -104,7 +104,7 @@ WriteLiteral("            </result>\r\n        </test>\r\n");
 
 
             
-            #line 21 "D:\forks\razorsinglefilegenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
+            #line 21 "D:\Code\CodePlex\RazorGenerator\samples\TemplateSample\PreProcessedTemplate.cshtml"
     }
 
             
@@ -114,60 +114,6 @@ WriteLiteral("</test>\r\n");
 
 
         }
-        public string TransformText()
-        {
-            this.Execute();
-            return this.GenerationEnvironment.ToString();
-        }
     }
-    #region Base class
-    public class PreProcessedTemplateBase
-    {
-        private System.Text.StringBuilder _generatingEnvironment = new System.Text.StringBuilder();
-        protected System.Text.StringBuilder GenerationEnvironment
-        {
-            get
-            {
-                return this._generatingEnvironment;
-            }
-            set
-            {
-                this._generatingEnvironment = value;
-            }
-        }
-        public virtual void Execute()
-        {
-        }
-        public void WriteLiteral(string textToAppend)
-        {
-            
-        if (String.IsNullOrEmpty(textToAppend)) {
-            return; 
-        }
-        this.GenerationEnvironment.Append(textToAppend);;
-        }
-        public void Write(object value)
-        {
-
-                if ((value == null))
-                {
-                    return;
-                }
-                string stringValue;
-                System.Type t = value.GetType();
-                System.Reflection.MethodInfo method = t.GetMethod("ToString", new System.Type[] {
-                            typeof(System.IFormatProvider)});
-                if ((method == null)) 
-                {
-                    stringValue = value.ToString();
-                }
-                else {
-                    stringValue = ((string)(method.Invoke(value, new object[] { System.Globalization.CultureInfo.InvariantCulture })));
-                }
-                WriteLiteral(stringValue);
-            
-        }
-    }
-    #endregion
 }
 #pragma warning restore 1591

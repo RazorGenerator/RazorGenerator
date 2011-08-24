@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using PrecompiledMvcViewEngine;
+using RazorGenerator.Mvc;
 
 namespace MvcSample.Controllers {
     public class HomeController : Controller {

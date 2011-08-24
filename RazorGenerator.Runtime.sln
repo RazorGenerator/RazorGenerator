@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateSample", "samples\T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrecompiledMvcLibrary", "samples\PrecompiledMvcLibrary\PrecompiledMvcLibrary.csproj", "{7737AB96-07CC-4940-A298-E949EC4B9EAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrecompiledMvcViewEngine", "PrecompiledMvcViewEngine\PrecompiledMvcViewEngine.csproj", "{ECA3FA91-06FB-421A-B5AC-2F985BAD12DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Mvc", "RazorGenerator.Mvc\RazorGenerator.Mvc.csproj", "{ECA3FA91-06FB-421A-B5AC-2F985BAD12DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcSample", "samples\MvcSample\MvcSample.csproj", "{B451EEF4-D35B-4D1D-96B5-0ED6057CCF07}"
 EndProject
@@ -40,7 +40,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "webpages", "webpages", "{EF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrecompiledWebPagesLibrary", "samples\PrecompiledWebPagesLibrary\PrecompiledWebPagesLibrary.csproj", "{6F63B0CA-5614-43BB-86CE-D39F10DED1DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrecompiledMvcViews.Testing", "PrecompiledMvcViews.Testing\PrecompiledMvcViews.Testing.csproj", "{54BBBD3E-7862-4687-8A9C-39DC707012BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Testing", "RazorGenerator.Testing\RazorGenerator.Testing.csproj", "{54BBBD3E-7862-4687-8A9C-39DC707012BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcViewsTests", "MvcViewsTests\MvcViewsTests.csproj", "{EA5115DC-E9ED-4A31-B15A-4198B93E3FC6}"
 EndProject
@@ -50,6 +50,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		RazorGenerator.Runtime.vsmdi = RazorGenerator.Runtime.vsmdi
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Templating", "RazorGenerator.Templating\RazorGenerator.Templating.csproj", "{B536BE55-3549-49AE-9CE6-066062B6E916}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -144,6 +146,16 @@ Global
 		{EA5115DC-E9ED-4A31-B15A-4198B93E3FC6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{EA5115DC-E9ED-4A31-B15A-4198B93E3FC6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EA5115DC-E9ED-4A31-B15A-4198B93E3FC6}.Release|x86.ActiveCfg = Release|Any CPU
+		{B536BE55-3549-49AE-9CE6-066062B6E916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B536BE55-3549-49AE-9CE6-066062B6E916}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B536BE55-3549-49AE-9CE6-066062B6E916}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B536BE55-3549-49AE-9CE6-066062B6E916}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B536BE55-3549-49AE-9CE6-066062B6E916}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B536BE55-3549-49AE-9CE6-066062B6E916}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B536BE55-3549-49AE-9CE6-066062B6E916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B536BE55-3549-49AE-9CE6-066062B6E916}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B536BE55-3549-49AE-9CE6-066062B6E916}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B536BE55-3549-49AE-9CE6-066062B6E916}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

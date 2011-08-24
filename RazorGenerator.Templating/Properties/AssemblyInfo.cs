@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PrecompiledMvcView")]
-[assembly: AssemblyDescription("MVC View engine that supports precompiled Razor views")]
+[assembly: AssemblyTitle("RazorGenerator.Templating")]
+[assembly: AssemblyDescription("Runtime support for Razor generated code")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("RazorGenerator contributors")]
-[assembly: AssemblyProduct("PrecompiledMvcView")]
+[assembly: AssemblyProduct("RazorGenerator.Templating")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("be24ae75-6094-48cb-b663-1c9016c3e749")]
+[assembly: Guid("0b304974-7fe5-42b5-8b2f-b08ad334a701")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.2.0")]

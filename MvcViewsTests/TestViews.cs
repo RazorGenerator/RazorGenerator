@@ -1,7 +1,7 @@
 ﻿using HtmlAgilityPack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrecompiledMvcLibrary.Views.Home;
-using PrecompiledMvcViews.Testing;
+using RazorGenerator.Testing;
 
 namespace MvcViewsTests {
     [TestClass]

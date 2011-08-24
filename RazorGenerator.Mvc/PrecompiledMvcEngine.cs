@@ -10,7 +10,7 @@ using System.Web.Compilation;
 using System.Web.Mvc;
 using System.Web.WebPages;
 
-namespace PrecompiledMvcViewEngine {
+namespace RazorGenerator.Mvc {
     public class PrecompiledMvcEngine : VirtualPathProviderViewEngine, IVirtualPathFactory {
         private readonly IDictionary<string, Type> _mappings;
         public PrecompiledMvcEngine(Assembly assembly) {

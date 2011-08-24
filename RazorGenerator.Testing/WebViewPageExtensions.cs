@@ -10,7 +10,7 @@ using System.Web.WebPages;
 using HtmlAgilityPack;
 using ReflectionMagic;
 
-namespace PrecompiledMvcViews.Testing {
+namespace RazorGenerator.Testing {
     public static class WebViewPageExtensions {
         private static DummyViewEngine _viewEngine = new DummyViewEngine();
 
