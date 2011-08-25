@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>RazorGenerator.Powershell</id>
+    <version>1.0</version>
+    <authors>prkrishn</authors>
+    <description>fsf</description>
+  </metadata>
+  <files>
+    <file src="*.ps*" target="tools" />
+  </files>
+</package>
