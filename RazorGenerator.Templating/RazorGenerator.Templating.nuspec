@@ -11,4 +11,7 @@
     <description>$description$</description>
     <tags>mvc razor</tags>
   </metadata>
+  <files>
+    <file src="NuGet\**\*.*" />
+  </files>
 </package>
