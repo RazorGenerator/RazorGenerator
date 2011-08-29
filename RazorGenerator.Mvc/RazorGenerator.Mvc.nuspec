@@ -21,6 +21,6 @@
   </metadata>
   <files>
     <file src="NuGet\**\*.*" />
-    <file src="..\RazorGenerator.Powershell\*.ps*" target="lib" />
+    <file src="..\RazorGenerator.Powershell\*.ps*" target="tools" />
   </files>
 </package>

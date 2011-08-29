@@ -12,7 +12,6 @@ function Resolve-ProjectName {
     }
 }
 
-
 function Get-ProjectFiles {
     Process {
         if ($_.Kind -eq "{6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C}" -or $_.Kind -eq "{66A26720-8FB5-11D2-AA7E-00C04F688DDE}") {
