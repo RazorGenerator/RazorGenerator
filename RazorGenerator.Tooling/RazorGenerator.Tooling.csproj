@@ -179,4 +179,14 @@
     <Copy SkipUnchangedFiles="true" ContinueOnError="true" SourceFiles="$(OutputPath)System.Razor.pdb;$(OutputPath)System.Razor.Web.pdb;$(OutputPath)$(TargetName).pdb" DestinationFolder="$(DevEnvDir)\Extensions\$(AssemblyName)" />
     <Copy SkipUnchangedFiles="true" ContinueOnError="true" SourceFiles="$(OutputPath)source.extension.vsixmanifest" DestinationFiles="$(DevEnvDir)\Extensions\$(AssemblyName)\extension.vsixmanifest" />
   </Target>
+  <Target Name="AfterBuild">
+    <ItemGroup>
+        <FilesToCopy Include="$(OutputPath)\*.vsix" />
+    </ItemGroup>
+    <PropertyGroup>
+        <VsixOut>$(MsBuildProjectDirectory)\..\Results</VsixOut>
+    </PropertyGroup>
+    <MakeDir Directories="$(VsixOut)" Condition=" !Exists('$(VsixOut)') " />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(VsixOut)" />
+  </Target>
 </Project>

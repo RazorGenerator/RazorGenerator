@@ -12,6 +12,6 @@
     <tags>razorgenerator msbuild</tags>
   </metadata>
   <files>
-    <file src="bin\Release\*.dll;bin\Release\*.targets" target="tools" />
+    <file src="bin\$configuration$\RazorGenerator.Core.dll;bin\$configuration$\*.targets" target="tools" />
   </files>
 </package>

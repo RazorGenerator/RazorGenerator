@@ -11,3 +11,4 @@ glob:*.suo
 glob:*.nupkg
 glob:TestResults
 glob:packages
+glob:Results
