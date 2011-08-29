@@ -5,6 +5,7 @@ namespace RazorGenerator.Core {
     public class DirectivesBasedTransformers : AggregateCodeTransformer {
         public static readonly string TypeVisibilityKey = "TypeVisibility";
         public static readonly string DisableLinePragmasKey = "DisableLinePragmas";
+        public static readonly string GenerateAbsolutePathLinePragmas = "GenerateAbsolutePathLinePragmas";
         private readonly List<IRazorCodeTransformer> _transformers = new List<IRazorCodeTransformer>();
 
         protected override IEnumerable<IRazorCodeTransformer> CodeTransformers {
@@ -19,6 +20,11 @@ namespace RazorGenerator.Core {
             if (IsSwitchEnabled(directives, DisableLinePragmasKey) == true) {
                 razorHost.EnableLinePragmas = false;
             }
+            else if (IsSwitchEnabled(directives, GenerateAbsolutePathLinePragmas) != true) {
+                // Rewrite line pragamas to generate bin relative paths instead of absolute paths.
+                _transformers.Add(new RewriteLinePragmas());
+            }
+            
 
             base.Initialize(razorHost, directives);
         }

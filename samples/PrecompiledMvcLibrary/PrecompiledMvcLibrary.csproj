@@ -50,7 +50,7 @@
   <ItemGroup>
     <Content Include="Areas\MyPluggableArea\Views\Foo\Index.cshtml">
       <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Index.cs</LastGenOutput>
+      <LastGenOutput>Index.generated.cs</LastGenOutput>
     </Content>
     <Content Include="Areas\MyPluggableArea\Views\Web.config" />
     <None Include="Helpers\ListHelper.cshtml">
@@ -60,10 +60,10 @@
     </None>
     <Compile Include="Areas\MyPluggableArea\Controllers\FooController.cs" />
     <Compile Include="Areas\MyPluggableArea\MyAreaAreaRegistration.cs" />
-    <Compile Include="Areas\MyPluggableArea\Views\Foo\Index.cs">
-      <DependentUpon>Index.cshtml</DependentUpon>
+    <Compile Include="Areas\MyPluggableArea\Views\Foo\Index.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Index.cshtml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ListHelper.cs">
       <AutoGen>True</AutoGen>

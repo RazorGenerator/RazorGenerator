@@ -3,12 +3,12 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Web.Razor;
 using System.Web.Razor.Generator;
 using System.Web.Razor.Parser;
 using System.Web.Razor.Parser.SyntaxTree;
 using System.Web.WebPages;
-using System.Text;
 
 namespace RazorGenerator.Core {
     public class RazorHost : RazorEngineHost, ICodeGenerationEventProvider {
