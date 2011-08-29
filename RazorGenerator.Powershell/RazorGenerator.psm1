@@ -1,18 +1,15 @@
 function Resolve-ProjectName {
     param(
         [parameter(ValueFromPipelineByPropertyName = $true)]
-        [string[]]$ProjectName
+        [string]$ProjectName
     )
     
     if($ProjectName) {
-        $projects = Get-Project $ProjectName
+        Get-Project $ProjectName
     }
     else {
-        # All projects by default
-        $projects = Get-Project -All
+        Get-Project
     }
-    
-    $projects
 }
 
 
@@ -30,43 +27,67 @@ function Get-ProjectFiles {
 function Set-CustomTool {
     param($item, [string]$customTool, [bool]$force = $false)
     
-    $customToolProperty = $_.Properties | Where { $_.Name -eq "CustomTool" }
+    $customToolProperty = $_.Properties.Item("CustomTool")
     if ($force -or !$customToolProperty.Value) {
         $customToolProperty.Value = $customTool
+        $_.Object.RunCustomTool()
+        return $true
     }
 }
 
 function Get-RazorFiles {
     param(
         [parameter(ValueFromPipelineByPropertyName = $true)]
-        [string[]]$ProjectName
+        [string]$ProjectName
     )
     
-    (Resolve-ProjectName $ProjectName) | % {
-        Get-ProjectFiles | Where { $_.Name.EndsWith('.cshtml') }
-    }
+    (Resolve-ProjectName $ProjectName).ProjectItems | Get-ProjectFiles | Where { $_.Name.EndsWith('.cshtml')  }
+}
 
-function Initialize-RazorGenerator {
+function Enable-RazorGenerator {
     param(
         [parameter(ValueFromPipelineByPropertyName = $true)]
-        [string[]]$ProjectName
+        [string]$ProjectName
     )
     Process {
-        Get-RazorFiles $ProjectName | % { Set-CustomTool $_ "RazorGenerator" }
+        $solutionExplorer = ($dte.Windows | Where { $_.Type -eq "vsWindowTypeSolutionExplorer" }).Object
+        $project = (Resolve-ProjectName $projectName)
+        $projectPath = [IO.Path]::GetDirectoryName($project.FullName)
+        $ProjectName = $project.Name
+        
+        Get-RazorFiles $ProjectName | % { 
+            if (Set-CustomTool $_ "RazorGenerator") {
+                $relativePath = Get-RelativePath $projectPath $_
+                if ($relativePath) {
+                    $solutionExplorer.GetItem("$ProjectName\$ProjectName$relativePath").UIHierarchyItems.Expanded = false
+                }
+            }
+        }
     }
 }
 
 function Redo-RazorGenerator {
     param(
         [parameter(ValueFromPipelineByPropertyName = $true)]
-        [string[]]$ProjectName
+        [string]$ProjectName
     )
     Process {
         Get-RazorFiles $ProjectName | % { 
-            Set-CustomTool $_ "" $true;
-            Set-CustomTool $_ "RazorGenerator" $true;
+            if ($_.Properties.Item("CustomTool")) {
+                $_.Object.RunCustomTool()
+            }
         }
     }
 }
 
-Export-ModuleMember Initialize-RazorGenerator, Redo-RazorGenerator
+function Get-RelativePath {
+    param($projectPath, $file) 
+    $filePath = $file.Properties.Item("FullPath").Value
+    
+    $index = $filePath.IndexOf($projectPath)
+    if ($index -ge 0) {
+        $filePath.Substring($projectPath.Length)
+    }
+}
+
+Export-ModuleMember Enable-RazorGenerator, Redo-RazorGenerator
