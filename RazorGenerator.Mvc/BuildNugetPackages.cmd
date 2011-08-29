@@ -1,1 +1,0 @@
-..\tools\nuget\nuget.exe pack -symbols PrecompiledMvcViewEngine.csproj
