@@ -58,7 +58,7 @@ function Enable-RazorGenerator {
             if (Set-CustomTool $_ "RazorGenerator") {
                 $relativePath = Get-RelativePath $projectPath $_
                 if ($relativePath) {
-                    $solutionExplorer.GetItem("$ProjectName\$ProjectName$relativePath").UIHierarchyItems.Expanded = false
+                    # $solutionExplorer.GetItem("$ProjectName\$ProjectName$relativePath").UIHierarchyItems.Expanded = $false
                 }
             }
         }

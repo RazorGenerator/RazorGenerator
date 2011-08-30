@@ -53,6 +53,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Templating", "RazorGenerator.Templating\RazorGenerator.Templating.csproj", "{B536BE55-3549-49AE-9CE6-066062B6E916}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowerShell", "PowerShell", "{60F9B523-37A5-4247-918C-8A0EFFBBC046}"
+	ProjectSection(SolutionItems) = preProject
+		RazorGenerator.Powershell\init.ps1 = RazorGenerator.Powershell\init.ps1
+		RazorGenerator.Powershell\RazorGenerator.psd1 = RazorGenerator.Powershell\RazorGenerator.psd1
+		RazorGenerator.Powershell\RazorGenerator.psm1 = RazorGenerator.Powershell\RazorGenerator.psm1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = RazorGenerator.Runtime.vsmdi

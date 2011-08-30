@@ -47,6 +47,8 @@
     <Compile Include="RazorTemplateBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NuGet\Content\SampleTemplate.cshtml" />
+    <None Include="NuGet\Tools\install.ps1" />
     <None Include="RazorGenerator.Templating.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
