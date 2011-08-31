@@ -2,12 +2,12 @@ using System.Web.Mvc;
 using System.Web.WebPages;
 using RazorGenerator.Mvc;
 
-[assembly: WebActivator.PreApplicationStartMethod(typeof($rootnamespace$.App_Start.PrecompiledMvcViewEngineStart), "Start")]
+[assembly: WebActivator.PreApplicationStartMethod(typeof($rootnamespace$.App_Start.RazorGeneratorMvcStart), "Start")]
 
 namespace $rootnamespace$.App_Start {
-    public static class PrecompiledMvcViewEngineStart {
+    public static class RazorGeneratorMvcStart {
         public static void Start() {
-            var engine = new PrecompiledMvcEngine(typeof(PrecompiledMvcViewEngineStart).Assembly);
+            var engine = new PrecompiledMvcEngine(typeof(RazorGeneratorMvcStart).Assembly);
 
             ViewEngines.Engines.Insert(0, engine);
 

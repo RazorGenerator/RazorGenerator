@@ -51,7 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NuGet\Content\App_Start\PrecompiledMvcViewEngineStart.cs.pp" />
+    <None Include="NuGet\Content\App_Start\RazorGeneratorMvcStart.cs.pp" />
     <None Include="RazorGenerator.Mvc.nuspec" />
   </ItemGroup>
   <ItemGroup />
