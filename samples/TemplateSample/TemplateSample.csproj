@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomTemplateBase.cs" />
     <Compile Include="MailTemplate.generated.cs">
       <DependentUpon>MailTemplate.cshtml</DependentUpon>
       <AutoGen>True</AutoGen>
