@@ -53,12 +53,13 @@ function Enable-RazorGenerator {
         $project = (Resolve-ProjectName $projectName)
         $projectPath = [IO.Path]::GetDirectoryName($project.FullName)
         $ProjectName = $project.Name
+		$SolutionName = [IO.Path]::GetFileNameWithoutExtension($dte.Solution.FullName)
         
         Get-RazorFiles $ProjectName | % { 
             if (Set-CustomTool $_ "RazorGenerator") {
                 $relativePath = Get-RelativePath $projectPath $_
                 if ($relativePath) {
-                    # $solutionExplorer.GetItem("$ProjectName\$ProjectName$relativePath").UIHierarchyItems.Expanded = $false
+                    $solutionExplorer.GetItem("$SolutionName\$ProjectName$relativePath").UIHierarchyItems.Expanded = $false
                 }
             }
         }
