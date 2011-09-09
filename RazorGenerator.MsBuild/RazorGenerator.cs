@@ -29,7 +29,7 @@ namespace RazorGenerator.MsBuild {
         public override bool Execute() {
             if (FilesToPrecompile == null || !FilesToPrecompile.Any()) {
                 return true;
-            }
+            }               
 
             string projectRoot = String.IsNullOrEmpty(ProjectRoot) ? Directory.GetCurrentDirectory() : ProjectRoot;
             TemporaryCodeGenDirectory = Path.Combine(projectRoot, "obj", "CodeGen");
@@ -50,7 +50,7 @@ namespace RazorGenerator.MsBuild {
                         hasErrors = true;
                     };
 
-                    string outputPath = Path.Combine(TemporaryCodeGenDirectory, projectRelativePath) + ".cs";
+                    string outputPath = Path.Combine(TemporaryCodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + ".cs";
                     EnsureDirectory(outputPath);
 
                     try {
