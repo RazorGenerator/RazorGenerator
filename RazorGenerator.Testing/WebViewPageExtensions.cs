@@ -120,11 +120,27 @@ namespace RazorGenerator.Testing {
             public override string RawUrl {
                 get { return ""; }
             }
+
+            private Lazy<HttpCookieCollection> _cookieCollection = new Lazy<HttpCookieCollection>();
+
+            public override HttpCookieCollection Cookies {
+                get {
+                    return _cookieCollection.Value;
+                }
+            }
         }
 
         class DummyHttpResponse : HttpResponseBase {
             public override string ApplyAppPathModifier(string virtualPath) {
                 return virtualPath;
+            }
+
+            private Lazy<HttpCookieCollection> _cookieCollection = new Lazy<HttpCookieCollection>();
+
+            public override HttpCookieCollection Cookies {
+                get {
+                    return _cookieCollection.Value;
+                }
             }
         }
 
@@ -144,7 +160,14 @@ namespace RazorGenerator.Testing {
             public override IDictionary Items {
                 get { return _items; }
             }
-        }
 
+            public override System.Security.Principal.IPrincipal User {
+                get {
+                    return null;
+                }
+                set {
+                }
+            }
+        }
     }
 }
