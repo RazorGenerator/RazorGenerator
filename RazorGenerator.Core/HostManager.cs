@@ -15,7 +15,7 @@ namespace RazorGenerator.Core {
         private readonly string _baseDirectory;
 
         public HostManager(string baseDirectory)
-            : this(baseDirectory, loadExtensions : false) {
+            : this(baseDirectory, loadExtensions : true) {
         }
 
         public HostManager(string baseDirectory, bool loadExtensions) {

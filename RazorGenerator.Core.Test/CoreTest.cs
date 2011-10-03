@@ -50,7 +50,7 @@ namespace RazorGenerator.Core.Test {
         }
 
         private void TestTransformerType() {
-            using (var razorGenerator = new HostManager(TestContext.TestDeploymentDir)) {
+            using (var razorGenerator = new HostManager(TestContext.TestDeploymentDir, loadExtensions: false)) {
                 string inputFile = SaveInputFile(TestContext);
                 var host = razorGenerator.CreateHost(inputFile, TestContext.TestName + ".cshtml");
                 host.DefaultNamespace = GetType().Namespace;
