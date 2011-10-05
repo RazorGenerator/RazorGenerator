@@ -9,6 +9,7 @@ using System.Web.Routing;
 using System.Web.WebPages;
 using HtmlAgilityPack;
 using ReflectionMagic;
+using Moq;
 
 namespace RazorGenerator.Testing {
     public static class WebViewPageExtensions {
@@ -54,7 +55,7 @@ namespace RazorGenerator.Testing {
         private static void Initialize<TModel>(this WebViewPage<TModel> view) {
             EnsureViewEngineRegistered();
 
-            var context = new DummyHttpContext();
+            var context = CreateMockContext();
             var routeData = new RouteData();
 
             var requestContext = new RequestContext(context, routeData);
@@ -75,7 +76,50 @@ namespace RazorGenerator.Testing {
             }
         }
 
+        /// <summary>
+        /// Creates a basic HttpContext mock for rendering a view.
+        /// </summary>
+        /// <returns>A mocked HttpContext object</returns>
+        private static HttpContextBase CreateMockContext()
+        {
+            // Use Moq for faking context objects as it can setup all members
+            // so that by default, calls to the members return a default/null value 
+            // instead of a not implemented exception.
+
+            // members were we want specific values returns are setup explicitly.
+
+            // mock the request object
+            var mockRequest = new Mock<HttpRequestBase>(MockBehavior.Loose);
+            mockRequest.Setup(m => m.IsLocal).Returns(false);
+            mockRequest.Setup(m => m.ApplicationPath).Returns("/");
+            mockRequest.Setup(m => m.ServerVariables).Returns(new NameValueCollection());
+            mockRequest.Setup(m => m.RawUrl).Returns(string.Empty);
+            mockRequest.Setup(m => m.Cookies).Returns(new HttpCookieCollection());
+                      
+            // mock the response object
+            var mockResponse = new Mock<HttpResponseBase>(MockBehavior.Loose);
+            mockResponse.Setup(m => m.ApplyAppPathModifier(It.IsAny<string>())).Returns<string>((virtualPath) => virtualPath);
+            mockResponse.Setup(m => m.Cookies).Returns(new HttpCookieCollection());
+
+            // mock the httpcontext
+
+            var mockHttpContext = new Mock<HttpContextBase>(MockBehavior.Loose);
+            mockHttpContext.Setup(m => m.Items).Returns(new Hashtable());
+            mockHttpContext.Setup(m => m.Request).Returns(mockRequest.Object);
+            mockHttpContext.Setup(m => m.Response).Returns(mockResponse.Object);
+
+            return mockHttpContext.Object;
+        }
+
         // Define minimal 'dummy' implementation of various things needed in order to render the view
+
+        class DummyController : ControllerBase
+        {
+            // Moq can't help with protected members.
+            protected override void ExecuteCore() { }
+        }
+
+        // TODO: Consider using Moq for these interface implementations
 
         class DummyViewEngine : IViewEngine {
             public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache) {
@@ -99,75 +143,7 @@ namespace RazorGenerator.Testing {
             }
         }
 
-        class DummyController : ControllerBase {
-            protected override void ExecuteCore() { }
-        }
-
-
-        class DummyHttpRequest : HttpRequestBase {
-            public override bool IsLocal {
-                get { return false; }
-            }
-
-            public override string ApplicationPath {
-                get { return "/"; }
-            }
-
-            public override NameValueCollection ServerVariables {
-                get { return new NameValueCollection(); }
-            }
-
-            public override string RawUrl {
-                get { return ""; }
-            }
-
-            private Lazy<HttpCookieCollection> _cookieCollection = new Lazy<HttpCookieCollection>();
-
-            public override HttpCookieCollection Cookies {
-                get {
-                    return _cookieCollection.Value;
-                }
-            }
-        }
-
-        class DummyHttpResponse : HttpResponseBase {
-            public override string ApplyAppPathModifier(string virtualPath) {
-                return virtualPath;
-            }
-
-            private Lazy<HttpCookieCollection> _cookieCollection = new Lazy<HttpCookieCollection>();
-
-            public override HttpCookieCollection Cookies {
-                get {
-                    return _cookieCollection.Value;
-                }
-            }
-        }
-
-        class DummyHttpContext : HttpContextBase {
-            private HttpRequestBase _request = new DummyHttpRequest();
-            private HttpResponseBase _response = new DummyHttpResponse();
-            private IDictionary _items = new Hashtable();
-
-            public override HttpRequestBase Request {
-                get { return _request; }
-            }
-
-            public override HttpResponseBase Response {
-                get { return _response; }
-            }
-
-            public override IDictionary Items {
-                get { return _items; }
-            }
-
-            public override System.Security.Principal.IPrincipal User {
-                get {
-                    return null;
-                }
-                set {
-                }
-            }
-        }
+        
+        
     }
 }
