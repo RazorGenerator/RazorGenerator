@@ -11,12 +11,20 @@ using HtmlAgilityPack;
 using ReflectionMagic;
 using Moq;
 
-namespace RazorGenerator.Testing {
-    public static class WebViewPageExtensions {
+namespace RazorGenerator.Testing
+{
+    public static class WebViewPageExtensions
+    {
         private static DummyViewEngine _viewEngine = new DummyViewEngine();
 
-        public static string Render<TModel>(this WebViewPage<TModel> view, TModel model = default(TModel)) {
-            view.Initialize();
+        public static string Render<TModel>(this WebViewPage<TModel> view, TModel model = default(TModel))
+        {
+            return Render<TModel>(view, null, model);
+        }
+
+        public static string Render<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext, TModel model = default(TModel))
+        {
+            view.Initialize(httpContext);
 
             view.ViewData.Model = model;
 
@@ -44,7 +52,13 @@ namespace RazorGenerator.Testing {
             return writer.ToString();
         }
 
-        public static HtmlDocument RenderAsHtml<TModel>(this WebViewPage<TModel> view, TModel model = default(TModel)) {
+        public static HtmlDocument RenderAsHtml<TModel>(this WebViewPage<TModel> view, TModel model = default(TModel))
+        {
+            return RenderAsHtml<TModel>(view, null, model);
+        }
+
+        public static HtmlDocument RenderAsHtml<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext, TModel model = default(TModel))
+        {
             string html = Render(view, model);
 
             var doc = new HtmlDocument();
@@ -52,10 +66,11 @@ namespace RazorGenerator.Testing {
             return doc;
         }
 
-        private static void Initialize<TModel>(this WebViewPage<TModel> view) {
+        private static void Initialize<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext)
+        {
             EnsureViewEngineRegistered();
 
-            var context = CreateMockContext();
+            var context = httpContext ?? CreateMockContext();
             var routeData = new RouteData();
 
             var requestContext = new RequestContext(context, routeData);
@@ -66,10 +81,13 @@ namespace RazorGenerator.Testing {
             view.InitHelpers();
         }
 
-        private static void EnsureViewEngineRegistered() {
+        private static void EnsureViewEngineRegistered()
+        {
             // Make sure our dummy view engine is registered
-            lock (_viewEngine) {
-                if (!ViewEngines.Engines.Contains(_viewEngine)) {
+            lock (_viewEngine)
+            {
+                if (!ViewEngines.Engines.Contains(_viewEngine))
+                {
                     ViewEngines.Engines.Clear();
                     ViewEngines.Engines.Insert(0, _viewEngine);
                 }
@@ -95,7 +113,7 @@ namespace RazorGenerator.Testing {
             mockRequest.Setup(m => m.ServerVariables).Returns(new NameValueCollection());
             mockRequest.Setup(m => m.RawUrl).Returns(string.Empty);
             mockRequest.Setup(m => m.Cookies).Returns(new HttpCookieCollection());
-                      
+
             // mock the response object
             var mockResponse = new Mock<HttpResponseBase>(MockBehavior.Loose);
             mockResponse.Setup(m => m.ApplyAppPathModifier(It.IsAny<string>())).Returns<string>((virtualPath) => virtualPath);
@@ -119,31 +137,35 @@ namespace RazorGenerator.Testing {
             protected override void ExecuteCore() { }
         }
 
-        // TODO: Consider using Moq for these interface implementations
-
-        class DummyViewEngine : IViewEngine {
-            public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache) {
+        class DummyViewEngine : IViewEngine
+        {
+            public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
+            {
                 return new ViewEngineResult(new DummyView { ViewName = partialViewName }, this);
             }
 
-            public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache) {
+            public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
+            {
                 return new ViewEngineResult(new DummyView { ViewName = viewName }, this);
             }
 
-            public void ReleaseView(ControllerContext controllerContext, IView view) {
+            public void ReleaseView(ControllerContext controllerContext, IView view)
+            {
             }
         }
 
-        class DummyView : IView {
+        class DummyView : IView
+        {
             public string ViewName { get; set; }
 
-            public void Render(ViewContext viewContext, TextWriter writer) {
+            public void Render(ViewContext viewContext, TextWriter writer)
+            {
                 // Render a marker instead of actually rendering the partial view
                 writer.WriteLine(String.Format("/* {0} */", ViewName));
             }
         }
 
-        
-        
+
+
     }
 }
