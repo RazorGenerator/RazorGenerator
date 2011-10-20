@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RazorGenerator.Core {
-    using System;
-    
-    
+namespace RazorGenerator.Core
+{
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -22,53 +22,63 @@ namespace RazorGenerator.Core {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class RazorGeneratorResources {
-        
+    internal class RazorGeneratorResources
+    {
+
         private static global::System.Resources.ResourceManager resourceMan;
-        
+
         private static global::System.Globalization.CultureInfo resourceCulture;
-        
+
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal RazorGeneratorResources() {
+        internal RazorGeneratorResources()
+        {
         }
-        
+
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
-            get {
-                if (object.ReferenceEquals(resourceMan, null)) {
+        internal static global::System.Resources.ResourceManager ResourceManager
+        {
+            get
+            {
+                if (object.ReferenceEquals(resourceMan, null))
+                {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RazorGenerator.Core.Resources.RazorGeneratorResources", typeof(RazorGeneratorResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-        
+
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
-            get {
+        internal static global::System.Globalization.CultureInfo Culture
+        {
+            get
+            {
                 return resourceCulture;
             }
-            set {
+            set
+            {
                 resourceCulture = value;
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Unknown generator &quot;{0}&quot;. Type &quot;{0}&quot;Host could not be loaded..
         /// </summary>
-        internal static string GeneratorError_UnknownGenerator {
-            get {
+        internal static string GeneratorError_UnknownGenerator
+        {
+            get
+            {
                 return ResourceManager.GetString("GeneratorError_UnknownGenerator", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to 
         ///Could not precompile the input file contents. Ensure that a generator declaration exists in the cshtml file. 
@@ -77,8 +87,10 @@ namespace RazorGenerator.Core {
         ///Valid host names: {0}
         ///    .
         /// </summary>
-        internal static string GeneratorFailureMessage {
-            get {
+        internal static string GeneratorFailureMessage
+        {
+            get
+            {
                 return ResourceManager.GetString("GeneratorFailureMessage", resourceCulture);
             }
         }

@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 
-namespace RazorGenerator.Core {
+namespace RazorGenerator.Core
+{
     [Export("WebPage", typeof(IRazorCodeTransformer))]
-    public class WebPageTransformer : AggregateCodeTransformer {
+    public class WebPageTransformer : AggregateCodeTransformer
+    {
         private readonly List<IRazorCodeTransformer> _transformers = new List<IRazorCodeTransformer> { 
             new DirectivesBasedTransformers(),
             new AddGeneratedClassAttribute(),
@@ -15,13 +17,16 @@ namespace RazorGenerator.Core {
             new SetImports(new[] { "System.Web.WebPages.Html" }, replaceExisting: false),
         };
 
-        protected override IEnumerable<IRazorCodeTransformer> CodeTransformers {
-            get {
+        protected override IEnumerable<IRazorCodeTransformer> CodeTransformers
+        {
+            get
+            {
                 return _transformers;
             }
         }
 
-        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives) {
+        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
+        {
             base.Initialize(razorHost, directives);
 
             // Remove the extension and replace path separator slashes with underscores
@@ -30,7 +35,8 @@ namespace RazorGenerator.Core {
             string className = pathWithoutExtenstion.TrimStart(Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '_');
 
             // If its a PageStart page, set the base type to StartPage.
-            if (fileNameWithoutExtension.Equals("_pagestart", StringComparison.OrdinalIgnoreCase)) {
+            if (fileNameWithoutExtension.Equals("_pagestart", StringComparison.OrdinalIgnoreCase))
+            {
                 razorHost.DefaultBaseClass = typeof(System.Web.WebPages.StartPage).FullName;
             }
         }
@@ -39,7 +45,8 @@ namespace RazorGenerator.Core {
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit,
                                                   CodeNamespace generatedNamespace,
                                                   CodeTypeDeclaration generatedClass,
-                                                  CodeMemberMethod executeMethod) {
+                                                  CodeMemberMethod executeMethod)
+        {
             base.ProcessGeneratedCode(codeCompileUnit, generatedNamespace, generatedClass, executeMethod);
 
 
@@ -55,7 +62,8 @@ namespace RazorGenerator.Core {
             generatedClass.Members.Add(hrefMethod);
 
             // If the generatedClass starts with an underscore, add a ClsCompliant(false) attribute.
-            if (generatedClass.Name.StartsWith("_", StringComparison.OrdinalIgnoreCase)) {
+            if (generatedClass.Name.StartsWith("_", StringComparison.OrdinalIgnoreCase))
+            {
                 generatedClass.CustomAttributes.Add(new CodeAttributeDeclaration(typeof(CLSCompliantAttribute).FullName,
                                                         new CodeAttributeArgument(new CodePrimitiveExpression(false))));
             }

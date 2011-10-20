@@ -10,8 +10,10 @@ using System.Web.Razor.Parser;
 using System.Web.Razor.Parser.SyntaxTree;
 using System.Web.WebPages;
 
-namespace RazorGenerator.Core {
-    public class RazorHost : RazorEngineHost, ICodeGenerationEventProvider {
+namespace RazorGenerator.Core
+{
+    public class RazorHost : RazorEngineHost, ICodeGenerationEventProvider
+    {
         private static readonly IEnumerable<string> _defaultImports = new[] {
             "System",
             "System.Collections.Generic",
@@ -35,18 +37,23 @@ namespace RazorGenerator.Core {
         private string _defaultClassName;
 
         public RazorHost(string baseRelativePath, string fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives)
-            : base(RazorCodeLanguage.GetLanguageByExtension(".cshtml")) {
+            : base(RazorCodeLanguage.GetLanguageByExtension(".cshtml"))
+        {
 
-            if (codeTransformer == null) {
+            if (codeTransformer == null)
+            {
                 throw new ArgumentNullException("codeTransformer");
             }
-            if (baseRelativePath == null) {
+            if (baseRelativePath == null)
+            {
                 throw new ArgumentNullException("baseRelativePath");
             }
-            if (fullPath == null) {
+            if (fullPath == null)
+            {
                 throw new ArgumentNullException("fullPath");
             }
-            if (codeDomProvider == null) {
+            if (codeDomProvider == null)
+            {
                 throw new ArgumentNullException("codeDomProvider");
             }
 
@@ -69,16 +76,19 @@ namespace RazorGenerator.Core {
             );
 
             base.DefaultBaseClass = typeof(WebPage).FullName;
-            foreach (var import in _defaultImports) {
+            foreach (var import in _defaultImports)
+            {
                 base.NamespaceImports.Add(import);
             }
         }
 
-        public string ProjectRelativePath {
+        public string ProjectRelativePath
+        {
             get { return _baseRelativePath; }
         }
 
-        public string FullPath {
+        public string FullPath
+        {
             get { return _fullPath; }
         }
 
@@ -86,12 +96,16 @@ namespace RazorGenerator.Core {
 
         public event EventHandler<ProgressEventArgs> Progress;
 
-        public override string DefaultClassName {
-            get {
+        public override string DefaultClassName
+        {
+            get
+            {
                 return _defaultClassName ?? GetClassName();
             }
-            set {
-                if (!String.Equals(value, "__CompiledTemplate", StringComparison.OrdinalIgnoreCase)) {
+            set
+            {
+                if (!String.Equals(value, "__CompiledTemplate", StringComparison.OrdinalIgnoreCase))
+                {
                     //  By default RazorEngineHost assigns the name __CompiledTemplate. We'll ignore this assignment
                     _defaultClassName = value;
                 }
@@ -104,7 +118,8 @@ namespace RazorGenerator.Core {
 
         public bool EnableLinePragmas { get; set; }
 
-        public string GenerateCode() {
+        public string GenerateCode()
+        {
             _codeTransformer.Initialize(this, _directives);
 
             // Create the engine
@@ -112,27 +127,33 @@ namespace RazorGenerator.Core {
 
             // Generate code 
             GeneratorResults results = null;
-            try {
+            try
+            {
                 Stream stream = File.OpenRead(_fullPath);
-                using (var reader = new StreamReader(stream, Encoding.Default, detectEncodingFromByteOrderMarks: true)) {
+                using (var reader = new StreamReader(stream, Encoding.Default, detectEncodingFromByteOrderMarks: true))
+                {
                     results = engine.GenerateCode(reader, className: DefaultClassName, rootNamespace: DefaultNamespace, sourceFileName: _fullPath);
                 }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 OnGenerateError(4, e.ToString(), 1, 1);
                 //Returning null signifies that generation has failed
                 return null;
             }
 
             // Output errors
-            foreach (RazorError error in results.ParserErrors) {
+            foreach (RazorError error in results.ParserErrors)
+            {
                 OnGenerateError(4, error.Message, (uint)error.Location.LineIndex + 1, (uint)error.Location.CharacterIndex + 1);
             }
 
-            try {
+            try
+            {
                 OnCodeCompletion(50, 100);
 
-                using (StringWriter writer = new StringWriter()) {
+                using (StringWriter writer = new StringWriter())
+                {
                     CodeGeneratorOptions options = new CodeGeneratorOptions();
                     options.BlankLinesBetweenMembers = false;
                     options.BracingStyle = "C";
@@ -151,40 +172,49 @@ namespace RazorGenerator.Core {
                     return codeContent;
                 }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 OnGenerateError(4, e.ToString(), 1, 1);
                 //Returning null signifies that generation has failed
                 return null;
             }
         }
 
-        public override void PostProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod) {
+        public override void PostProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
+        {
             _codeTransformer.ProcessGeneratedCode(codeCompileUnit, generatedNamespace, generatedClass, executeMethod);
         }
 
-        public override RazorCodeGenerator DecorateCodeGenerator(RazorCodeGenerator incomingCodeGenerator) {
+        public override RazorCodeGenerator DecorateCodeGenerator(RazorCodeGenerator incomingCodeGenerator)
+        {
             var codeGenerator = CodeGenerator ?? base.DecorateCodeGenerator(incomingCodeGenerator);
             codeGenerator.GenerateLinePragmas = EnableLinePragmas;
             return codeGenerator;
         }
 
-        public override ParserBase DecorateCodeParser(ParserBase incomingCodeParser) {
+        public override ParserBase DecorateCodeParser(ParserBase incomingCodeParser)
+        {
             return Parser ?? base.DecorateCodeParser(incomingCodeParser);
         }
 
-        private void OnGenerateError(uint errorCode, string errorMessage, uint lineNumber, uint columnNumber) {
-            if (Error != null) {
+        private void OnGenerateError(uint errorCode, string errorMessage, uint lineNumber, uint columnNumber)
+        {
+            if (Error != null)
+            {
                 Error(this, new GeneratorErrorEventArgs(errorCode, errorMessage, lineNumber, columnNumber));
             }
         }
 
-        private void OnCodeCompletion(uint completed, uint total) {
-            if (Progress != null) {
+        private void OnCodeCompletion(uint completed, uint total)
+        {
+            if (Progress != null)
+            {
                 Progress(this, new ProgressEventArgs(completed, total));
             }
         }
 
-        protected virtual string GetClassName() {
+        protected virtual string GetClassName()
+        {
             string filename = Path.GetFileNameWithoutExtension(_baseRelativePath);
             return ParserHelpers.SanitizeClassName(filename);
         }

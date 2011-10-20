@@ -1,8 +1,11 @@
 ﻿using System;
 
-namespace RazorGenerator.Core {
-    public class GeneratorErrorEventArgs : EventArgs {
-        public GeneratorErrorEventArgs(uint errorCode, string errorMessage, uint lineNumber, uint columnNumber) {
+namespace RazorGenerator.Core
+{
+    public class GeneratorErrorEventArgs : EventArgs
+    {
+        public GeneratorErrorEventArgs(uint errorCode, string errorMessage, uint lineNumber, uint columnNumber)
+        {
             ErorrCode = errorCode;
             ErrorMessage = errorMessage;
             LineNumber = lineNumber;
@@ -18,8 +21,10 @@ namespace RazorGenerator.Core {
         public uint ColumnNumber { get; private set; }
     }
 
-    public class ProgressEventArgs : EventArgs {
-        public ProgressEventArgs(uint completed, uint total) {
+    public class ProgressEventArgs : EventArgs
+    {
+        public ProgressEventArgs(uint completed, uint total)
+        {
             Completed = completed;
             Total = total;
         }

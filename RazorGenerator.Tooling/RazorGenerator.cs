@@ -17,7 +17,8 @@ using Microsoft.VisualStudio.Shell;
 using RazorGenerator.Core;
 using VSLangProj80;
 
-namespace RazorGenerator {
+namespace RazorGenerator
+{
     /// <summary>
     /// This is the generator class. 
     /// When setting the 'Custom Tool' property of a C#, VB, or J# project item to "RazorGenerator", 
@@ -28,7 +29,8 @@ namespace RazorGenerator {
     [Guid("52B316AA-1997-4c81-9969-83604C09EEB4")]
     [CodeGeneratorRegistration(typeof(RazorGenerator), "C# Razor Generator", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true)]
     [ProvideObject(typeof(RazorGenerator))]
-    public class RazorGenerator : BaseCodeGeneratorWithSite {
+    public class RazorGenerator : BaseCodeGeneratorWithSite
+    {
 #pragma warning disable 0414
         //The name of this generator (use for 'Custom Tool' property of project item)
         internal static string name = "RazorGenerator";
@@ -39,32 +41,41 @@ namespace RazorGenerator {
         /// </summary>
         /// <param name="inputFileContent">Content of the input file</param>
         /// <returns>Generated file as a byte array</returns>
-        protected override byte[] GenerateCode(string inputFileContent) {
-            try {
+        protected override byte[] GenerateCode(string inputFileContent)
+        {
+            try
+            {
                 return GenerateFromHost();
             }
-            catch (InvalidOperationException exception) {
+            catch (InvalidOperationException exception)
+            {
                 GeneratorError(0, exception.Message, 0, 0);
                 return ConvertToBytes(exception.Message);
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 GeneratorError(0, exception.Message, 0, 0);
             }
             return null;
         }
 
-        private byte[] GenerateFromHost() {
+        private byte[] GenerateFromHost()
+        {
             var projectDirectory = Path.GetDirectoryName(GetProject().FullName);
             var projectRelativePath = InputFilePath.Substring(projectDirectory.Length);
 
-            using (var hostManager = new HostManager(projectDirectory)) {
+            using (var hostManager = new HostManager(projectDirectory))
+            {
                 var host = hostManager.CreateHost(InputFilePath, projectRelativePath, GetCodeProvider());
                 host.DefaultNamespace = FileNameSpace;
-                host.Error += (o, eventArgs) => {
+                host.Error += (o, eventArgs) =>
+                {
                     GeneratorError(0, eventArgs.ErrorMessage, eventArgs.LineNumber, eventArgs.ColumnNumber);
                 };
-                host.Progress += (o, eventArgs) => {
-                    if (CodeGeneratorProgress != null) {
+                host.Progress += (o, eventArgs) =>
+                {
+                    if (CodeGeneratorProgress != null)
+                    {
                         CodeGeneratorProgress.Progress(eventArgs.Completed, eventArgs.Total);
                     }
                 };
@@ -74,7 +85,8 @@ namespace RazorGenerator {
             }
         }
 
-        private static byte[] ConvertToBytes(string content) {
+        private static byte[] ConvertToBytes(string content)
+        {
             //Get the preamble (byte-order mark) for our encoding
             byte[] preamble = Encoding.UTF8.GetPreamble();
             int preambleLength = preamble.Length;

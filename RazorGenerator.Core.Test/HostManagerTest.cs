@@ -1,12 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace RazorGenerator.Core.Test {
+namespace RazorGenerator.Core.Test
+{
     [TestClass]
-    public class HostManagerTest {
+    public class HostManagerTest
+    {
         public TestContext TestContext { get; set; }
 
         [TestMethod]
-        public void HostManagerHieruisticForMvcHelperInViewsFolder() {
+        public void HostManagerHieruisticForMvcHelperInViewsFolder()
+        {
             // Arrange
             var path1 = @"Views\Helper\HtmlExtensions.cshtml";
             var path2 = @"Views\Shared\Helper\Menu.cshtml";
@@ -23,7 +26,8 @@ namespace RazorGenerator.Core.Test {
         }
 
         [TestMethod]
-        public void HostManagerHieruisticForMvcViews() {
+        public void HostManagerHieruisticForMvcViews()
+        {
             // Arrange
             var path1 = @"Views\Home\About.cshtml";
             var path2 = @"Views\Shared\_Layout.cshtml";

@@ -103,7 +103,7 @@ namespace RazorGenerator
         }
 
         #endregion
-        
+
         /// <summary>
         /// Namespace for the file
         /// </summary>

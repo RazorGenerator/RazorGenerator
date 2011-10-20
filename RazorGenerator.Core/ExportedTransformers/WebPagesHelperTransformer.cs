@@ -4,9 +4,11 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace RazorGenerator.Core {
+namespace RazorGenerator.Core
+{
     [Export("WebPagesHelper", typeof(IRazorCodeTransformer))]
-    public class WebPagesHelperTransformer : AggregateCodeTransformer {
+    public class WebPagesHelperTransformer : AggregateCodeTransformer
+    {
         private readonly IRazorCodeTransformer[] _codeTransformers = new IRazorCodeTransformer[] {
             new DirectivesBasedTransformers(),
             new AddGeneratedClassAttribute(),
@@ -16,18 +18,21 @@ namespace RazorGenerator.Core {
             new RemoveLineHiddenPragmas(),
         };
 
-        protected override IEnumerable<IRazorCodeTransformer> CodeTransformers {
+        protected override IEnumerable<IRazorCodeTransformer> CodeTransformers
+        {
             get { return _codeTransformers; }
         }
 
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit,
                                                   CodeNamespace generatedNamespace,
                                                   CodeTypeDeclaration generatedClass,
-                                                  CodeMemberMethod executeMethod) {
+                                                  CodeMemberMethod executeMethod)
+        {
             base.ProcessGeneratedCode(codeCompileUnit, generatedNamespace, generatedClass, executeMethod);
 
             // Make all helper methods prefixed by '_' internal
-            foreach (var method in generatedClass.Members.OfType<CodeSnippetTypeMember>()) {
+            foreach (var method in generatedClass.Members.OfType<CodeSnippetTypeMember>())
+            {
                 method.Text = Regex.Replace(method.Text, "public static System\\.Web\\.WebPages\\.HelperResult _",
                      "internal static System.Web.WebPages.HelperResult _");
             }
