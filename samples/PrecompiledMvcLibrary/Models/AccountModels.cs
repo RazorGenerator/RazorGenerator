@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
-namespace MvcSample.Models {
+namespace MvcSample.Models
+{
 
     #region Models
 
-    public class ChangePasswordModel {
+    public class ChangePasswordModel
+    {
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Current password")]
@@ -30,7 +29,8 @@ namespace MvcSample.Models {
         public string ConfirmPassword { get; set; }
     }
 
-    public class LogOnModel {
+    public class LogOnModel
+    {
         [Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
@@ -45,7 +45,8 @@ namespace MvcSample.Models {
     }
 
 
-    public class RegisterModel {
+    public class RegisterModel
+    {
         [Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
@@ -74,7 +75,8 @@ namespace MvcSample.Models {
     // how to create an abstract wrapper around such a type in order to make the AccountController
     // code unit testable.
 
-    public interface IMembershipService {
+    public interface IMembershipService
+    {
         int MinPasswordLength { get; }
 
         bool ValidateUser(string userName, string password);
@@ -82,31 +84,38 @@ namespace MvcSample.Models {
         bool ChangePassword(string userName, string oldPassword, string newPassword);
     }
 
-    public class AccountMembershipService : IMembershipService {
+    public class AccountMembershipService : IMembershipService
+    {
         private readonly MembershipProvider _provider;
 
         public AccountMembershipService()
-            : this(null) {
+            : this(null)
+        {
         }
 
-        public AccountMembershipService(MembershipProvider provider) {
+        public AccountMembershipService(MembershipProvider provider)
+        {
             _provider = provider ?? Membership.Provider;
         }
 
-        public int MinPasswordLength {
-            get {
+        public int MinPasswordLength
+        {
+            get
+            {
                 return _provider.MinRequiredPasswordLength;
             }
         }
 
-        public bool ValidateUser(string userName, string password) {
+        public bool ValidateUser(string userName, string password)
+        {
             if (String.IsNullOrEmpty(userName)) throw new ArgumentException("Value cannot be null or empty.", "userName");
             if (String.IsNullOrEmpty(password)) throw new ArgumentException("Value cannot be null or empty.", "password");
 
             return _provider.ValidateUser(userName, password);
         }
 
-        public MembershipCreateStatus CreateUser(string userName, string password, string email) {
+        public MembershipCreateStatus CreateUser(string userName, string password, string email)
+        {
             if (String.IsNullOrEmpty(userName)) throw new ArgumentException("Value cannot be null or empty.", "userName");
             if (String.IsNullOrEmpty(password)) throw new ArgumentException("Value cannot be null or empty.", "password");
             if (String.IsNullOrEmpty(email)) throw new ArgumentException("Value cannot be null or empty.", "email");
@@ -116,50 +125,61 @@ namespace MvcSample.Models {
             return status;
         }
 
-        public bool ChangePassword(string userName, string oldPassword, string newPassword) {
+        public bool ChangePassword(string userName, string oldPassword, string newPassword)
+        {
             if (String.IsNullOrEmpty(userName)) throw new ArgumentException("Value cannot be null or empty.", "userName");
             if (String.IsNullOrEmpty(oldPassword)) throw new ArgumentException("Value cannot be null or empty.", "oldPassword");
             if (String.IsNullOrEmpty(newPassword)) throw new ArgumentException("Value cannot be null or empty.", "newPassword");
 
             // The underlying ChangePassword() will throw an exception rather
             // than return false in certain failure scenarios.
-            try {
+            try
+            {
                 MembershipUser currentUser = _provider.GetUser(userName, true /* userIsOnline */);
                 return currentUser.ChangePassword(oldPassword, newPassword);
             }
-            catch (ArgumentException) {
+            catch (ArgumentException)
+            {
                 return false;
             }
-            catch (MembershipPasswordException) {
+            catch (MembershipPasswordException)
+            {
                 return false;
             }
         }
     }
 
-    public interface IFormsAuthenticationService {
+    public interface IFormsAuthenticationService
+    {
         void SignIn(string userName, bool createPersistentCookie);
         void SignOut();
     }
 
-    public class FormsAuthenticationService : IFormsAuthenticationService {
-        public void SignIn(string userName, bool createPersistentCookie) {
+    public class FormsAuthenticationService : IFormsAuthenticationService
+    {
+        public void SignIn(string userName, bool createPersistentCookie)
+        {
             if (String.IsNullOrEmpty(userName)) throw new ArgumentException("Value cannot be null or empty.", "userName");
 
             FormsAuthentication.SetAuthCookie(userName, createPersistentCookie);
         }
 
-        public void SignOut() {
+        public void SignOut()
+        {
             FormsAuthentication.SignOut();
         }
     }
     #endregion
 
     #region Validation
-    public static class AccountValidation {
-        public static string ErrorCodeToString(MembershipCreateStatus createStatus) {
+    public static class AccountValidation
+    {
+        public static string ErrorCodeToString(MembershipCreateStatus createStatus)
+        {
             // See http://go.microsoft.com/fwlink/?LinkID=177550 for
             // a full list of status codes.
-            switch (createStatus) {
+            switch (createStatus)
+            {
                 case MembershipCreateStatus.DuplicateUserName:
                     return "Username already exists. Please enter a different user name.";
 
@@ -194,25 +214,30 @@ namespace MvcSample.Models {
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    public sealed class ValidatePasswordLengthAttribute : ValidationAttribute, IClientValidatable {
+    public sealed class ValidatePasswordLengthAttribute : ValidationAttribute, IClientValidatable
+    {
         private const string _defaultErrorMessage = "'{0}' must be at least {1} characters long.";
         private readonly int _minCharacters = Membership.Provider.MinRequiredPasswordLength;
 
         public ValidatePasswordLengthAttribute()
-            : base(_defaultErrorMessage) {
+            : base(_defaultErrorMessage)
+        {
         }
 
-        public override string FormatErrorMessage(string name) {
+        public override string FormatErrorMessage(string name)
+        {
             return String.Format(CultureInfo.CurrentCulture, ErrorMessageString,
                 name, _minCharacters);
         }
 
-        public override bool IsValid(object value) {
+        public override bool IsValid(object value)
+        {
             string valueAsString = value as string;
             return (valueAsString != null && valueAsString.Length >= _minCharacters);
         }
 
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context) {
+        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        {
             return new[]{
                 new ModelClientValidationStringLengthRule(FormatErrorMessage(metadata.GetDisplayName()), _minCharacters, int.MaxValue)
             };

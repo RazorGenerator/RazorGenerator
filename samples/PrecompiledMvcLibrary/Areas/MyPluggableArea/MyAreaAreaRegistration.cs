@@ -1,14 +1,19 @@
 ﻿using System.Web.Mvc;
 
-namespace PrecompiledMvcLibrary.Areas.MyPluggableArea {
-    public class MyPluggableAreaAreaRegistration : AreaRegistration {
-        public override string AreaName {
-            get {
+namespace PrecompiledMvcLibrary.Areas.MyPluggableArea
+{
+    public class MyPluggableAreaAreaRegistration : AreaRegistration
+    {
+        public override string AreaName
+        {
+            get
+            {
                 return "MyPluggableArea";
             }
         }
 
-        public override void RegisterArea(AreaRegistrationContext context) {
+        public override void RegisterArea(AreaRegistrationContext context)
+        {
             context.MapRoute(
                 "MyPluggableArea_default",
                 "MyPluggableArea/{controller}/{action}/{id}",

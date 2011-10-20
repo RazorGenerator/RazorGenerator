@@ -11,11 +11,7 @@
 
 namespace TemplateSample
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.2.0.0")]
     public partial class MailTemplate : RazorGenerator.Templating.RazorTemplateBase
     {
@@ -25,7 +21,7 @@ namespace TemplateSample
         {
 
 
-WriteLiteral("\r\n\r\nSome mail\r\n");
+            WriteLiteral("\r\n\r\nSome mail\r\n");
 
 
         }

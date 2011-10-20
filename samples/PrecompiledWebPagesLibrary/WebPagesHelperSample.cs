@@ -12,45 +12,36 @@
 namespace ASP
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Text;
-    using System.Web;
-    using System.Web.Helpers;
-    using System.Web.Security;
-    using System.Web.UI;
-    using System.Web.WebPages;
-    using System.Web.WebPages.Html;
-    
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     public class WebPagesHelperSample : System.Web.WebPages.HelperPage
     {
 #line hidden
 #line hidden
-public static System.Web.WebPages.HelperResult PrintTime() {
-return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
+        public static System.Web.WebPages.HelperResult PrintTime()
+        {
+            return new System.Web.WebPages.HelperResult(__razor_helper_writer =>
+            {
 
 
 
 #line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledWebPagesLibrary\WebPagesHelperSample.cshtml"
-                     
+
 
 #line default
 #line hidden
 
-WriteLiteralTo(@__razor_helper_writer, "    <span class=\"time\">The time is now ");
+                WriteLiteralTo(@__razor_helper_writer, "    <span class=\"time\">The time is now ");
 
 
 
 #line 2 "D:\forks\razorsinglefilegenerator\samples\PrecompiledWebPagesLibrary\WebPagesHelperSample.cshtml"
-        WriteTo(@__razor_helper_writer, DateTime.Now.TimeOfDay);
+                WriteTo(@__razor_helper_writer, DateTime.Now.TimeOfDay);
 
 #line default
 #line hidden
 
-WriteLiteralTo(@__razor_helper_writer, "</span>\r\n");
+                WriteLiteralTo(@__razor_helper_writer, "</span>\r\n");
 
 
 
@@ -59,9 +50,9 @@ WriteLiteralTo(@__razor_helper_writer, "</span>\r\n");
 #line default
 #line hidden
 
-});
+            });
 
-}
+        }
 
 
         public WebPagesHelperSample()

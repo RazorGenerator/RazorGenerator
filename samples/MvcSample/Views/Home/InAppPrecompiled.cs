@@ -11,26 +11,15 @@
 
 namespace MvcSample.Views.Home
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Text;
-    using System.Web;
-    using System.Web.Helpers;
-    using System.Web.Mvc;
     using System.Web.Mvc.Html;
-    using System.Web.Security;
-    using System.Web.UI;
-    using System.Web.WebPages;
-    
-    #line 2 "\Views\Home\InAppPrecompiled.cshtml"
-    using PrecompiledMvcLibrary.Views.Shared;
-    
-    #line default
-    #line hidden
-    
+
+
+#line 2 "\Views\Home\InAppPrecompiled.cshtml"
+
+
+#line default
+#line hidden
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Home/InAppPrecompiled.cshtml")]
     public class InAppPrecompiled : System.Web.Mvc.WebViewPage<dynamic>
@@ -44,71 +33,72 @@ namespace MvcSample.Views.Home
         {
 
 
-WriteLiteral("\r\n");
+            WriteLiteral("\r\n");
 
 
-WriteLiteral("\r\n<h3>This is executing from ");
+            WriteLiteral("\r\n<h3>This is executing from ");
 
 
-            
-            #line 4 "\Views\Home\InAppPrecompiled.cshtml"
-                      Write(GetType().Assembly.Location);
 
-            
-            #line default
-            #line hidden
-WriteLiteral(".</h3>\r\n\r\n");
+#line 4 "\Views\Home\InAppPrecompiled.cshtml"
+            Write(GetType().Assembly.Location);
 
 
-            
-            #line 6 "\Views\Home\InAppPrecompiled.cshtml"
- using (Html.BeginForm()) {
-    
-
-            
-            #line default
-            #line hidden
-WriteLiteral("    <label>");
+#line default
+#line hidden
+            WriteLiteral(".</h3>\r\n\r\n");
 
 
-            
-            #line 8 "\Views\Home\InAppPrecompiled.cshtml"
-      Write(Html.CheckBox("executePrecompiledEngineFirst"));
 
-            
-            #line default
-            #line hidden
-WriteLiteral(" <strong>Precompiled view engine executes first</strong>&nbsp;</label>\r\n");
+#line 6 "\Views\Home\InAppPrecompiled.cshtml"
+            using (Html.BeginForm())
+            {
 
 
-            
-            #line 9 "\Views\Home\InAppPrecompiled.cshtml"
+
+#line default
+#line hidden
+                WriteLiteral("    <label>");
 
 
-            
-            #line default
-            #line hidden
-WriteLiteral("    <input type=\"submit\" value=\"Submit\" />\r\n");
+
+#line 8 "\Views\Home\InAppPrecompiled.cshtml"
+                Write(Html.CheckBox("executePrecompiledEngineFirst"));
 
 
-            
-            #line 11 "\Views\Home\InAppPrecompiled.cshtml"
-    
-}
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n");
+#line default
+#line hidden
+                WriteLiteral(" <strong>Precompiled view engine executes first</strong>&nbsp;</label>\r\n");
 
 
-            
-            #line 14 "\Views\Home\InAppPrecompiled.cshtml"
-Write(RenderPage("~/Views/Shared/_ViewTypes.cshtml"));
 
-            
-            #line default
-            #line hidden
+#line 9 "\Views\Home\InAppPrecompiled.cshtml"
+
+
+
+#line default
+#line hidden
+                WriteLiteral("    <input type=\"submit\" value=\"Submit\" />\r\n");
+
+
+
+#line 11 "\Views\Home\InAppPrecompiled.cshtml"
+
+            }
+
+
+#line default
+#line hidden
+            WriteLiteral("\r\n");
+
+
+
+#line 14 "\Views\Home\InAppPrecompiled.cshtml"
+            Write(RenderPage("~/Views/Shared/_ViewTypes.cshtml"));
+
+
+#line default
+#line hidden
 
         }
     }

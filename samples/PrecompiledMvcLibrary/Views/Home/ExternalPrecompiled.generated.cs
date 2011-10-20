@@ -11,28 +11,15 @@
 
 namespace PrecompiledMvcLibrary.Views.Home
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Text;
-    using System.Web;
-    using System.Web.Helpers;
-    using System.Web.Mvc;
-    using System.Web.Mvc.Ajax;
     using System.Web.Mvc.Html;
-    using System.Web.Routing;
-    using System.Web.Security;
-    using System.Web.UI;
-    using System.Web.WebPages;
-    
-    #line 1 "..\..\Views\Home\ExternalPrecompiled.cshtml"
+
+
+#line 1 "..\..\Views\Home\ExternalPrecompiled.cshtml"
     using PrecompiledMvcLibrary.Views.Shared;
-    
-    #line default
-    #line hidden
-    
+
+#line default
+#line hidden
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.2.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Home/ExternalPrecompiled.cshtml")]
     public class ExternalPrecompiled : System.Web.Mvc.WebViewPage<dynamic>
@@ -43,61 +30,61 @@ namespace PrecompiledMvcLibrary.Views.Home
         public override void Execute()
         {
 
-WriteLiteral("\r\n");
+            WriteLiteral("\r\n");
 
 
-            
-            #line 3 "..\..\Views\Home\ExternalPrecompiled.cshtml"
-  
-    ViewBag.Title = "Home Page";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+
+#line 3 "..\..\Views\Home\ExternalPrecompiled.cshtml"
+
+            ViewBag.Title = "Home Page";
+            Layout = "~/Views/Shared/_Layout.cshtml";
 
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n<h2>");
+
+#line default
+#line hidden
+            WriteLiteral("\r\n<h2>");
 
 
-            
-            #line 8 "..\..\Views\Home\ExternalPrecompiled.cshtml"
-Write(ViewBag.Message);
 
-            
-            #line default
-            #line hidden
-WriteLiteral("</h2>\r\n<p>\r\n    To learn more about ASP.NET MVC visit <a href=\"http://asp.net/mvc" +
-"\" title=\"ASP.NET MVC Website\">http://asp.net/mvc</a>.\r\n</p>\r\n\r\n<h2>\r\n    I\'m in " +
-"an assembly!\r\n</h2>\r\n\r\n");
+#line 8 "..\..\Views\Home\ExternalPrecompiled.cshtml"
+            Write(ViewBag.Message);
 
 
-            
-            #line 17 "..\..\Views\Home\ExternalPrecompiled.cshtml"
-Write(Html.AntiForgeryToken());
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n\r\n");
+#line default
+#line hidden
+            WriteLiteral("</h2>\r\n<p>\r\n    To learn more about ASP.NET MVC visit <a href=\"http://asp.net/mvc" +
+            "\" title=\"ASP.NET MVC Website\">http://asp.net/mvc</a>.\r\n</p>\r\n\r\n<h2>\r\n    I\'m in " +
+            "an assembly!\r\n</h2>\r\n\r\n");
 
 
-            
-            #line 19 "..\..\Views\Home\ExternalPrecompiled.cshtml"
-Write(Html.ObjectInfo(this));
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n\r\n");
+#line 17 "..\..\Views\Home\ExternalPrecompiled.cshtml"
+            Write(Html.AntiForgeryToken());
 
 
-            
-            #line 21 "..\..\Views\Home\ExternalPrecompiled.cshtml"
-Write(Html.Partial("~/Views/Shared/_ViewTypes.cshtml"));
+#line default
+#line hidden
+            WriteLiteral("\r\n\r\n");
 
-            
-            #line default
-            #line hidden
+
+
+#line 19 "..\..\Views\Home\ExternalPrecompiled.cshtml"
+            Write(Html.ObjectInfo(this));
+
+
+#line default
+#line hidden
+            WriteLiteral("\r\n\r\n");
+
+
+
+#line 21 "..\..\Views\Home\ExternalPrecompiled.cshtml"
+            Write(Html.Partial("~/Views/Shared/_ViewTypes.cshtml"));
+
+
+#line default
+#line hidden
 
         }
     }

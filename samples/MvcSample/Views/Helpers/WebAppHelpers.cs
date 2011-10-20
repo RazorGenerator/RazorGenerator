@@ -11,67 +11,59 @@
 
 namespace ASP
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Text;
-    using System.Web;
-    using System.Web.Helpers;
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
-    using System.Web.Security;
-    using System.Web.UI;
-    using System.Web.WebPages;
-    
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     public static class WebAppHelpers
     {
 #line hidden
 #line hidden
-public static System.Web.WebPages.HelperResult WriteList(string[] items) {
-return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
+        public static System.Web.WebPages.HelperResult WriteList(string[] items)
+        {
+            return new System.Web.WebPages.HelperResult(__razor_helper_writer =>
+            {
 
 
 
 #line 3 "D:\forks\razorsinglefilegenerator\samples\MvcSample\Views\Helpers\WebAppHelpers.cshtml"
-                                   
+
 
 #line default
 #line hidden
 
-WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    <ul>\r\n");
+                WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    <ul>\r\n");
 
 
 
 #line 5 "D:\forks\razorsinglefilegenerator\samples\MvcSample\Views\Helpers\WebAppHelpers.cshtml"
-         foreach (var s in items) {
+                foreach (var s in items)
+                {
 
 #line default
 #line hidden
 
-WebViewPage.WriteLiteralTo(@__razor_helper_writer, "            <li>\r\n                ");
+                    WebViewPage.WriteLiteralTo(@__razor_helper_writer, "            <li>\r\n                ");
 
 
 
 #line 7 "D:\forks\razorsinglefilegenerator\samples\MvcSample\Views\Helpers\WebAppHelpers.cshtml"
-WebViewPage.WriteTo(@__razor_helper_writer, s);
+                    WebViewPage.WriteTo(@__razor_helper_writer, s);
 
 #line default
 #line hidden
 
-WebViewPage.WriteLiteralTo(@__razor_helper_writer, "!  (from webapp)\r\n            </li>\r\n");
+                    WebViewPage.WriteLiteralTo(@__razor_helper_writer, "!  (from webapp)\r\n            </li>\r\n");
 
 
 
 #line 9 "D:\forks\razorsinglefilegenerator\samples\MvcSample\Views\Helpers\WebAppHelpers.cshtml"
-        }
+                }
 
 #line default
 #line hidden
 
-WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    </ul>\r\n");
+                WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    </ul>\r\n");
 
 
 
@@ -80,39 +72,41 @@ WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    </ul>\r\n");
 #line default
 #line hidden
 
-});
+            });
 
-}
+        }
 
 #line hidden
-public static System.Web.WebPages.HelperResult RenderAboutLink(this HtmlHelper Html) {
-return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
+        public static System.Web.WebPages.HelperResult RenderAboutLink(this HtmlHelper Html)
+        {
+            return new System.Web.WebPages.HelperResult(__razor_helper_writer =>
+            {
 
 
 
 #line 13 "D:\forks\razorsinglefilegenerator\samples\MvcSample\Views\Helpers\WebAppHelpers.cshtml"
-                                               
-    
-#line default
-#line hidden
 
-
-#line 14 "D:\forks\razorsinglefilegenerator\samples\MvcSample\Views\Helpers\WebAppHelpers.cshtml"
-WebViewPage.WriteTo(@__razor_helper_writer, Html.ActionLink("About link from helper", "About", "Home"));
 
 #line default
 #line hidden
 
 
 #line 14 "D:\forks\razorsinglefilegenerator\samples\MvcSample\Views\Helpers\WebAppHelpers.cshtml"
-                                                               ;
+                WebViewPage.WriteTo(@__razor_helper_writer, Html.ActionLink("About link from helper", "About", "Home"));
 
 #line default
 #line hidden
 
-});
 
-}
+#line 14 "D:\forks\razorsinglefilegenerator\samples\MvcSample\Views\Helpers\WebAppHelpers.cshtml"
+                ;
+
+#line default
+#line hidden
+
+            });
+
+        }
 
 
     }

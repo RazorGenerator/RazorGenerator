@@ -11,20 +11,8 @@
 
 namespace PrecompiledMvcLibrary.Views.Account
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Text;
-    using System.Web;
-    using System.Web.Helpers;
-    using System.Web.Mvc;
     using System.Web.Mvc.Html;
-    using System.Web.Security;
-    using System.Web.UI;
-    using System.Web.WebPages;
-    
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Account/Register.cshtml")]
     public class Register : System.Web.Mvc.WebViewPage<MvcSample.Models.RegisterModel>
@@ -36,208 +24,209 @@ namespace PrecompiledMvcLibrary.Views.Account
         {
 
 
-WriteLiteral("\r\n\r\n");
+            WriteLiteral("\r\n\r\n");
 
 
-WriteLiteral("\r\n");
+            WriteLiteral("\r\n");
 
 
-            
-            #line 5 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-  
-    ViewBag.Title = "Register";
+
+#line 5 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+
+            ViewBag.Title = "Register";
 
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n<h2>Create a New Account</h2>\r\n<p>\r\n    Use the form below to create a new acco" +
-"unt. \r\n</p>\r\n<p>\r\n    Passwords are required to be a minimum of ");
+
+#line default
+#line hidden
+            WriteLiteral("\r\n<h2>Create a New Account</h2>\r\n<p>\r\n    Use the form below to create a new acco" +
+            "unt. \r\n</p>\r\n<p>\r\n    Passwords are required to be a minimum of ");
 
 
-            
-            #line 14 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-                                         Write(ViewBag.PasswordLength);
 
-            
-            #line default
-            #line hidden
-WriteLiteral(" characters in length.\r\n</p>\r\n\r\n<script src=\"");
+#line 14 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+            Write(ViewBag.PasswordLength);
 
 
-            
-            #line 17 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-        Write(Url.Content("~/Scripts/jquery.validate.min.js"));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\" type=\"text/javascript\"></script>\r\n<script src=\"");
+#line default
+#line hidden
+            WriteLiteral(" characters in length.\r\n</p>\r\n\r\n<script src=\"");
 
 
-            
-            #line 18 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-        Write(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"));
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\" type=\"text/javascript\"></script>\r\n\r\n");
+#line 17 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+            Write(Url.Content("~/Scripts/jquery.validate.min.js"));
 
 
-            
-            #line 20 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
- using (Html.BeginForm()) {
-    
-            
-            #line default
-            #line hidden
-            
-            #line 21 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-Write(Html.ValidationSummary(true, "Account creation was unsuccessful. Please correct the errors and try again."));
-
-            
-            #line default
-            #line hidden
-            
-            #line 21 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-                                                                                                                
-
-            
-            #line default
-            #line hidden
-WriteLiteral("    <div>\r\n        <fieldset>\r\n            <legend>Account Information</legend>\r\n" +
-"\r\n            <div class=\"editor-label\">\r\n                ");
+#line default
+#line hidden
+            WriteLiteral("\" type=\"text/javascript\"></script>\r\n<script src=\"");
 
 
-            
-            #line 27 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-           Write(Html.LabelFor(m => m.UserName));
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">\r\n                ");
+#line 18 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+            Write(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"));
 
 
-            
-            #line 30 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-           Write(Html.TextBoxFor(m => m.UserName));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n                ");
+#line default
+#line hidden
+            WriteLiteral("\" type=\"text/javascript\"></script>\r\n\r\n");
 
 
-            
-            #line 31 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-           Write(Html.ValidationMessageFor(m => m.UserName));
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-label\">\r\n                ");
+#line 20 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+            using (Html.BeginForm())
+            {
 
 
-            
-            #line 35 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-           Write(Html.LabelFor(m => m.Email));
+#line default
+#line hidden
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">\r\n                ");
+#line 21 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.ValidationSummary(true, "Account creation was unsuccessful. Please correct the errors and try again."));
 
 
-            
-            #line 38 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-           Write(Html.TextBoxFor(m => m.Email));
+#line default
+#line hidden
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n                ");
+#line 21 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
 
 
-            
-            #line 39 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-           Write(Html.ValidationMessageFor(m => m.Email));
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-label\">\r\n                ");
+#line default
+#line hidden
+                WriteLiteral("    <div>\r\n        <fieldset>\r\n            <legend>Account Information</legend>\r\n" +
+                "\r\n            <div class=\"editor-label\">\r\n                ");
 
 
-            
-            #line 43 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-           Write(Html.LabelFor(m => m.Password));
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">\r\n                ");
+#line 27 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.LabelFor(m => m.UserName));
 
 
-            
-            #line 46 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-           Write(Html.PasswordFor(m => m.Password));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n                ");
+#line default
+#line hidden
+                WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">\r\n                ");
 
 
-            
-            #line 47 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-           Write(Html.ValidationMessageFor(m => m.Password));
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-label\">\r\n                ");
+#line 30 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.TextBoxFor(m => m.UserName));
 
 
-            
-            #line 51 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-           Write(Html.LabelFor(m => m.ConfirmPassword));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">\r\n                ");
+#line default
+#line hidden
+                WriteLiteral("\r\n                ");
 
 
-            
-            #line 54 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-           Write(Html.PasswordFor(m => m.ConfirmPassword));
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n                ");
+#line 31 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.ValidationMessageFor(m => m.UserName));
 
 
-            
-            #line 55 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-           Write(Html.ValidationMessageFor(m => m.ConfirmPassword));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n            </div>\r\n\r\n            <p>\r\n                <input type=\"submit\" val" +
-"ue=\"Register\" />\r\n            </p>\r\n        </fieldset>\r\n    </div>\r\n");
+#line default
+#line hidden
+                WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-label\">\r\n                ");
 
 
-            
-            #line 63 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
-}
 
-            
-            #line default
-            #line hidden
+#line 35 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.LabelFor(m => m.Email));
+
+
+#line default
+#line hidden
+                WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">\r\n                ");
+
+
+
+#line 38 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.TextBoxFor(m => m.Email));
+
+
+#line default
+#line hidden
+                WriteLiteral("\r\n                ");
+
+
+
+#line 39 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.ValidationMessageFor(m => m.Email));
+
+
+#line default
+#line hidden
+                WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-label\">\r\n                ");
+
+
+
+#line 43 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.LabelFor(m => m.Password));
+
+
+#line default
+#line hidden
+                WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">\r\n                ");
+
+
+
+#line 46 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.PasswordFor(m => m.Password));
+
+
+#line default
+#line hidden
+                WriteLiteral("\r\n                ");
+
+
+
+#line 47 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.ValidationMessageFor(m => m.Password));
+
+
+#line default
+#line hidden
+                WriteLiteral("\r\n            </div>\r\n\r\n            <div class=\"editor-label\">\r\n                ");
+
+
+
+#line 51 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.LabelFor(m => m.ConfirmPassword));
+
+
+#line default
+#line hidden
+                WriteLiteral("\r\n            </div>\r\n            <div class=\"editor-field\">\r\n                ");
+
+
+
+#line 54 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.PasswordFor(m => m.ConfirmPassword));
+
+
+#line default
+#line hidden
+                WriteLiteral("\r\n                ");
+
+
+
+#line 55 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+                Write(Html.ValidationMessageFor(m => m.ConfirmPassword));
+
+
+#line default
+#line hidden
+                WriteLiteral("\r\n            </div>\r\n\r\n            <p>\r\n                <input type=\"submit\" val" +
+                "ue=\"Register\" />\r\n            </p>\r\n        </fieldset>\r\n    </div>\r\n");
+
+
+
+#line 63 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\Register.cshtml"
+            }
+
+
+#line default
+#line hidden
 
         }
     }

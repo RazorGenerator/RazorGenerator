@@ -11,109 +11,109 @@
 
 namespace TemplateSample
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.2.0.0")]
     public partial class PreProcessedTemplate : CustomTemplateBase
     {
 #line hidden
 
-        #line 4 "..\..\PreProcessedTemplate.cshtml"
+#line 4 "..\..\PreProcessedTemplate.cshtml"
 
-    public IEnumerable<TemplateSample.TestResult> TestResults { get; set; }
+        public IEnumerable<TemplateSample.TestResult> TestResults { get; set; }
 
-        #line default
-        #line hidden
+#line default
+#line hidden
 
         public override void Execute()
         {
 
 
-WriteLiteral("\r\n");
+            WriteLiteral("\r\n");
 
 
-WriteLiteral("\r\n");
+            WriteLiteral("\r\n");
 
 
-WriteLiteral("\r\n\r\n<?xml version=\"1.0\" ?>\r\n<tests>\r\n");
+            WriteLiteral("\r\n\r\n<?xml version=\"1.0\" ?>\r\n<tests>\r\n");
 
 
-            
-            #line 10 "..\..\PreProcessedTemplate.cshtml"
-     foreach (var result in TestResults) { 
 
-            
-            #line default
-            #line hidden
-WriteLiteral("        <test id=\"");
+#line 10 "..\..\PreProcessedTemplate.cshtml"
+            foreach (var result in TestResults)
+            {
 
 
-            
-            #line 11 "..\..\PreProcessedTemplate.cshtml"
-             Write(result.Id);
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\">\r\n            <name>");
+#line default
+#line hidden
+                WriteLiteral("        <test id=\"");
 
 
-            
-            #line 12 "..\..\PreProcessedTemplate.cshtml"
-             Write(result.Name);
 
-            
-            #line default
-            #line hidden
-WriteLiteral("</name>\r\n            <result>\r\n");
+#line 11 "..\..\PreProcessedTemplate.cshtml"
+                Write(result.Id);
 
 
-            
-            #line 14 "..\..\PreProcessedTemplate.cshtml"
-             if(result.Passed) {
-
-            
-            #line default
-            #line hidden
-WriteLiteral("                ");
-
-WriteLiteral(" Success\r\n");
+#line default
+#line hidden
+                WriteLiteral("\">\r\n            <name>");
 
 
-            
-            #line 16 "..\..\PreProcessedTemplate.cshtml"
+
+#line 12 "..\..\PreProcessedTemplate.cshtml"
+                Write(result.Name);
+
+
+#line default
+#line hidden
+                WriteLiteral("</name>\r\n            <result>\r\n");
+
+
+
+#line 14 "..\..\PreProcessedTemplate.cshtml"
+                if (result.Passed)
+                {
+
+
+#line default
+#line hidden
+                    WriteLiteral("                ");
+
+                    WriteLiteral(" Success\r\n");
+
+
+
+#line 16 "..\..\PreProcessedTemplate.cshtml"
+                }
+                else
+                {
+
+
+#line default
+#line hidden
+                    WriteLiteral("                ");
+
+                    WriteLiteral(" Failed\r\n");
+
+
+
+#line 19 "..\..\PreProcessedTemplate.cshtml"
+                }
+
+
+#line default
+#line hidden
+                WriteLiteral("            </result>\r\n        </test>\r\n");
+
+
+
+#line 22 "..\..\PreProcessedTemplate.cshtml"
             }
-            else{
-
-            
-            #line default
-            #line hidden
-WriteLiteral("                ");
-
-WriteLiteral(" Failed\r\n");
 
 
-            
-            #line 19 "..\..\PreProcessedTemplate.cshtml"
-            }
-
-            
-            #line default
-            #line hidden
-WriteLiteral("            </result>\r\n        </test>\r\n");
-
-
-            
-            #line 22 "..\..\PreProcessedTemplate.cshtml"
-    }
-
-            
-            #line default
-            #line hidden
-WriteLiteral("</test>\r\n");
+#line default
+#line hidden
+            WriteLiteral("</test>\r\n");
 
 
         }

@@ -11,22 +11,7 @@
 
 namespace PrecompiledMvcLibrary.Areas.MyPluggableArea.Views.Foo
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Text;
-    using System.Web;
-    using System.Web.Helpers;
-    using System.Web.Mvc;
-    using System.Web.Mvc.Ajax;
-    using System.Web.Mvc.Html;
-    using System.Web.Routing;
-    using System.Web.Security;
-    using System.Web.UI;
-    using System.Web.WebPages;
-    
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.2.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Areas/MyPluggableArea/Views/Foo/Index.cshtml")]
     public class Index : System.Web.Mvc.WebViewPage<dynamic>
@@ -37,18 +22,18 @@ namespace PrecompiledMvcLibrary.Areas.MyPluggableArea.Views.Foo
         public override void Execute()
         {
 
-            
-            #line 1 "..\..\Areas\MyPluggableArea\Views\Foo\Index.cshtml"
-  
-    Layout = null;
+
+#line 1 "..\..\Areas\MyPluggableArea\Views\Foo\Index.cshtml"
+
+            Layout = null;
 
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n<!DOCTYPE html>\r\n\r\n<html>\r\n<head>\r\n    <title>Index</title>\r\n</head>\r\n<body>\r\n " +
-"   <div>\r\n        <h1>Foo\\Index view from MyPluggableArea!</h1>\r\n    </div>\r\n</b" +
-"ody>\r\n</html>\r\n");
+
+#line default
+#line hidden
+            WriteLiteral("\r\n<!DOCTYPE html>\r\n\r\n<html>\r\n<head>\r\n    <title>Index</title>\r\n</head>\r\n<body>\r\n " +
+            "   <div>\r\n        <h1>Foo\\Index view from MyPluggableArea!</h1>\r\n    </div>\r\n</b" +
+            "ody>\r\n</html>\r\n");
 
 
         }

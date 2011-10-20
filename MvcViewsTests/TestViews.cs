@@ -1,13 +1,15 @@
-﻿using HtmlAgilityPack;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PrecompiledMvcLibrary.Views.Home;
 using RazorGenerator.Testing;
 
-namespace MvcViewsTests {
+namespace MvcViewsTests
+{
     [TestClass]
-    public class TestViews {
+    public class TestViews
+    {
         [TestMethod]
-        public void TestRenderPlainText() {
+        public void TestRenderPlainText()
+        {
             const string message = "Some unit test message!";
 
             // Instantiate the view directly
@@ -24,7 +26,8 @@ namespace MvcViewsTests {
         }
 
         [TestMethod]
-        public void TestRenderAsHtml() {
+        public void TestRenderAsHtml()
+        {
             const string message = "Some unit test message!";
 
             // Instantiate the view directly
@@ -43,7 +46,8 @@ namespace MvcViewsTests {
 
 
         [TestMethod]
-        public void TestLayout() {
+        public void TestLayout()
+        {
             const string title = "Some unit test title!";
 
             // Instantiate the view directly

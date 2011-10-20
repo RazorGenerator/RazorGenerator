@@ -7,19 +7,20 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.WebPages;
-using HtmlAgilityPack;
-using Moq;
-using ReflectionMagic;
 
-namespace RazorGenerator.Testing {
-    public static class WebViewPageExtensions {
+namespace RazorGenerator.Testing
+{
+    public static class WebViewPageExtensions
+    {
         private static readonly DummyViewEngine _viewEngine = new DummyViewEngine();
 
-        public static string Render<TModel>(this WebViewPage<TModel> view, TModel model = default(TModel)) {
+        public static string Render<TModel>(this WebViewPage<TModel> view, TModel model = default(TModel))
+        {
             return Render<TModel>(view, null, model);
         }
 
-        public static string Render<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext, TModel model = default(TModel)) {
+        public static string Render<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext, TModel model = default(TModel))
+        {
             view.Initialize(httpContext);
 
             view.ViewData.Model = model;
@@ -48,11 +49,13 @@ namespace RazorGenerator.Testing {
             return writer.ToString();
         }
 
-        public static HtmlDocument RenderAsHtml<TModel>(this WebViewPage<TModel> view, TModel model = default(TModel)) {
+        public static HtmlDocument RenderAsHtml<TModel>(this WebViewPage<TModel> view, TModel model = default(TModel))
+        {
             return RenderAsHtml<TModel>(view, null, model);
         }
 
-        public static HtmlDocument RenderAsHtml<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext, TModel model = default(TModel)) {
+        public static HtmlDocument RenderAsHtml<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext, TModel model = default(TModel))
+        {
             string html = Render(view, model);
 
             var doc = new HtmlDocument();
@@ -60,7 +63,8 @@ namespace RazorGenerator.Testing {
             return doc;
         }
 
-        private static void Initialize<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext) {
+        private static void Initialize<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext)
+        {
             EnsureViewEngineRegistered();
 
             var context = httpContext ?? CreateMockContext();
@@ -74,10 +78,13 @@ namespace RazorGenerator.Testing {
             view.InitHelpers();
         }
 
-        private static void EnsureViewEngineRegistered() {
+        private static void EnsureViewEngineRegistered()
+        {
             // Make sure our dummy view engine is registered
-            lock (_viewEngine) {
-                if (!ViewEngines.Engines.Contains(_viewEngine)) {
+            lock (_viewEngine)
+            {
+                if (!ViewEngines.Engines.Contains(_viewEngine))
+                {
                     ViewEngines.Engines.Clear();
                     ViewEngines.Engines.Insert(0, _viewEngine);
                 }
@@ -88,7 +95,8 @@ namespace RazorGenerator.Testing {
         /// Creates a basic HttpContext mock for rendering a view.
         /// </summary>
         /// <returns>A mocked HttpContext object</returns>
-        private static HttpContextBase CreateMockContext() {
+        private static HttpContextBase CreateMockContext()
+        {
             // Use Moq for faking context objects as it can setup all members
             // so that by default, calls to the members return a default/null value 
             // instead of a not implemented exception.
@@ -120,28 +128,35 @@ namespace RazorGenerator.Testing {
 
         // Define minimal 'dummy' implementation of various things needed in order to render the view
 
-        class DummyController : ControllerBase {
+        class DummyController : ControllerBase
+        {
             // Moq can't help with protected members.
             protected override void ExecuteCore() { }
         }
 
-        class DummyViewEngine : IViewEngine {
-            public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache) {
+        class DummyViewEngine : IViewEngine
+        {
+            public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
+            {
                 return new ViewEngineResult(new DummyView { ViewName = partialViewName }, this);
             }
 
-            public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache) {
+            public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
+            {
                 return new ViewEngineResult(new DummyView { ViewName = viewName }, this);
             }
 
-            public void ReleaseView(ControllerContext controllerContext, IView view) {
+            public void ReleaseView(ControllerContext controllerContext, IView view)
+            {
             }
         }
 
-        class DummyView : IView {
+        class DummyView : IView
+        {
             public string ViewName { get; set; }
 
-            public void Render(ViewContext viewContext, TextWriter writer) {
+            public void Render(ViewContext viewContext, TextWriter writer)
+            {
                 // Render a marker instead of actually rendering the partial view
                 writer.WriteLine(String.Format("/* {0} */", ViewName));
             }

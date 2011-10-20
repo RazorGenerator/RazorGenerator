@@ -11,20 +11,7 @@
 
 namespace PrecompiledMvcLibrary.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Text;
-    using System.Web;
-    using System.Web.Helpers;
-    using System.Web.Mvc;
-    using System.Web.Mvc.Html;
-    using System.Web.Security;
-    using System.Web.UI;
-    using System.Web.WebPages;
-    
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/_ViewStart.cshtml")]
     public class _ViewStart : System.Web.Mvc.ViewStartPage
@@ -36,17 +23,17 @@ namespace PrecompiledMvcLibrary.Views
         {
 
 
-WriteLiteral("\r\n");
+            WriteLiteral("\r\n");
 
 
-            
-            #line 2 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\_ViewStart.cshtml"
-  
-    Layout = "~/Views/Shared/_Layout.cshtml";
 
-            
-            #line default
-            #line hidden
+#line 2 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\_ViewStart.cshtml"
+
+            Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+#line default
+#line hidden
 
         }
     }

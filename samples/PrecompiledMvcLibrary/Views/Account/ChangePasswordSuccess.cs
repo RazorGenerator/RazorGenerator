@@ -11,20 +11,7 @@
 
 namespace PrecompiledMvcLibrary.Views.Account
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Text;
-    using System.Web;
-    using System.Web.Helpers;
-    using System.Web.Mvc;
-    using System.Web.Mvc.Html;
-    using System.Web.Security;
-    using System.Web.UI;
-    using System.Web.WebPages;
-    
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Account/ChangePasswordSuccess.cshtml")]
     public class ChangePasswordSuccess : System.Web.Mvc.WebViewPage<dynamic>
@@ -35,17 +22,17 @@ namespace PrecompiledMvcLibrary.Views.Account
         public override void Execute()
         {
 
-            
-            #line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePasswordSuccess.cshtml"
-  
-    ViewBag.Title = "Change Password";
+
+#line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Account\ChangePasswordSuccess.cshtml"
+
+            ViewBag.Title = "Change Password";
 
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n<h2>Change Password</h2>\r\n<p>\r\n    Your password has been changed successfully." +
-"\r\n</p>\r\n");
+
+#line default
+#line hidden
+            WriteLiteral("\r\n<h2>Change Password</h2>\r\n<p>\r\n    Your password has been changed successfully." +
+            "\r\n</p>\r\n");
 
 
         }

@@ -1,21 +1,26 @@
 ﻿using System;
 using System.Linq;
 
-namespace TemplateSample {
-    class Program {
-        static void Main(string[] args) {
+namespace TemplateSample
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
             RenderTestTemplate();
             RenderMailTemplate();
         }
 
-        private static void RenderTestTemplate() {
+        private static void RenderTestTemplate()
+        {
             // Create the template
             var preprocessedTemplate = new PreProcessedTemplate();
 
             // Give it some input data
             preprocessedTemplate.TestResults =
                 from i in Enumerable.Range(0, 40)
-                select new TestResult {
+                select new TestResult
+                {
                     Id = Guid.NewGuid(),
                     Name = "Test" + i,
                     Passed = i % 2 == 0
@@ -25,9 +30,11 @@ namespace TemplateSample {
             Console.WriteLine(preprocessedTemplate.TransformText());
         }
 
-        private static void RenderMailTemplate() {
+        private static void RenderMailTemplate()
+        {
             // Create the template
-            var preprocessedTemplate = new MailTemplate() {
+            var preprocessedTemplate = new MailTemplate()
+            {
                 Layout = new MyLayout()
             };
 

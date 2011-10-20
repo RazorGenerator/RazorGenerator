@@ -1,12 +1,16 @@
 ﻿using System.Web.WebPages;
 using System.Web.WebPages.Razor;
 
-namespace PrecompiledWebPagesHelper {
-    public static class PreApplicationStartCode {
+namespace PrecompiledWebPagesHelper
+{
+    public static class PreApplicationStartCode
+    {
         private static bool _startCalled;
 
-        public static void Start() {
-            if (_startCalled) {
+        public static void Start()
+        {
+            if (_startCalled)
+            {
                 return;
             }
             _startCalled = true;

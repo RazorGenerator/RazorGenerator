@@ -11,20 +11,8 @@
 
 namespace PrecompiledMvcLibrary.Views.Shared
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Text;
-    using System.Web;
-    using System.Web.Helpers;
-    using System.Web.Mvc;
     using System.Web.Mvc.Html;
-    using System.Web.Security;
-    using System.Web.UI;
-    using System.Web.WebPages;
-    
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Shared/_LogOnPartial.cshtml")]
     public class _LogOnPartial : System.Web.Mvc.WebViewPage<dynamic>
@@ -35,70 +23,72 @@ namespace PrecompiledMvcLibrary.Views.Shared
         public override void Execute()
         {
 
-            
-            #line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
- if(Request.IsAuthenticated) {
 
-            
-            #line default
-            #line hidden
-WriteLiteral("    ");
-
-WriteLiteral("Welcome <b>");
+#line 1 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
+            if (Request.IsAuthenticated)
+            {
 
 
-            
-            #line 2 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
+#line default
+#line hidden
+                WriteLiteral("    ");
+
+                WriteLiteral("Welcome <b>");
+
+
+
+#line 2 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
                 Write(Context.User.Identity.Name);
 
-            
-            #line default
-            #line hidden
-WriteLiteral("</b>!\r\n    [ ");
+
+#line default
+#line hidden
+                WriteLiteral("</b>!\r\n    [ ");
 
 
-            
-            #line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
- Write(Html.ActionLink("Log Off", "LogOff", "Account"));
 
-            
-            #line default
-            #line hidden
-WriteLiteral(" ]");
-
-WriteLiteral("\r\n");
+#line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
+                Write(Html.ActionLink("Log Off", "LogOff", "Account"));
 
 
-            
-            #line 4 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
-}
-else {
+#line default
+#line hidden
+                WriteLiteral(" ]");
 
-            
-            #line default
-            #line hidden
-WriteLiteral("    ");
-
-WriteLiteral("[ ");
+                WriteLiteral("\r\n");
 
 
-            
-            #line 6 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
-   Write(Html.ActionLink("Log On", "LogOn", "Account"));
 
-            
-            #line default
-            #line hidden
-WriteLiteral(" ]\r\n");
+#line 4 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
+            }
+            else
+            {
 
 
-            
-            #line 7 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
-}
+#line default
+#line hidden
+                WriteLiteral("    ");
 
-            
-            #line default
-            #line hidden
+                WriteLiteral("[ ");
+
+
+
+#line 6 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
+                Write(Html.ActionLink("Log On", "LogOn", "Account"));
+
+
+#line default
+#line hidden
+                WriteLiteral(" ]\r\n");
+
+
+
+#line 7 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\_LogOnPartial.cshtml"
+            }
+
+
+#line default
+#line hidden
 
         }
     }

@@ -11,20 +11,7 @@
 
 namespace PrecompiledMvcLibrary.Views.Shared
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Text;
-    using System.Web;
-    using System.Web.Helpers;
-    using System.Web.Mvc;
-    using System.Web.Mvc.Html;
-    using System.Web.Security;
-    using System.Web.UI;
-    using System.Web.WebPages;
-    
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.0.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Shared/Error.cshtml")]
     public class Error : System.Web.Mvc.WebViewPage<System.Web.Mvc.HandleErrorInfo>
@@ -35,19 +22,19 @@ namespace PrecompiledMvcLibrary.Views.Shared
         public override void Execute()
         {
 
-WriteLiteral("\r\n");
+            WriteLiteral("\r\n");
 
 
-            
-            #line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Error.cshtml"
-  
-    ViewBag.Title = "Error";
+
+#line 3 "D:\forks\razorsinglefilegenerator\samples\PrecompiledMvcLibrary\Views\Shared\Error.cshtml"
+
+            ViewBag.Title = "Error";
 
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n<h2>\r\n    Sorry, an error occurred while processing your request.\r\n</h2>\r\n");
+
+#line default
+#line hidden
+            WriteLiteral("\r\n<h2>\r\n    Sorry, an error occurred while processing your request.\r\n</h2>\r\n");
 
 
         }

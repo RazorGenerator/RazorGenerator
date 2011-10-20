@@ -2,13 +2,17 @@
 using System.Web.WebPages;
 using RazorGenerator.Mvc;
 
-namespace PrecompiledMvcLibrary {
+namespace PrecompiledMvcLibrary
+{
 
-    public static class PreApplicationStartCode {
+    public static class PreApplicationStartCode
+    {
         private static bool _startMethodExecuted = false;
 
-        public static void Start() {
-            if (_startMethodExecuted == true) {
+        public static void Start()
+        {
+            if (_startMethodExecuted == true)
+            {
                 return;
             }
 

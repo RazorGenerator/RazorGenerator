@@ -11,11 +11,7 @@
 
 namespace TemplateSample
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    
+
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.2.0.0")]
     public partial class MyLayout : RazorGenerator.Templating.RazorTemplateBase
     {
@@ -25,20 +21,20 @@ namespace TemplateSample
         {
 
 
-WriteLiteral("\r\n");
+            WriteLiteral("\r\n");
 
 
-WriteLiteral("\r\nBefore\r\n\r\n");
+            WriteLiteral("\r\nBefore\r\n\r\n");
 
 
-            
-            #line 6 "D:\Code\CodePlex\RazorGenerator\samples\TemplateSample\MyLayout.cshtml"
-Write(RenderBody());
 
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n\r\nAfter\r\n");
+#line 6 "D:\Code\CodePlex\RazorGenerator\samples\TemplateSample\MyLayout.cshtml"
+            Write(RenderBody());
+
+
+#line default
+#line hidden
+            WriteLiteral("\r\n\r\nAfter\r\n");
 
 
         }
