@@ -7,6 +7,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.WebPages;
+using HtmlAgilityPack;
+using Moq;
+using ReflectionMagic;
 
 namespace RazorGenerator.Testing
 {
@@ -56,7 +59,7 @@ namespace RazorGenerator.Testing
 
         public static HtmlDocument RenderAsHtml<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext, TModel model = default(TModel))
         {
-            string html = Render(view, model);
+            string html = Render(view, httpContext, model);
 
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
