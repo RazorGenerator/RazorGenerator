@@ -7,6 +7,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.WebPages;
+using HtmlAgilityPack;
+using Moq;
+using ReflectionMagic;
 
 namespace RazorGenerator.Testing
 {
