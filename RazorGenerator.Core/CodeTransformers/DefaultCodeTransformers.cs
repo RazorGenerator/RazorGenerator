@@ -1,10 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Web;
 
 namespace RazorGenerator.Core
 {
@@ -19,26 +16,6 @@ namespace RazorGenerator.Core
                         new CodeAttributeArgument(new CodePrimitiveExpression(tool)),
                         new CodeAttributeArgument(new CodePrimitiveExpression(version.ToString()))
             ));
-        }
-    }
-
-    public class AddPageVirtualPathAttribute : RazorCodeTransformerBase
-    {
-        private string _projectRelativePath;
-
-        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
-        {
-            _projectRelativePath = razorHost.ProjectRelativePath;
-        }
-
-        public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
-        {
-            Debug.Assert(_projectRelativePath != null, "Initialize has to be called before we get here.");
-            var virtualPath = VirtualPathUtility.ToAppRelative("~/" + _projectRelativePath.TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
-
-            generatedClass.CustomAttributes.Add(
-                new CodeAttributeDeclaration(typeof(System.Web.WebPages.PageVirtualPathAttribute).FullName,
-                new CodeAttributeArgument(new CodePrimitiveExpression(virtualPath))));
         }
     }
 

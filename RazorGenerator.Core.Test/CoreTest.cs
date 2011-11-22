@@ -2,97 +2,62 @@
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
+using Xunit.Extensions;
 
 namespace RazorGenerator.Core.Test
 {
-    [TestClass]
     public class CoreTest
     {
-        public TestContext TestContext { get; set; }
-
-        [TestMethod]
-        public void WebPageTest()
+        [Theory]
+        [InlineData(new object[] { "WebPageTest" })]
+        [InlineData(new object[] { "WebPageHelperTest" })]
+        [InlineData(new object[] { "MvcViewTest" })]
+        [InlineData(new object[] { "MvcHelperTest" })]
+        [InlineData(new object[] { "TemplateTest" })]
+        [InlineData(new object[] { "_ViewStart" })]
+        [InlineData(new object[] { "DirectivesTest" })]
+        [InlineData(new object[] { "TemplateWithBaseTypeTest" })]
+        [InlineData(new object[] { "VirtualPathAttributeTest" })]
+        public void TestTransformerType(string testName)
         {
-            TestTransformerType();
-        }
-
-        [TestMethod]
-        public void WebPageHelperTest()
-        {
-            TestTransformerType();
-        }
-
-        [TestMethod]
-        public void MvcHelperTest()
-        {
-            TestTransformerType();
-        }
-
-        [TestMethod]
-        public void MvcViewTest()
-        {
-            TestTransformerType();
-        }
-
-        [TestMethod]
-        public void TemplateTest()
-        {
-            TestTransformerType();
-        }
-
-        [TestMethod]
-        public void _ViewStart()
-        {
-            TestTransformerType();
-        }
-
-        [TestMethod]
-        public void DirectivesTest()
-        {
-            TestTransformerType();
-        }
-
-        [TestMethod]
-        public void TemplateWithBaseTypeTest()
-        {
-            TestTransformerType();
-        }
-
-        private void TestTransformerType()
-        {
-            using (var razorGenerator = new HostManager(TestContext.TestDeploymentDir, loadExtensions: false))
+            string workingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            using (var razorGenerator = new HostManager(workingDirectory, loadExtensions: false))
             {
-                string inputFile = SaveInputFile(TestContext);
-                var host = razorGenerator.CreateHost(inputFile, TestContext.TestName + ".cshtml");
+                string inputFile = SaveInputFile(workingDirectory, testName);
+                var host = razorGenerator.CreateHost(inputFile, testName + ".cshtml");
                 host.DefaultNamespace = GetType().Namespace;
                 host.EnableLinePragmas = false;
 
                 var output = host.GenerateCode();
-                AssertOutput(TestContext, output);
+                AssertOutput(testName, output);
             }
         }
 
-        private static string SaveInputFile(TestContext testContext)
+        private static string SaveInputFile(string outputDirectory, string testName)
         {
-            string outputFile = Path.Combine(testContext.TestDeploymentDir, testContext.TestName);
-            File.WriteAllText(outputFile, GetManifestFileContent(testContext, "Input"));
+            if (!Directory.Exists(outputDirectory))
+            {
+                Directory.CreateDirectory(outputDirectory);
+            }
+            string outputFile = Path.Combine(outputDirectory, testName + ".cshtml");
+            File.WriteAllText(outputFile, GetManifestFileContent(testName, "Input"));
             return outputFile;
         }
 
-        private static void AssertOutput(TestContext testContext, string output)
+        private static void AssertOutput(string testName, string output)
         {
-            var expectedContent = GetManifestFileContent(testContext, "Output");
+            var expectedContent = GetManifestFileContent(testName, "Output");
             output = Regex.Replace(output, @"Runtime Version:[\d.]*", "Runtime Version:N.N.NNNNN.N");
             expectedContent = expectedContent.Replace("v.v.v.v", typeof(HostManager).Assembly.GetName().Version.ToString());
 
-            Assert.AreEqual(expectedContent, output);
+            Assert.Equal(expectedContent, output);
         }
 
-        private static string GetManifestFileContent(TestContext testContext, string fileType)
+        private static string GetManifestFileContent(string testName, string fileType)
         {
             var extension = fileType.Equals("Input", StringComparison.OrdinalIgnoreCase) ? "cshtml" : "txt";
-            var resourceName = String.Join(".", "RazorGenerator.Core.Test.TestFiles", fileType, testContext.TestName, extension);
+            var resourceName = String.Join(".", "RazorGenerator.Core.Test.TestFiles", fileType, testName, extension);
 
             using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName)))
             {

@@ -10,7 +10,7 @@ namespace RazorGenerator.Core
     {
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
-            string projectPath = GetProjectRoot(razorHost.ProjectRelativePath, razorHost.FullPath);
+            string projectPath = GetProjectRoot(razorHost.ProjectRelativePath, razorHost.FullPath).TrimEnd(Path.DirectorySeparatorChar);
             string currentPath = razorHost.FullPath;
             string directoryVirtualPath = null;
 

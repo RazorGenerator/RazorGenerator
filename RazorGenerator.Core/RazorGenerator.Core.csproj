@@ -50,6 +50,7 @@
     <Compile Include="CodeTransformers\AddWebConfigNamespaces.cs" />
     <Compile Include="CodeTransformers\DefaultCodeTransformers.cs" />
     <Compile Include="CodeTransformers\DirectivesBasedTransformers.cs" />
+    <Compile Include="CodeTransformers\AddPageVirtualPathAttribute.cs" />
     <Compile Include="CodeTransformers\RemoveLineHiddenPragmas.cs" />
     <Compile Include="CodeTransformers\RewriteLinePragmas.cs" />
     <Compile Include="CodeTransformers\SetTypeVisibility.cs" />

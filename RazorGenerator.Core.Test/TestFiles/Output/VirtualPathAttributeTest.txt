@@ -13,15 +13,27 @@ namespace RazorGenerator.Core.Test
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
+    using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Text;
+    using System.Web;
+    using System.Web.Helpers;
+    using System.Web.Mvc;
+    using System.Web.Mvc.Ajax;
+    using System.Web.Mvc.Html;
+    using System.Web.Routing;
+    using System.Web.Security;
+    using System.Web.UI;
+    using System.Web.WebPages;
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "v.v.v.v")]
-    public partial class TemplateTest : RazorGenerator.Templating.RazorTemplateBase
+    [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Account/Users.cshtml")]
+    public class VirtualPathAttributeTest : System.Web.Mvc.WebViewPage<dynamic>
     {
-#line hidden
-
+        public VirtualPathAttributeTest()
+        {
+        }
         public override void Execute()
         {
 
@@ -29,47 +41,11 @@ namespace RazorGenerator.Core.Test
 WriteLiteral("\r\n\r\n");
 
 
-WriteLiteral("\r\n<?xml version=\"1.0\" ?>\r\n<tests>\r\n");
+  
+    ViewBag.Title = "About Us";
 
 
-     foreach (var result in TestResults) { 
-
-WriteLiteral("        <test id=\"");
-
-
-             Write(result.Id);
-
-WriteLiteral("\">\r\n            <name>");
-
-
-             Write(result.Name);
-
-WriteLiteral("</name>\r\n            <result>\r\n");
-
-
-             if(result.Passed) {
-
-WriteLiteral("                ");
-
-WriteLiteral(" Success\r\n");
-
-
-            }
-            else{
-
-WriteLiteral("                ");
-
-WriteLiteral(" Failed\r\n");
-
-
-            }
-
-WriteLiteral("            </result>\r\n        </test>\r\n");
-
-
-    }
-
-WriteLiteral("</test>\r\n");
+WriteLiteral("\r\n<h2>About</h2>\r\n<p>\r\n     Put content here.\r\n</p>\r\n");
 
 
         }

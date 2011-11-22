@@ -1,13 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using Xunit;
 
 namespace RazorGenerator.Core.Test
 {
-    [TestClass]
     public class HostManagerTest
     {
-        public TestContext TestContext { get; set; }
-
-        [TestMethod]
+        [Fact]
         public void HostManagerHieruisticForMvcHelperInViewsFolder()
         {
             // Arrange
@@ -16,16 +14,16 @@ namespace RazorGenerator.Core.Test
             var path3 = @"View\CustomModel.cshtml";
 
             // Act 
-            var guess1 = HostManager.GuessHost(TestContext.TestDeploymentDir, path1);
-            var guess2 = HostManager.GuessHost(TestContext.TestDeploymentDir, path2);
-            var guess3 = HostManager.GuessHost(TestContext.TestDeploymentDir, path3);
+            var guess1 = HostManager.GuessHost(Directory.GetCurrentDirectory(), path1);
+            var guess2 = HostManager.GuessHost(Directory.GetCurrentDirectory(), path2);
+            var guess3 = HostManager.GuessHost(Directory.GetCurrentDirectory(), path3);
 
-            Assert.AreEqual("MvcHelper", guess1);
-            Assert.AreEqual("MvcHelper", guess2);
-            Assert.IsNull(guess3);
+            Assert.Equal("MvcHelper", guess1);
+            Assert.Equal("MvcHelper", guess2);
+            Assert.Null(guess3);
         }
 
-        [TestMethod]
+        [Fact]
         public void HostManagerHieruisticForMvcViews()
         {
             // Arrange
@@ -33,11 +31,11 @@ namespace RazorGenerator.Core.Test
             var path2 = @"Views\Shared\_Layout.cshtml";
 
             // Act 
-            var guess1 = HostManager.GuessHost(TestContext.TestDeploymentDir, path1);
-            var guess2 = HostManager.GuessHost(TestContext.TestDeploymentDir, path2);
+            var guess1 = HostManager.GuessHost(Directory.GetCurrentDirectory(), path1);
+            var guess2 = HostManager.GuessHost(Directory.GetCurrentDirectory(), path2);
 
-            Assert.AreEqual("MvcView", guess1);
-            Assert.AreEqual("MvcView", guess2);
+            Assert.Equal("MvcView", guess1);
+            Assert.Equal("MvcView", guess2);
         }
     }
 }
