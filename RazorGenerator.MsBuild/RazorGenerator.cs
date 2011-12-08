@@ -50,6 +50,12 @@ namespace RazorGenerator.MsBuild
                     string itemNamespace = GetNamespace(file, projectRelativePath);
 
                     string outputPath = Path.Combine(TemporaryCodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + ".cs";
+
+                    if (!RequiresRecompilation(filePath, outputPath))
+                    {
+                        continue;
+                    }
+
                     EnsureDirectory(outputPath);
 
                     var host = hostManager.CreateHost(filePath, projectRelativePath);
@@ -85,6 +91,18 @@ namespace RazorGenerator.MsBuild
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Determines if the file has a corresponding output code-gened file that does not require updating.
+        /// </summary>
+        private static bool RequiresRecompilation(string filePath, string outputPath)
+        {
+            if (!File.Exists(outputPath))
+            {
+                return true;
+            }
+            return File.GetLastWriteTimeUtc(filePath) > File.GetLastWriteTimeUtc(outputPath);
         }
 
         private string GetNamespace(ITaskItem file, string projectRelativePath)
