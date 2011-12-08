@@ -58,6 +58,9 @@
     <Compile Include="EventArgs.cs" />
     <Compile Include="ICodeGenerationEventProvider.cs" />
     <Compile Include="IRazorCodeTransformer.cs" />
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HostManager.cs" />
     <Compile Include="ExportedTransformers\MvcHelperTransformer.cs">
