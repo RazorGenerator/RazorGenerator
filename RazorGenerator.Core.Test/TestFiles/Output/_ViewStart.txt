@@ -29,9 +29,9 @@ namespace RazorGenerator.Core.Test
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "v.v.v.v")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/_ViewStart.cshtml")]
-    public class _ViewStart : System.Web.Mvc.ViewStartPage
+    public class ViewStart : System.Web.Mvc.ViewStartPage
     {
-        public _ViewStart()
+        public ViewStart()
         {
         }
         public override void Execute()
