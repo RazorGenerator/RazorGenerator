@@ -17,10 +17,19 @@ namespace RazorGenerator.Mvc
     public class PrecompiledMvcEngine : VirtualPathProviderViewEngine, IVirtualPathFactory
     {
         private readonly IDictionary<string, Type> _mappings;
+        private readonly string _baseVirtualPath;
         private readonly DateTime _assemblyCreatedTime;
+
         public PrecompiledMvcEngine(Assembly assembly)
+            : this(assembly, null)
+        {
+
+        }
+
+        public PrecompiledMvcEngine(Assembly assembly, string baseVirtualPath)
         {
             _assemblyCreatedTime = File.GetLastWriteTimeUtc(assembly.Location);
+            _baseVirtualPath = NormalizeBaseVirtualPath(baseVirtualPath);
 
             base.AreaViewLocationFormats = new[] {
                 "~/Areas/{2}/Views/{1}/{0}.cshtml", 
@@ -56,7 +65,7 @@ namespace RazorGenerator.Mvc
                          where typeof(WebPageRenderingBase).IsAssignableFrom(type)
                          let pageVirtualPath = type.GetCustomAttributes(inherit: false).OfType<PageVirtualPathAttribute>().FirstOrDefault()
                          where pageVirtualPath != null
-                         select new KeyValuePair<string, Type>(pageVirtualPath.VirtualPath, type)
+                         select new KeyValuePair<string, Type>(CombineVirtualPaths(_baseVirtualPath, pageVirtualPath.VirtualPath), type)
                          ).ToDictionary(t => t.Key, t => t.Value, StringComparer.OrdinalIgnoreCase);
         }
 
@@ -139,8 +148,44 @@ namespace RazorGenerator.Mvc
 
         private bool IsPhysicalFileNewer(string virtualPath)
         {
-            string path = HttpContext.Current.Request.MapPath(virtualPath);
-            return File.Exists(path) && File.GetLastWriteTimeUtc(path) > _assemblyCreatedTime;
+            if (virtualPath.StartsWith(_baseVirtualPath ?? String.Empty, StringComparison.Ordinal))
+            {
+                // If a base virtual path is specified, we should remove it as a prefix. Everything that follows should map to a view file on disk.
+                if (!String.IsNullOrEmpty(_baseVirtualPath))
+                {
+                    virtualPath = '~' + virtualPath.Substring(_baseVirtualPath.Length);
+                }
+
+                string path = HttpContext.Current.Request.MapPath(virtualPath);
+                return File.Exists(path) && File.GetLastWriteTimeUtc(path) > _assemblyCreatedTime;
+            }
+            return false;
+        }
+
+        private static string NormalizeBaseVirtualPath(string virtualPath)
+        {
+            if (!String.IsNullOrEmpty(virtualPath))
+            {
+                // For a virtual path to combine properly, it needs to start with a ~/ and end with a /.
+                if (!virtualPath.StartsWith("~/", StringComparison.Ordinal))
+                {
+                    virtualPath = "~/" + virtualPath;
+                }
+                if (!virtualPath.EndsWith("/", StringComparison.Ordinal))
+                {
+                    virtualPath += "/";
+                }
+            }
+            return virtualPath;
+        }
+
+        private static string CombineVirtualPaths(string baseVirtualPath, string virtualPath)
+        {
+            if (!String.IsNullOrEmpty(baseVirtualPath))
+            {
+                return VirtualPathUtility.Combine(baseVirtualPath, virtualPath.Substring(2));
+            }
+            return virtualPath;
         }
     }
 }
