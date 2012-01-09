@@ -34,7 +34,10 @@ namespace RazorGenerator.Core
             }
 
             var config = WebConfigurationManager.OpenMappedWebConfiguration(configFileMap, directoryVirtualPath);
-            var section = (RazorPagesSection)config.GetSection(RazorPagesSection.SectionName);
+
+            // We use dynamic here because we could be dealing both with a 1.0 or a 2.0 RazorPagesSection, which
+            // are not type compatible (http://razorgenerator.codeplex.com/workitem/26)
+            dynamic section = config.GetSection(RazorPagesSection.SectionName);
 
             if (section != null)
             {
