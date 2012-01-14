@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeTransformers\AddWebConfigNamespaces.cs" />
+    <Compile Include="CodeTransformers\MvcWebConfigTransformer.cs" />
     <Compile Include="CodeTransformers\DefaultCodeTransformers.cs" />
     <Compile Include="CodeTransformers\DirectivesBasedTransformers.cs" />
     <Compile Include="CodeTransformers\AddPageVirtualPathAttribute.cs" />

@@ -25,7 +25,7 @@ namespace RazorGenerator.Core
             new SetImports(_namespaces, replaceExisting: false),
             new SetBaseType(typeof(WebViewPage)),
             new RemoveLineHiddenPragmas(),
-            new AddWebConfigNamespaces(),
+            new MvcWebConfigTransformer(),
         };
 
         internal static IEnumerable<string> MvcNamespaces
@@ -42,7 +42,7 @@ namespace RazorGenerator.Core
         {
             base.Initialize(razorHost, directives);
 
-            razorHost.CodeGenerator = new MvcCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultNamespace, razorHost.FullPath, razorHost);
+            razorHost.CodeGenerator = new MvcCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultBaseClass, razorHost.DefaultNamespace, razorHost.FullPath, razorHost);
             razorHost.CodeGenerator.GenerateLinePragmas = razorHost.EnableLinePragmas;
             razorHost.Parser = new MvcCSharpRazorCodeParser();
         }
@@ -56,7 +56,7 @@ namespace RazorGenerator.Core
             private const string DefaultModelTypeName = "dynamic";
             private const string ViewStartFileName = "_ViewStart";
 
-            public MvcCodeGenerator(string className, string rootNamespaceName, string sourceFileName, RazorEngineHost host)
+            public MvcCodeGenerator(string className, string baseClass, string rootNamespaceName, string sourceFileName, RazorEngineHost host)
                 : base(className, rootNamespaceName, sourceFileName, host)
             {
                 string baseType;
@@ -67,7 +67,7 @@ namespace RazorGenerator.Core
                 }
                 else
                 {
-                    baseType = host.DefaultBaseClass + '<' + DefaultModelTypeName + '>';
+                    baseType = baseClass + '<' + DefaultModelTypeName + '>';
                 }
                 SetBaseType(baseType);
             }

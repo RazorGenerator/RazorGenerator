@@ -19,7 +19,7 @@ namespace RazorGenerator.Core
             new MakeTypeStatic(),
             new MakeTypeHelper(),
             new RemoveLineHiddenPragmas(),
-            new AddWebConfigNamespaces(),
+            new MvcWebConfigTransformer(),
         };
 
         protected override IEnumerable<IRazorCodeTransformer> CodeTransformers

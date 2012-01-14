@@ -6,8 +6,16 @@ using System.Web.WebPages.Razor.Configuration;
 
 namespace RazorGenerator.Core
 {
-    public class AddWebConfigNamespaces : RazorCodeTransformerBase
+    public class MvcWebConfigTransformer : AggregateCodeTransformer
     {
+        private const string DefaultBaseType = "System.Web.Mvc.WebViewPage";
+        private readonly List<RazorCodeTransformerBase> _transformers = new List<RazorCodeTransformerBase>();
+
+        protected override IEnumerable<IRazorCodeTransformer> CodeTransformers
+        {
+            get { return _transformers; ; }
+        }
+
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
             string projectPath = GetProjectRoot(razorHost.ProjectRelativePath, razorHost.FullPath).TrimEnd(Path.DirectorySeparatorChar);
@@ -38,14 +46,23 @@ namespace RazorGenerator.Core
             // We use dynamic here because we could be dealing both with a 1.0 or a 2.0 RazorPagesSection, which
             // are not type compatible (http://razorgenerator.codeplex.com/workitem/26)
             dynamic section = config.GetSection(RazorPagesSection.SectionName);
-
             if (section != null)
             {
-                foreach (NamespaceInfo n in section.Namespaces)
+                string baseType = section.PageBaseType;
+                if (!DefaultBaseType.Equals(baseType, StringComparison.OrdinalIgnoreCase))
                 {
-                    razorHost.NamespaceImports.Add(n.Namespace);
+                    _transformers.Add(new SetBaseType(baseType));
+                }
+
+                if (section != null)
+                {
+                    foreach (NamespaceInfo n in section.Namespaces)
+                    {
+                        razorHost.NamespaceImports.Add(n.Namespace);
+                    }
                 }
             }
+            base.Initialize(razorHost, directives);
         }
 
         private static string GetProjectRoot(string projectRelativePath, string fullPath)
