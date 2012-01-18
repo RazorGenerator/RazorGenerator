@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.Mvc;
@@ -18,7 +19,9 @@ namespace RazorGenerator.Mvc
     {
         private readonly IDictionary<string, Type> _mappings;
         private readonly string _baseVirtualPath;
-        private readonly DateTime _assemblyCreatedTime;
+        private readonly Assembly _assembly;
+        private DateTime? _assemblyCreatedTime;
+
 
         public PrecompiledMvcEngine(Assembly assembly)
             : this(assembly, null)
@@ -28,7 +31,7 @@ namespace RazorGenerator.Mvc
 
         public PrecompiledMvcEngine(Assembly assembly, string baseVirtualPath)
         {
-            _assemblyCreatedTime = File.GetLastWriteTimeUtc(assembly.Location);
+            _assembly = assembly;
             _baseVirtualPath = NormalizeBaseVirtualPath(baseVirtualPath);
 
             base.AreaViewLocationFormats = new[] {
@@ -86,6 +89,18 @@ namespace RazorGenerator.Mvc
         public bool UsePhysicalViewsIfNewer
         {
             get; set;
+        }
+
+        private DateTime AssemblyCreationTime
+        {
+            get
+            {
+                if (_assemblyCreatedTime == null)
+                {
+                    _assemblyCreatedTime = TryGetAssemblyCreationTime(_assembly);
+                }
+                return _assemblyCreatedTime.Value;
+            }
         }
 
         protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
@@ -157,7 +172,7 @@ namespace RazorGenerator.Mvc
                 }
 
                 string path = HttpContext.Current.Request.MapPath(virtualPath);
-                return File.Exists(path) && File.GetLastWriteTimeUtc(path) > _assemblyCreatedTime;
+                return File.Exists(path) && File.GetLastWriteTimeUtc(path) > AssemblyCreationTime;
             }
             return false;
         }
@@ -186,6 +201,27 @@ namespace RazorGenerator.Mvc
                 return VirtualPathUtility.Combine(baseVirtualPath, virtualPath.Substring(2));
             }
             return virtualPath;
+        }
+
+        private static DateTime TryGetAssemblyCreationTime(Assembly assembly)
+        {
+            string assemblyLocation = null;
+            try
+            {
+                assemblyLocation = assembly.Location;
+            }
+            catch (SecurityException)
+            {
+                // In partial trust we may not be able to read assembly.Location. In which case, we'll try looking at assembly.CodeBase
+                Uri uri;
+                if (!String.IsNullOrEmpty(assembly.CodeBase) && Uri.TryCreate(assembly.CodeBase, UriKind.Absolute, out uri) && uri.IsFile)
+                {
+                    assemblyLocation = uri.LocalPath;
+                }
+            }
+
+            // If we are unable to read the filename, just pick max date so we'll always serve from the assembly.
+            return String.IsNullOrEmpty(assemblyLocation) ? DateTime.MaxValue : File.GetCreationTimeUtc(assemblyLocation);
         }
     }
 }
