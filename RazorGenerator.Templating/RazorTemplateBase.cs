@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 
 namespace RazorGenerator.Templating
 {
     public class RazorTemplateBase
     {
+        private string _content;
         public RazorTemplateBase Layout { get; set; }
 
         private StringBuilder _generatingEnvironment = new System.Text.StringBuilder();
@@ -24,28 +26,13 @@ namespace RazorGenerator.Templating
 
         public void Write(object value)
         {
-
             if ((value == null))
             {
                 return;
             }
-            string stringValue;
-            System.Type t = value.GetType();
-            System.Reflection.MethodInfo method = t.GetMethod("ToString", new System.Type[] {
-                            typeof(System.IFormatProvider)});
-            if ((method == null))
-            {
-                stringValue = value.ToString();
-            }
-            else
-            {
-                stringValue = ((string)(method.Invoke(value, new object[] { System.Globalization.CultureInfo.InvariantCulture })));
-            }
-            WriteLiteral(stringValue);
 
+            WriteLiteral(Convert.ToString(value, CultureInfo.InvariantCulture));
         }
-
-        string _content;
 
         public string RenderBody()
         {
