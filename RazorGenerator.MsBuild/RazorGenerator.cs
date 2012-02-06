@@ -39,7 +39,6 @@ namespace RazorGenerator.MsBuild
             }
 
             string projectRoot = String.IsNullOrEmpty(ProjectRoot) ? Directory.GetCurrentDirectory() : ProjectRoot;
-
             using (var hostManager = new HostManager(projectRoot))
             {
                 foreach (var file in FilesToPrecompile)
@@ -50,22 +49,36 @@ namespace RazorGenerator.MsBuild
                     string itemNamespace = GetNamespace(file, projectRelativePath);
 
                     string outputPath = Path.Combine(CodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + ".cs";
+                    if (!RequiresRecompilation(filePath, outputPath))
+                    {
+                        continue;
+                    }
                     EnsureDirectory(outputPath);
 
                     var host = hostManager.CreateHost(filePath, projectRelativePath);
                     host.DefaultNamespace = itemNamespace;
 
+                    Log.LogMessage(MessageImportance.High, "Generating: " + filePath);
+
                     bool hasErrors = false;
                     host.Error += (o, eventArgs) =>
                     {
-                        Log.LogError(eventArgs.ErrorMessage);
+                        Log.LogError("RazorGenerator", eventArgs.ErorrCode.ToString(), helpKeyword: "", file: file.ItemSpec, 
+                                     lineNumber: (int)eventArgs.LineNumber, columnNumber: (int)eventArgs.ColumnNumber,
+                                     endLineNumber: (int)eventArgs.LineNumber, endColumnNumber: (int)eventArgs.ColumnNumber, 
+                                     message: eventArgs.ErrorMessage);
+                        
                         hasErrors = true;
                     };
 
                     try
                     {
                         string result = host.GenerateCode();
-                        File.WriteAllText(outputPath, result);
+                        if (!hasErrors)
+                        {
+                            // If we had errors when generating the output, don't write the file.
+                            File.WriteAllText(outputPath, result);
+                        }
                     }
                     catch (Exception exception)
                     {
@@ -85,6 +98,18 @@ namespace RazorGenerator.MsBuild
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Determines if the file has a corresponding output code-gened file that does not require updating.
+        /// </summary>
+        private static bool RequiresRecompilation(string filePath, string outputPath)
+        {
+            if (!File.Exists(outputPath))
+            {
+                return true;
+            }
+            return File.GetLastWriteTimeUtc(filePath) > File.GetLastWriteTimeUtc(outputPath);
         }
 
         private string GetNamespace(ITaskItem file, string projectRelativePath)
