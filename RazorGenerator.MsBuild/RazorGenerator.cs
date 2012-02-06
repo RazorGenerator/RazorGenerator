@@ -14,9 +14,13 @@ namespace RazorGenerator.MsBuild
 
         public ITaskItem[] FilesToPrecompile { get; set; }
 
+        [Required]
         public string ProjectRoot { get; set; }
 
         public string RootNamespace { get; set; }
+
+        [Required]
+        public string CodeGenDirectory { get; set; }
 
         [Output]
         public ITaskItem[] GeneratedFiles
@@ -27,9 +31,6 @@ namespace RazorGenerator.MsBuild
             }
         }
 
-        [Output]
-        public string TemporaryCodeGenDirectory { get; set; }
-
         public override bool Execute()
         {
             if (FilesToPrecompile == null || !FilesToPrecompile.Any())
@@ -38,7 +39,6 @@ namespace RazorGenerator.MsBuild
             }
 
             string projectRoot = String.IsNullOrEmpty(ProjectRoot) ? Directory.GetCurrentDirectory() : ProjectRoot;
-            TemporaryCodeGenDirectory = Path.Combine(projectRoot, "obj", "CodeGen");
 
             using (var hostManager = new HostManager(projectRoot))
             {
@@ -49,13 +49,7 @@ namespace RazorGenerator.MsBuild
                     var projectRelativePath = GetProjectRelativePath(filePath, projectRoot);
                     string itemNamespace = GetNamespace(file, projectRelativePath);
 
-                    string outputPath = Path.Combine(TemporaryCodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + ".cs";
-
-                    if (!RequiresRecompilation(filePath, outputPath))
-                    {
-                        continue;
-                    }
-
+                    string outputPath = Path.Combine(CodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + ".cs";
                     EnsureDirectory(outputPath);
 
                     var host = hostManager.CreateHost(filePath, projectRelativePath);
@@ -91,18 +85,6 @@ namespace RazorGenerator.MsBuild
                 }
             }
             return true;
-        }
-
-        /// <summary>
-        /// Determines if the file has a corresponding output code-gened file that does not require updating.
-        /// </summary>
-        private static bool RequiresRecompilation(string filePath, string outputPath)
-        {
-            if (!File.Exists(outputPath))
-            {
-                return true;
-            }
-            return File.GetLastWriteTimeUtc(filePath) > File.GetLastWriteTimeUtc(outputPath);
         }
 
         private string GetNamespace(ITaskItem file, string projectRelativePath)
