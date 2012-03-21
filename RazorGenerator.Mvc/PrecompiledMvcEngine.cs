@@ -70,6 +70,7 @@ namespace RazorGenerator.Mvc
                          where pageVirtualPath != null
                          select new KeyValuePair<string, Type>(CombineVirtualPaths(_baseVirtualPath, pageVirtualPath.VirtualPath), type)
                          ).ToDictionary(t => t.Key, t => t.Value, StringComparer.OrdinalIgnoreCase);
+            this.ViewLocationCache = new PrecompiledViewLocationCache(assembly.FullName, this.ViewLocationCache);
         }
 
         /// <summary>
