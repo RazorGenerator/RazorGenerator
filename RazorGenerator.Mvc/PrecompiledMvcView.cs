@@ -14,7 +14,7 @@ namespace RazorGenerator.Mvc
         private readonly string _masterPath;
 
         private delegate void OverriddenLayoutSetter(WebViewPage page, string layoutPath);
-        private static readonly OverriddenLayoutSetter _overriddenLayoutSetter = CreateSetOverriddenLayoutDelegate();
+        private static readonly OverriddenLayoutSetter _overriddenLayoutSetter = CreateOverriddenLayoutSetterDelegate();
 
         public PrecompiledMvcView(string virtualPath, Type type, bool runViewStartPages, IEnumerable<string> fileExtension)
             : this(virtualPath, null, type, runViewStartPages, fileExtension)
@@ -78,7 +78,7 @@ namespace RazorGenerator.Mvc
         // This method makes use of reflection for creating a property setter in the form of a
         // delegate. The latter is used to improve performance, compared to invoking the MethodInfo
         // instance directly, without sacrificing maintainability.
-        private static OverriddenLayoutSetter CreateSetOverriddenLayoutDelegate()
+        private static OverriddenLayoutSetter CreateOverriddenLayoutSetterDelegate()
         {
             PropertyInfo property = typeof(WebViewPage).GetProperty("OverridenLayoutPath",
                 BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
