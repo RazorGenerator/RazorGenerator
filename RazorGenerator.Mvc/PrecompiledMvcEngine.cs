@@ -116,20 +116,20 @@ namespace RazorGenerator.Mvc
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
-            return CreateViewInternal(partialPath, runViewStartPages: false);
+            return CreateViewInternal(partialPath, masterPath: null, runViewStartPages: false);
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
-            return CreateViewInternal(viewPath, runViewStartPages: true);
+            return CreateViewInternal(viewPath, masterPath, runViewStartPages: true);
         }
 
-        private IView CreateViewInternal(string viewPath, bool runViewStartPages)
+        private IView CreateViewInternal(string viewPath, string masterPath, bool runViewStartPages)
         {
             Type type;
             if (_mappings.TryGetValue(viewPath, out type))
             {
-                return new PrecompiledMvcView(viewPath, type, runViewStartPages, base.FileExtensions);
+                return new PrecompiledMvcView(viewPath, masterPath, type, runViewStartPages, base.FileExtensions);
             }
             return null;
         }
