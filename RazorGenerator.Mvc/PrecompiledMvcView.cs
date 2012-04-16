@@ -9,18 +9,17 @@ namespace RazorGenerator.Mvc
 {
     public class PrecompiledMvcView : IView
     {
+        private static readonly Action<WebViewPage, string> _overriddenLayoutSetter = CreateOverriddenLayoutSetterDelegate();
         private readonly Type _type;
         private readonly string _virtualPath;
         private readonly string _masterPath;
 
-        private delegate void OverriddenLayoutSetter(WebViewPage page, string layoutPath);
-        private static readonly OverriddenLayoutSetter _overriddenLayoutSetter = CreateOverriddenLayoutSetterDelegate();
 
         public PrecompiledMvcView(string virtualPath, Type type, bool runViewStartPages, IEnumerable<string> fileExtension)
             : this(virtualPath, null, type, runViewStartPages, fileExtension)
         {
         }
-        
+
         public PrecompiledMvcView(string virtualPath, string masterPath, Type type, bool runViewStartPages, IEnumerable<string> fileExtension)
         {
             _type = type;
@@ -78,7 +77,7 @@ namespace RazorGenerator.Mvc
         // This method makes use of reflection for creating a property setter in the form of a
         // delegate. The latter is used to improve performance, compared to invoking the MethodInfo
         // instance directly, without sacrificing maintainability.
-        private static OverriddenLayoutSetter CreateOverriddenLayoutSetterDelegate()
+        private static Action<WebViewPage, string> CreateOverriddenLayoutSetterDelegate()
         {
             PropertyInfo property = typeof(WebViewPage).GetProperty("OverridenLayoutPath",
                 BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
@@ -87,13 +86,13 @@ namespace RazorGenerator.Mvc
                 throw new NotSupportedException("The WebViewPage internal property \"OverridenLayoutPath\" does not exist, probably due to an unsupported run-time version.");
             }
 
-            MethodInfo setter = property.GetSetMethod(true);
+            MethodInfo setter = property.GetSetMethod(nonPublic: true);
             if (setter == null)
             {
                 throw new NotSupportedException("The WebViewPage internal property \"OverridenLayoutPath\" exists but is missing a set method, probably due to an unsupported run-time version.");
             }
 
-            return (OverriddenLayoutSetter)Delegate.CreateDelegate(typeof(OverriddenLayoutSetter), setter, true);
+            return (Action<WebViewPage, string>)Delegate.CreateDelegate(typeof(Action<WebViewPage, string>), setter, throwOnBindFailure: true);
         }
     }
 }
