@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyExtensions.cs" />
     <Compile Include="PrecompiledMvcEngine.cs" />
     <Compile Include="PrecompiledMvcView.cs" />
     <Compile Include="PrecompiledViewLocationCache.cs" />
