@@ -53,6 +53,7 @@
     <Compile Include="CodeTransformers\AddPageVirtualPathAttribute.cs" />
     <Compile Include="CodeTransformers\RemoveLineHiddenPragmas.cs" />
     <Compile Include="CodeTransformers\RewriteLinePragmas.cs" />
+    <Compile Include="CodeTransformers\SetTypeNamespace.cs" />
     <Compile Include="CodeTransformers\SetTypeVisibility.cs" />
     <Compile Include="DirectivesParser.cs" />
     <Compile Include="EventArgs.cs" />

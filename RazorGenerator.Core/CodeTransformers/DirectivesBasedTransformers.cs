@@ -9,6 +9,7 @@ namespace RazorGenerator.Core
         public static readonly string DisableLinePragmasKey = "DisableLinePragmas";
         public static readonly string TrimLeadingUnderscoresKey = "TrimLeadingUnderscores";
         public static readonly string GenerateAbsolutePathLinePragmas = "GenerateAbsolutePathLinePragmas";
+        public static readonly string NamespaceKey = "Namespace";
         private readonly List<IRazorCodeTransformer> _transformers = new List<IRazorCodeTransformer>();
 
         protected override IEnumerable<IRazorCodeTransformer> CodeTransformers
@@ -18,9 +19,16 @@ namespace RazorGenerator.Core
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
-            if (directives.ContainsKey(TypeVisibilityKey))
+            string typeVisibility;
+            if (directives.TryGetValue(TypeVisibilityKey, out typeVisibility))
             {
-                _transformers.Add(new SetTypeVisibility(directives[TypeVisibilityKey]));
+                _transformers.Add(new SetTypeVisibility(typeVisibility));
+            }
+
+            string typeNamespace;
+            if (directives.TryGetValue(NamespaceKey, out typeNamespace))
+            {
+                _transformers.Add(new SetTypeNamespace(typeNamespace));
             }
 
             if (ReadSwitchValue(directives, DisableLinePragmasKey) == true)

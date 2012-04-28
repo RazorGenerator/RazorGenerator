@@ -33,6 +33,19 @@ namespace RazorGenerator.MsBuild
 
         public override bool Execute()
         {
+            try
+            {
+                return ExecuteCore();
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex.Message);
+            }
+            return false;
+        }
+
+        private bool ExecuteCore()
+        {
             if (FilesToPrecompile == null || !FilesToPrecompile.Any())
             {
                 return true;
@@ -55,19 +68,18 @@ namespace RazorGenerator.MsBuild
                     }
                     EnsureDirectory(outputPath);
 
+                    Log.LogMessage(MessageImportance.High, "Generating: " + filePath);
                     var host = hostManager.CreateHost(filePath, projectRelativePath);
                     host.DefaultNamespace = itemNamespace;
-
-                    Log.LogMessage(MessageImportance.High, "Generating: " + filePath);
 
                     bool hasErrors = false;
                     host.Error += (o, eventArgs) =>
                     {
-                        Log.LogError("RazorGenerator", eventArgs.ErorrCode.ToString(), helpKeyword: "", file: file.ItemSpec, 
+                        Log.LogError("RazorGenerator", eventArgs.ErorrCode.ToString(), helpKeyword: "", file: file.ItemSpec,
                                      lineNumber: (int)eventArgs.LineNumber, columnNumber: (int)eventArgs.ColumnNumber,
-                                     endLineNumber: (int)eventArgs.LineNumber, endColumnNumber: (int)eventArgs.ColumnNumber, 
+                                     endLineNumber: (int)eventArgs.LineNumber, endColumnNumber: (int)eventArgs.ColumnNumber,
                                      message: eventArgs.ErrorMessage);
-                        
+
                         hasErrors = true;
                     };
 
