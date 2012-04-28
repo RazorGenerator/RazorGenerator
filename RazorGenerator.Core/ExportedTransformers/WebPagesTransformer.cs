@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 
 namespace RazorGenerator.Core
@@ -31,8 +32,6 @@ namespace RazorGenerator.Core
 
             // Remove the extension and replace path separator slashes with underscores
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(razorHost.ProjectRelativePath);
-            var pathWithoutExtenstion = Path.Combine(Path.GetDirectoryName(razorHost.ProjectRelativePath), fileNameWithoutExtension);
-            string className = pathWithoutExtenstion.TrimStart(Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '_');
 
             // If its a PageStart page, set the base type to StartPage.
             if (fileNameWithoutExtension.Equals("_pagestart", StringComparison.OrdinalIgnoreCase))
@@ -61,8 +60,14 @@ namespace RazorGenerator.Core
 
             generatedClass.Members.Add(hrefMethod);
 
+            Debug.Assert(generatedClass.Name.Length > 0);
+            if (!(Char.IsLetter(generatedClass.Name[0]) || generatedClass.Name[0] == '_'))
+            {
+                generatedClass.Name = '_' + generatedClass.Name;
+            }
+
             // If the generatedClass starts with an underscore, add a ClsCompliant(false) attribute.
-            if (generatedClass.Name.StartsWith("_", StringComparison.OrdinalIgnoreCase))
+            if (generatedClass.Name[0] == '_')
             {
                 generatedClass.CustomAttributes.Add(new CodeAttributeDeclaration(typeof(CLSCompliantAttribute).FullName,
                                                         new CodeAttributeArgument(new CodePrimitiveExpression(false))));
