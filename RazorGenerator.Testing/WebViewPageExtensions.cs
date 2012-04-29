@@ -16,7 +16,7 @@ namespace RazorGenerator.Testing
 {
     public static class WebViewPageExtensions
     {
-        private static object _lockObject = new object();
+        private static readonly object _lockObject = new object();
 
         private static readonly DummyViewEngine _viewEngine = new DummyViewEngine();
 
@@ -44,7 +44,7 @@ namespace RazorGenerator.Testing
             // Note: ideally we would not have to do this, but WebPages is just not mockable enough :(
             var dynamicPageContext = webPageContext.AsDynamic();
             dynamicPageContext.OutputStack.Push(writer);
-            
+
             // Push some section writer dictionary onto the stack. We need two, because the logic in WebPageBase.RenderBody
             // checks that as a way to make sure the layout page is not called directly
             var sectionWriters = new Dictionary<string, SectionWriter>(StringComparer.OrdinalIgnoreCase);
@@ -114,34 +114,34 @@ namespace RazorGenerator.Testing
         /// <param name="doc"></param>
         private static void PostProcessActionUrlNodes(HtmlDocument doc)
         {
-          var guidLength = Guid.Empty.ToString().Length;
+            var guidLength = Guid.Empty.ToString().Length;
 
-          var actionUrlAttributes =
-            doc.DocumentNode.Descendants().SelectMany(n => n.Attributes.Where(a => a.Value.Length >= guidLength && _urls.ContainsKey(a.Value.Substring(a.Value.Length - guidLength)))).ToList();
+            var actionUrlAttributes =
+              doc.DocumentNode.Descendants().SelectMany(n => n.Attributes.Where(a => a.Value.Length >= guidLength && _urls.ContainsKey(a.Value.Substring(a.Value.Length - guidLength)))).ToList();
 
-          foreach (HtmlAttribute actionUrlAttribute in actionUrlAttributes)
-          {
-              var key = actionUrlAttribute.Value.Substring(actionUrlAttribute.Value.Length - guidLength);
-              var node = actionUrlAttribute.OwnerNode;
+            foreach (HtmlAttribute actionUrlAttribute in actionUrlAttributes)
+            {
+                var key = actionUrlAttribute.Value.Substring(actionUrlAttribute.Value.Length - guidLength);
+                var node = actionUrlAttribute.OwnerNode;
 
-              var actionUrlNode = node as ActionUrlNode;
+                var actionUrlNode = node as ActionUrlNode;
 
-              if (actionUrlNode == null)
-              {
-                  actionUrlNode = new ActionUrlNode(node);
-                  node.ReplaceWith(actionUrlNode);
-              }
+                if (actionUrlNode == null)
+                {
+                    actionUrlNode = new ActionUrlNode(node);
+                    node.ReplaceWith(actionUrlNode);
+                }
 
-              actionUrlNode.Attributes[actionUrlAttribute.Name].Value = String.Empty;
-              actionUrlNode.RouteValues.Add(actionUrlAttribute.Name, _urls[key]);
-            
-              _urls.Remove(key);          
+                actionUrlNode.Attributes[actionUrlAttribute.Name].Value = String.Empty;
+                actionUrlNode.RouteValues.Add(actionUrlAttribute.Name, _urls[key]);
+
+                _urls.Remove(key);
             }
         }
 
         private static void ReplaceWith(this HtmlNode originalNode, HtmlNode newNode)
         {
-          originalNode.ParentNode.ReplaceChild(newNode, originalNode);
+            originalNode.ParentNode.ReplaceChild(newNode, originalNode);
         }
 
         private static void EnsureStaticMembersInitialised()
@@ -177,10 +177,10 @@ namespace RazorGenerator.Testing
                     RouteTable.Routes.Add(_mockRoute.Object);
                     _mockRoute
                         .Setup(x => x.GetVirtualPath(It.IsAny<RequestContext>(), It.IsAny<RouteValueDictionary>()))
-                        .Returns<RequestContext, RouteValueDictionary>((c, d) =>
+                        .Returns<RequestContext, RouteValueDictionary>((_, routeDictionary) =>
                                                                          {
                                                                              var key = Guid.NewGuid().ToString();
-                                                                             _urls.Add(key, d);
+                                                                             _urls.Add(key, routeDictionary);
                                                                              return new VirtualPathData(_mockRoute.Object, key);
                                                                          });
                 }
@@ -221,7 +221,7 @@ namespace RazorGenerator.Testing
 
             return mockHttpContext.Object;
         }
-      
+
         class DummyViewEngine : IViewEngine
         {
             public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
@@ -264,7 +264,7 @@ namespace RazorGenerator.Testing
                 writer.WriteLine(tagBuilder.ToString());
             }
         }
-       
+
         private class ViewPlaceholder
         {
             private readonly string _viewName;
