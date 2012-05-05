@@ -25,7 +25,8 @@
             <Output TaskParameter="GeneratedFiles" ItemName="FilesGenerated" />
         </RazorCodeGen>
         <ItemGroup>
-            <Compile Include="@(FilesGenerated)" />
+          <Compile Include="@(FilesGenerated)" Condition=" '@(RazorOutputFiles)' == '' "/>
+          <Compile Include="@(RazorOutputFiles)" />
         </ItemGroup>
     </Target>
 </Project>

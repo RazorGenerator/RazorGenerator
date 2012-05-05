@@ -68,7 +68,7 @@ namespace RazorGenerator.MsBuild
                     }
                     EnsureDirectory(outputPath);
 
-                    Log.LogMessage(MessageImportance.High, "Generating: " + filePath);
+                    Log.LogMessage(MessageImportance.Low, "Generating: " + filePath);
                     var host = hostManager.CreateHost(filePath, projectRelativePath);
                     host.DefaultNamespace = itemNamespace;
 
