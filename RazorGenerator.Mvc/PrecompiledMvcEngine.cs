@@ -136,6 +136,10 @@ namespace RazorGenerator.Mvc
 
             if (_mappings.TryGetValue(virtualPath, out type))
             {
+                if (DependencyResolver.Current != null)
+                {
+                    return DependencyResolver.Current.GetService(type);
+                }
                 return Activator.CreateInstance(type);
             }
             return null;

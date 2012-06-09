@@ -43,7 +43,17 @@ namespace RazorGenerator.Mvc
 
         public void Render(ViewContext viewContext, TextWriter writer)
         {
-            object instance = Activator.CreateInstance(_type);
+            object instance = null;
+            if (DependencyResolver.Current != null)
+            {
+                var viewPageActivator = DependencyResolver.Current.GetService<IViewPageActivator>();
+                if (viewPageActivator != null)
+                    instance = viewPageActivator.Create(viewContext.Controller.ControllerContext, _type);
+                else
+                    instance = DependencyResolver.Current.GetService(_type);
+            }
+            if (instance == null)
+                instance = Activator.CreateInstance(_type);
 
             WebViewPage webViewPage = instance as WebViewPage;
 

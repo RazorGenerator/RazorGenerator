@@ -35,8 +35,9 @@ namespace RazorGenerator.Core
         private readonly CodeDomProvider _codeDomProvider;
         private readonly IDictionary<string, string> _directives;
         private string _defaultClassName;
+        private string _hostName;
 
-        public RazorHost(string baseRelativePath, string fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives)
+        public RazorHost(string baseRelativePath, string fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives, string hostName)
             : base(RazorCodeLanguage.GetLanguageByExtension(".cshtml"))
         {
 
@@ -56,7 +57,7 @@ namespace RazorGenerator.Core
             {
                 throw new ArgumentNullException("codeDomProvider");
             }
-
+            _hostName = hostName;
             _codeTransformer = codeTransformer;
             _baseRelativePath = baseRelativePath;
             _fullPath = fullPath;
@@ -216,7 +217,16 @@ namespace RazorGenerator.Core
         protected virtual string GetClassName()
         {
             string filename = Path.GetFileNameWithoutExtension(_baseRelativePath);
-            return ParserHelpers.SanitizeClassName(filename);
+            var className = ParserHelpers.SanitizeClassName(filename);
+            string suffixClassNameString = "";
+            bool suffixClassName = false;
+            if (_directives.TryGetValue("SuffixClassNames", out suffixClassNameString)
+                && bool.TryParse(suffixClassNameString, out suffixClassName)
+                && suffixClassName)
+            {
+                className += _hostName;
+            }
+            return className;
         }
     }
 }

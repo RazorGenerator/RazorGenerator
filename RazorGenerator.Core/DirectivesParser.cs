@@ -11,21 +11,49 @@ namespace RazorGenerator.Core
 
         public static Dictionary<string, string> ParseDirectives(string baseDirectory, string fullPath)
         {
+            var baseInfo = new DirectoryInfo(baseDirectory);
             var directives = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            ParseGlobalDirectives(directives, baseDirectory);
+
+            var path = new DirectoryInfo(Path.GetDirectoryName(fullPath));
+            var found = false;
+            while (path != null && !string.Equals(path.FullName, baseInfo.FullName, StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (ParseGlobalDirectives(directives, path.FullName))
+                {
+                    found = true;
+                    break;
+                }
+                path = GetParent(path);
+            }
+            if (!found)
+                ParseGlobalDirectives(directives, baseDirectory);
             ParseFileDirectives(directives, fullPath);
 
             return directives;
         }
+        private static DirectoryInfo GetParent(DirectoryInfo dir)
+        {
+            try
+            {
+                return Directory.GetParent(dir.FullName);
+            }
+            catch 
+            {
+                return null;
+            }
+            
+        }
 
-        private static void ParseGlobalDirectives(Dictionary<string, string> directives, string baseDirectory)
+        private static bool ParseGlobalDirectives(Dictionary<string, string> directives, string baseDirectory)
         {
             var globalDirectivesFile = Path.Combine(baseDirectory, GlobalDirectivesFileName);
             if (File.Exists(globalDirectivesFile))
             {
                 var fileContent = File.ReadAllText(globalDirectivesFile);
                 ParseKeyValueDirectives(directives, fileContent);
+                return true;
             }
+            return false;
         }
 
         private static void ParseFileDirectives(Dictionary<string, string> directives, string filePath)
