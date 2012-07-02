@@ -11,49 +11,44 @@ namespace RazorGenerator.Core
 
         public static Dictionary<string, string> ParseDirectives(string baseDirectory, string fullPath)
         {
-            var baseInfo = new DirectoryInfo(baseDirectory);
             var directives = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-            var path = new DirectoryInfo(Path.GetDirectoryName(fullPath));
-            var found = false;
-            while (path != null && !string.Equals(path.FullName, baseInfo.FullName, StringComparison.InvariantCultureIgnoreCase))
+            string directivesPath;
+            if (TryFindGlobalDirectivesFile(baseDirectory, fullPath, out directivesPath))
             {
-                if (ParseGlobalDirectives(directives, path.FullName))
-                {
-                    found = true;
-                    break;
-                }
-                path = GetParent(path);
+                ParseGlobalDirectives(directives, directivesPath);
             }
-            if (!found)
-                ParseGlobalDirectives(directives, baseDirectory);
             ParseFileDirectives(directives, fullPath);
 
             return directives;
         }
-        private static DirectoryInfo GetParent(DirectoryInfo dir)
+
+        /// <summary>
+        /// Attempts to locate the nearest global directive file by 
+        /// </summary>
+        /// <param name="baseDirectory"></param>
+        /// <param name="fullPath"></param>
+        /// <param name="directives"></param>
+        private static bool TryFindGlobalDirectivesFile(string baseDirectory, string fullPath, out string path)
         {
-            try
+            baseDirectory = baseDirectory.TrimEnd(Path.DirectorySeparatorChar);
+            var directivesDirectory = Path.GetDirectoryName(fullPath).TrimEnd(Path.DirectorySeparatorChar);
+            while (directivesDirectory != null && directivesDirectory.Length >= baseDirectory.Length)
             {
-                return Directory.GetParent(dir.FullName);
+                path = Path.Combine(directivesDirectory, GlobalDirectivesFileName);
+                if (File.Exists(path))
+                {
+                    return true;
+                }
+                directivesDirectory = Path.GetDirectoryName(directivesDirectory).TrimEnd(Path.DirectorySeparatorChar);
             }
-            catch 
-            {
-                return null;
-            }
-            
+            path = null;
+            return false;
         }
 
-        private static bool ParseGlobalDirectives(Dictionary<string, string> directives, string baseDirectory)
+        private static void ParseGlobalDirectives(Dictionary<string, string> directives, string directivesPath)
         {
-            var globalDirectivesFile = Path.Combine(baseDirectory, GlobalDirectivesFileName);
-            if (File.Exists(globalDirectivesFile))
-            {
-                var fileContent = File.ReadAllText(globalDirectivesFile);
-                ParseKeyValueDirectives(directives, fileContent);
-                return true;
-            }
-            return false;
+            var fileContent = File.ReadAllText(directivesPath);
+            ParseKeyValueDirectives(directives, fileContent);
         }
 
         private static void ParseFileDirectives(Dictionary<string, string> directives, string filePath)

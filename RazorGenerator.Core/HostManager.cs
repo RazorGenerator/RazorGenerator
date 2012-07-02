@@ -47,11 +47,11 @@ namespace RazorGenerator.Core
         public RazorHost CreateHost(string fullPath, string projectRelativePath, CodeDomProvider codeDomProvider)
         {
             var directives = DirectivesParser.ParseDirectives(_baseDirectory, fullPath);
-            var hostName = this.GetHostName(projectRelativePath, directives);
-            var codeTransformer = GetRazorCodeTransformer(hostName);
-            return new RazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives, hostName);
+            var codeTransformer = GetRazorCodeTransformer(projectRelativePath, directives);
+            return new RazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
         }
-        private string GetHostName(string projectRelativePath, IDictionary<string, string> directives)
+
+        private IRazorCodeTransformer GetRazorCodeTransformer(string projectRelativePath, IDictionary<string, string> directives)
         {
             string hostName;
 
@@ -59,11 +59,7 @@ namespace RazorGenerator.Core
             {
                 hostName = GuessHost(_baseDirectory, projectRelativePath);
             }
-            return hostName;
-        }
 
-        private IRazorCodeTransformer GetRazorCodeTransformer(string hostName)
-        {
             IRazorCodeTransformer codeTransformer = null;
             try
             {

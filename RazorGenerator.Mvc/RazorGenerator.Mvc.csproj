@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Include="AssemblyExtensions.cs" />
     <Compile Include="PrecompiledMvcEngine.cs" />
-    <Compile Include="PrecompiledMvcEngineOptions.cs" />
     <Compile Include="PrecompiledMvcView.cs" />
     <Compile Include="PrecompiledViewLocationCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
