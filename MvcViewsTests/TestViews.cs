@@ -27,6 +27,21 @@ namespace MvcViewsTests
         }
 
         [TestMethod]
+        public void TestRenderPlainTextWithModel()
+        {
+            const string message = "Some model data!";
+
+            // Instantiate the view directly
+            var view = new ExternalPrecompiled();
+
+            // Render it as a string
+            var output = view.Render(message);
+
+            // Verify that it looks correct
+            Assert.IsTrue(output.Contains(message));
+        }
+
+        [TestMethod]
         public void TestRenderAsHtml()
         {
             const string message = "Some unit test message!";
@@ -44,7 +59,6 @@ namespace MvcViewsTests
             HtmlNode node = doc.DocumentNode.Element("h2");
             Assert.AreEqual(message, node.InnerHtml.Trim());
         }
-
 
         [TestMethod]
         public void TestLayout()
