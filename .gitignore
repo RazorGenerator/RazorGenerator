@@ -1,0 +1,10 @@
+bin
+obj
+*.user
+*.suo
+App_Data
+*.results.xml
+/TestResults
+/packages
+/Results
+*.vsix
