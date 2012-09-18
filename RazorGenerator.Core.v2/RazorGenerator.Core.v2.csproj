@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8AC6362A-CF3F-441B-B0B4-B9907F4CBB46}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RazorGenerator.Core.V2</RootNamespace>
+    <AssemblyName>RazorGenerator.Core.V2</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MvcViewTransformer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\AddPageVirtualPathAttribute.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\AggregateCodeTransformer.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\DefaultCodeTransformers.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\DirectivesBasedTransformers.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\MvcWebConfigTransformer.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\RazorCodeTransformerBase.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\RemoveLineHiddenPragmas.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\RewriteLinePragmas.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\SetTypeNamespace.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\SetTypeVisibility.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\ExportedTransformers\MvcHelperTransformer.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\ExportedTransformers\TemplateTransformer.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\ExportedTransformers\WebPagesHelperTransformer.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\ExportedTransformers\WebPagesTransformer.cs" />
+    <Compile Include="..\RazorGenerator.Core.v1\RazorHostProvider.cs" />
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="RazorHost.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RazorGenerator.Core\RazorGenerator.Core.csproj">
+      <Project>{AF040852-112F-494D-B1D0-B50888928DB6}</Project>
+      <Name>RazorGenerator.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

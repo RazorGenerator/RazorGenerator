@@ -1,41 +1,37 @@
 ﻿using System.IO;
 using Xunit;
+using Xunit.Extensions;
 
 namespace RazorGenerator.Core.Test
 {
     public class HostManagerTest
     {
-        [Fact]
-        public void HostManagerHieruisticForMvcHelperInViewsFolder()
+        [Theory]
+        [InlineData(@"Views\Helper\HtmlExtensions.cshtml", "MvcHelper", RazorRuntime.Version1)]
+        [InlineData(@"Views\Shared\Helper\Menu.cshtml", "MvcHelper", RazorRuntime.Version1)]
+        [InlineData(@"View\CustomModel.cshtml", null, RazorRuntime.Version1)]
+        public void HostManagerHieruisticForMvcHelperInViewsFolder(string path, string expected, RazorRuntime expectedRuntime)
         {
-            // Arrange
-            var path1 = @"Views\Helper\HtmlExtensions.cshtml";
-            var path2 = @"Views\Shared\Helper\Menu.cshtml";
-            var path3 = @"View\CustomModel.cshtml";
-
             // Act 
-            var guess1 = HostManager.GuessHost(Directory.GetCurrentDirectory(), path1);
-            var guess2 = HostManager.GuessHost(Directory.GetCurrentDirectory(), path2);
-            var guess3 = HostManager.GuessHost(Directory.GetCurrentDirectory(), path3);
+            RazorRuntime runtime;
+            var guess = HostManager.GuessHost(Directory.GetCurrentDirectory(), path, out runtime);
 
-            Assert.Equal("MvcHelper", guess1);
-            Assert.Equal("MvcHelper", guess2);
-            Assert.Null(guess3);
+            // Assert
+            Assert.Equal(expected, guess);
+            Assert.Equal(expectedRuntime, runtime);
         }
 
-        [Fact]
-        public void HostManagerHieruisticForMvcViews()
+        [Theory]
+        [InlineData(@"Views\Home\About.cshtml")]
+        [InlineData(@"Views\Shared\_Layout.cshtml")]
+        public void HostManagerHieruisticForMvcViews(string path)
         {
-            // Arrange
-            var path1 = @"Views\Home\About.cshtml";
-            var path2 = @"Views\Shared\_Layout.cshtml";
+            // Act
+            RazorRuntime runtime;
+            var guess = HostManager.GuessHost(Directory.GetCurrentDirectory(), path, out runtime);
 
-            // Act 
-            var guess1 = HostManager.GuessHost(Directory.GetCurrentDirectory(), path1);
-            var guess2 = HostManager.GuessHost(Directory.GetCurrentDirectory(), path2);
-
-            Assert.Equal("MvcView", guess1);
-            Assert.Equal("MvcView", guess2);
+            // Assert
+            Assert.Equal("MvcView", guess);
         }
     }
 }

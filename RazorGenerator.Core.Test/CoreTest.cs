@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Xunit;
@@ -9,20 +11,26 @@ namespace RazorGenerator.Core.Test
 {
     public class CoreTest
     {
+        private static readonly string[] _testNames = new[] 
+        { 
+            "WebPageTest",
+            "WebPageHelperTest",
+            "MvcViewTest",
+            "MvcHelperTest",
+            "TemplateTest",
+            "_ViewStart",
+            "DirectivesTest",
+            "TemplateWithBaseTypeTest",
+            "VirtualPathAttributeTest",
+        };
+
         [Theory]
-        [InlineData(new object[] { "WebPageTest" })]
-        [InlineData(new object[] { "WebPageHelperTest" })]
-        [InlineData(new object[] { "MvcViewTest" })]
-        [InlineData(new object[] { "MvcHelperTest" })]
-        [InlineData(new object[] { "TemplateTest" })]
-        [InlineData(new object[] { "_ViewStart" })]
-        [InlineData(new object[] { "DirectivesTest" })]
-        [InlineData(new object[] { "TemplateWithBaseTypeTest" })]
-        [InlineData(new object[] { "VirtualPathAttributeTest" })]
-        public void TestTransformerType(string testName)
+        [PropertyData("V1Tests")]
+        [PropertyData("V2Tests")]
+        public void TestTransformerType(string testName, RazorRuntime runtime)
         {
             string workingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            using (var razorGenerator = new HostManager(workingDirectory, loadExtensions: false))
+            using (var razorGenerator = new HostManager(workingDirectory, loadExtensions: false, defaultRuntime: runtime))
             {
                 string inputFile = SaveInputFile(workingDirectory, testName);
                 var host = razorGenerator.CreateHost(inputFile, testName + ".cshtml");
@@ -30,7 +38,23 @@ namespace RazorGenerator.Core.Test
                 host.EnableLinePragmas = false;
 
                 var output = host.GenerateCode();
-                AssertOutput(testName, output);
+                AssertOutput(testName, output, runtime);
+            }
+        }
+
+        public static IEnumerable<object[]> V1Tests
+        {
+            get
+            {
+                return _testNames.Select(c => new object[] { c, RazorRuntime.Version1 });
+            }
+        }
+
+        public static IEnumerable<object[]> V2Tests
+        {
+            get
+            {
+                return _testNames.Select(c => new object[] { c, RazorRuntime.Version2 });
             }
         }
 
@@ -45,11 +69,11 @@ namespace RazorGenerator.Core.Test
             return outputFile;
         }
 
-        private static void AssertOutput(string testName, string output)
+        private static void AssertOutput(string testName, string output, RazorRuntime runtime)
         {
-            var expectedContent = GetManifestFileContent(testName, "Output");
-            output = Regex.Replace(output, @"Runtime Version:[\d.]*", "Runtime Version:N.N.NNNNN.N");
-            expectedContent = expectedContent.Replace("v.v.v.v", typeof(HostManager).Assembly.GetName().Version.ToString());
+            var expectedContent = GetManifestFileContent(testName, "Output_v" + (int)runtime);
+            output = Regex.Replace(output, @"Runtime Version:[\d.]*", "Runtime Version:N.N.NNNNN.N")
+                          .Replace(typeof(HostManager).Assembly.GetName().Version.ToString(), "v.v.v.v");
 
             Assert.Equal(expectedContent, output);
         }

@@ -55,6 +55,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RazorGenerator.Core.v1\RazorGenerator.Core.v1.csproj">
+      <Project>{1A99F351-138E-440B-A4E9-B8651FEEA593}</Project>
+      <Name>RazorGenerator.Core.v1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RazorGenerator.Core.v2\RazorGenerator.Core.v2.csproj">
+      <Project>{8AC6362A-CF3F-441B-B0B4-B9907F4CBB46}</Project>
+      <Name>RazorGenerator.Core.v2</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RazorGenerator.Core\RazorGenerator.Core.csproj">
       <Project>{AF040852-112F-494D-B1D0-B50888928DB6}</Project>
       <Name>RazorGenerator.Core</Name>

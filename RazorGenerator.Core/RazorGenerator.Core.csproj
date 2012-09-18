@@ -36,10 +36,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,40 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeTransformers\MvcWebConfigTransformer.cs" />
-    <Compile Include="CodeTransformers\DefaultCodeTransformers.cs" />
-    <Compile Include="CodeTransformers\DirectivesBasedTransformers.cs" />
-    <Compile Include="CodeTransformers\AddPageVirtualPathAttribute.cs" />
-    <Compile Include="CodeTransformers\RemoveLineHiddenPragmas.cs" />
-    <Compile Include="CodeTransformers\RewriteLinePragmas.cs" />
-    <Compile Include="CodeTransformers\SetTypeNamespace.cs" />
-    <Compile Include="CodeTransformers\SetTypeVisibility.cs" />
     <Compile Include="DirectivesParser.cs" />
     <Compile Include="EventArgs.cs" />
     <Compile Include="ICodeGenerationEventProvider.cs" />
+    <Compile Include="IHostProvider.cs" />
     <Compile Include="IRazorCodeTransformer.cs" />
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="IRazorHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HostManager.cs" />
-    <Compile Include="ExportedTransformers\MvcHelperTransformer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ExportedTransformers\MvcViewTransformer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ExportedTransformers\TemplateTransformer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ExportedTransformers\WebPagesHelperTransformer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ExportedTransformers\WebPagesTransformer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="RazorHost.cs" />
-    <Compile Include="CodeTransformers\RazorCodeTransformerBase.cs" />
+    <Compile Include="RazorRuntime.cs" />
     <Compile Include="Resources\RazorGeneratorResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -93,9 +67,6 @@
       <LastGenOutput>RazorGeneratorResources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>RazorGenerator.Core</CustomToolNamespace>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="CodeTransformers\AggregateCodeTransformer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

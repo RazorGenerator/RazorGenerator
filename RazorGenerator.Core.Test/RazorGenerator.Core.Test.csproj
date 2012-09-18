@@ -59,8 +59,8 @@
     <Compile Include="CoreTest.cs" />
     <EmbeddedResource Include="TestFiles\Input\VirtualPathAttributeTest.cshtml" />
     <EmbeddedResource Include="TestFiles\Input\MvcHelperTest.cshtml" />
-    <EmbeddedResource Include="TestFiles\Output\MvcHelperTest.txt" />
-    <EmbeddedResource Include="TestFiles\Output\WebPageHelperTest.txt" />
+    <EmbeddedResource Include="TestFiles\Output_v1\MvcHelperTest.txt" />
+    <EmbeddedResource Include="TestFiles\Output_v1\WebPageHelperTest.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestFiles\Input\WebPageHelperTest.cshtml" />
@@ -69,9 +69,17 @@
     <EmbeddedResource Include="TestFiles\Input\WebPageTest.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestFiles\Output\WebPageTest.txt" />
+    <EmbeddedResource Include="TestFiles\Output_v1\WebPageTest.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RazorGenerator.Core.v1\RazorGenerator.Core.v1.csproj">
+      <Project>{1A99F351-138E-440B-A4E9-B8651FEEA593}</Project>
+      <Name>RazorGenerator.Core.v1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RazorGenerator.Core.v2\RazorGenerator.Core.v2.csproj">
+      <Project>{8AC6362A-CF3F-441B-B0B4-B9907F4CBB46}</Project>
+      <Name>RazorGenerator.Core.v2</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RazorGenerator.Core\RazorGenerator.Core.csproj">
       <Project>{AF040852-112F-494D-B1D0-B50888928DB6}</Project>
       <Name>RazorGenerator.Core</Name>
@@ -79,37 +87,64 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestFiles\Input\MvcViewTest.cshtml" />
-    <EmbeddedResource Include="TestFiles\Output\MvcViewTest.txt" />
+    <EmbeddedResource Include="TestFiles\Output_v1\MvcViewTest.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestFiles\Input\TemplateTest.cshtml">
       <LastGenOutput>TemplateTest.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="TestFiles\Output\TemplateTest.txt" />
+    <EmbeddedResource Include="TestFiles\Output_v1\TemplateTest.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestFiles\Input\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestFiles\Output\_ViewStart.txt" />
+    <EmbeddedResource Include="TestFiles\Output_v1\_ViewStart.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestFiles\Input\DirectivesTest.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestFiles\Output\DirectivesTest.txt" />
+    <EmbeddedResource Include="TestFiles\Output_v1\DirectivesTest.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestFiles\Input\TemplateWithBaseTypeTest.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestFiles\Output\TemplateWithBaseTypeTest.txt" />
+    <EmbeddedResource Include="TestFiles\Output_v1\TemplateWithBaseTypeTest.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TestFiles\Output\VirtualPathAttributeTest.txt" />
+    <EmbeddedResource Include="TestFiles\Output_v1\VirtualPathAttributeTest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\Output_v2\_ViewStart.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\Output_v2\DirectivesTest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\Output_v2\MvcHelperTest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\Output_v2\MvcViewTest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\Output_v2\TemplateTest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\Output_v2\TemplateWithBaseTypeTest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\Output_v2\VirtualPathAttributeTest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\Output_v2\WebPageHelperTest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\Output_v2\WebPageTest.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MsBuildProjectDirectory)\..\.nuget\NuGet.targets" />

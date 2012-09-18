@@ -6,6 +6,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.CSharp;
 
@@ -13,30 +14,24 @@ namespace RazorGenerator.Core
 {
     public class HostManager : IDisposable
     {
-        private readonly CompositionContainer _container;
         private readonly string _baseDirectory;
+        private readonly bool _loadExtensions;
+        private readonly RazorRuntime _defaultRuntime;
+        private CompositionContainer _container;
 
         public HostManager(string baseDirectory)
-            : this(baseDirectory, loadExtensions: true)
+            : this(baseDirectory, loadExtensions: true, defaultRuntime: RazorRuntime.Version1)
         {
         }
 
-        public HostManager(string baseDirectory, bool loadExtensions)
+        public HostManager(string baseDirectory, bool loadExtensions, RazorRuntime defaultRuntime)
         {
-            _container = InitCompositionContainer(baseDirectory, loadExtensions);
+            _loadExtensions = loadExtensions;
             _baseDirectory = baseDirectory;
+            _defaultRuntime = defaultRuntime;
         }
 
-        private IEnumerable<string> GetAvailableHosts()
-        {
-            // We need for a way to figure out what the exporting type is. This could return arbitrary exports that are not ISingleFileGenerators
-            return from part in _container.Catalog.Parts
-                   from export in part.ExportDefinitions
-                   where !String.IsNullOrEmpty(export.ContractName)
-                   select export.ContractName;
-        }
-
-        public RazorHost CreateHost(string fullPath, string projectRelativePath)
+        public IRazorHost CreateHost(string fullPath, string projectRelativePath)
         {
             using (var codeDomProvider = new CSharpCodeProvider())
             {
@@ -44,22 +39,32 @@ namespace RazorGenerator.Core
             }
         }
 
-        public RazorHost CreateHost(string fullPath, string projectRelativePath, CodeDomProvider codeDomProvider)
+        public IRazorHost CreateHost(string fullPath, string projectRelativePath, CodeDomProvider codeDomProvider)
         {
             var directives = DirectivesParser.ParseDirectives(_baseDirectory, fullPath);
             var codeTransformer = GetRazorCodeTransformer(projectRelativePath, directives);
-            return new RazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
+
+            var host = _container.GetExport<IHostProvider>().Value;
+            return host.GetRazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
         }
 
         private IRazorCodeTransformer GetRazorCodeTransformer(string projectRelativePath, IDictionary<string, string> directives)
         {
             string hostName;
-
+            RazorRuntime runtime = _defaultRuntime;
             if (!directives.TryGetValue("Generator", out hostName))
             {
-                hostName = GuessHost(_baseDirectory, projectRelativePath);
+                // Determine the host and runtime from the file \ project
+                hostName = GuessHost(_baseDirectory, projectRelativePath, out runtime);
+            }
+            string razorVersion;
+            if (directives.TryGetValue("RazorVersion", out razorVersion))
+            {
+                // If the directive explicitly specifies a host, use that.
+                runtime = razorVersion == "2" ? RazorRuntime.Version2 : RazorRuntime.Version1;
             }
 
+            EnsureCompositionContainer(runtime);
             IRazorCodeTransformer codeTransformer = null;
             try
             {
@@ -77,10 +82,19 @@ namespace RazorGenerator.Core
             return codeTransformer;
         }
 
-        private static CompositionContainer InitCompositionContainer(string baseDirectory, bool loadExtensions)
+        private void EnsureCompositionContainer(RazorRuntime runtime)
+        {
+            if (_container == null)
+            {
+                _container = InitCompositionContainer(_baseDirectory, _loadExtensions, runtime);
+            }
+        }
+
+        private static CompositionContainer InitCompositionContainer(string baseDirectory, bool loadExtensions, RazorRuntime runtime)
         {
             // Retrieve available hosts
-            var catalog = new AggregateCatalog(new AssemblyCatalog(typeof(HostManager).Assembly));
+            var hostsAssembly = GetAssembly(runtime);
+            var catalog = new AggregateCatalog(new AssemblyCatalog(hostsAssembly));
 
             if (loadExtensions)
             {
@@ -100,8 +114,27 @@ namespace RazorGenerator.Core
             return container;
         }
 
-        internal static string GuessHost(string projectRoot, string projectRelativePath)
+        private IEnumerable<string> GetAvailableHosts()
         {
+            // We need for a way to figure out what the exporting type is. This could return arbitrary exports that are not ISingleFileGenerators
+            return from part in _container.Catalog.Parts
+                   from export in part.ExportDefinitions
+                   where !String.IsNullOrEmpty(export.ContractName)
+                   select export.ContractName;
+        }
+
+        private static Assembly GetAssembly(RazorRuntime runtime)
+        {
+            // Change RazorGenerator.Core.dll to RazorGenerator.Core.v3.dll or RazorGenerator.Core.v4.dll
+            int runtimeValue = (int)runtime;
+            var assemblyPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, "v" + runtimeValue + ".dll");
+
+            return Assembly.LoadFrom(assemblyPath);
+        }
+
+        internal static string GuessHost(string projectRoot, string projectRelativePath, out RazorRuntime runtime)
+        {
+            bool? isMvcProject = IsMvcProject(projectRoot, out runtime);
             var mvcHelperRegex = new Regex(@"(^|\\)Views(\\.*)+Helpers?", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
             if (mvcHelperRegex.IsMatch(projectRelativePath))
             {
@@ -112,25 +145,27 @@ namespace RazorGenerator.Core
             {
                 return "MvcView";
             }
-            if (Path.GetFileNameWithoutExtension(projectRelativePath).Contains("Helper"))
+            if (Path.GetFileNameWithoutExtension(projectRelativePath).Contains("Helper") && isMvcProject.HasValue)
             {
-                bool? isMvcProject = IsMvcProject(projectRoot);
-                if (isMvcProject.HasValue)
-                {
-                    return isMvcProject.Value ? "MvcHelper" : "WebPagesHelper";
-                }
+                return isMvcProject.Value ? "MvcHelper" : "WebPagesHelper";
             }
             return null;
         }
 
-        private static bool? IsMvcProject(string projectRoot)
+        private static bool? IsMvcProject(string projectRoot, out RazorRuntime razorRuntime)
         {
+            razorRuntime = RazorRuntime.Version1;
             try
             {
                 var projectFile = Directory.EnumerateFiles(projectRoot, "*.csproj").FirstOrDefault();
                 if (projectFile != null)
                 {
                     var content = File.ReadAllText(projectFile);
+                    if (content.IndexOf("System.Web.Razor, Version=2.0.0.0", StringComparison.OrdinalIgnoreCase) != -1)
+                    {
+                        // The project references Razor v2
+                        razorRuntime = RazorRuntime.Version2;
+                    }
                     return content.IndexOf("System.Web.Mvc", StringComparison.OrdinalIgnoreCase) != -1;
                 }
             }
