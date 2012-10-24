@@ -10,6 +10,7 @@ namespace RazorGenerator.Core
         public static readonly string TrimLeadingUnderscoresKey = "TrimLeadingUnderscores";
         public static readonly string GenerateAbsolutePathLinePragmas = "GenerateAbsolutePathLinePragmas";
         public static readonly string NamespaceKey = "Namespace";
+        public static readonly string ExcludeFromCodeCoverage = "ExcludeFromCodeCoverage";
         private readonly List<RazorCodeTransformerBase> _transformers = new List<RazorCodeTransformerBase>();
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
@@ -45,6 +46,11 @@ namespace RazorGenerator.Core
             {
                 // This should in theory be a different transformer.
                 razorHost.DefaultClassName = razorHost.DefaultClassName.TrimStart('_');
+            }
+
+            if (ReadSwitchValue(directives, ExcludeFromCodeCoverage) == true)
+            {
+                _transformers.Add(new ExcludeFromCodeCoverageTransformer());
             }
 
             base.Initialize(razorHost, directives);

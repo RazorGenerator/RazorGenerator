@@ -25,9 +25,6 @@ namespace RazorGenerator.Core
         /// <summary>
         /// Attempts to locate the nearest global directive file by 
         /// </summary>
-        /// <param name="baseDirectory"></param>
-        /// <param name="fullPath"></param>
-        /// <param name="directives"></param>
         private static bool TryFindGlobalDirectivesFile(string baseDirectory, string fullPath, out string path)
         {
             baseDirectory = baseDirectory.TrimEnd(Path.DirectorySeparatorChar);
