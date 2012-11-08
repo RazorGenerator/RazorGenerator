@@ -24,6 +24,11 @@ namespace RazorGenerator.Core.Test
             "VirtualPathAttributeTest",
         };
 
+        public CoreTest()
+        {
+            HostManager.AssemblyDirectory = Environment.CurrentDirectory;
+        }
+
         [Theory]
         [PropertyData("V1Tests")]
         [PropertyData("V2Tests")]

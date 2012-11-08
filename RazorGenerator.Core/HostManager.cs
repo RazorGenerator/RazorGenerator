@@ -31,6 +31,11 @@ namespace RazorGenerator.Core
             _defaultRuntime = defaultRuntime;
         }
 
+        /// <summary>
+        /// Work around for VS 2012's shadow copying
+        /// </summary>
+        internal static string AssemblyDirectory { get; set; }
+
         public IRazorHost CreateHost(string fullPath, string projectRelativePath)
         {
             using (var codeDomProvider = new CSharpCodeProvider())
@@ -125,11 +130,15 @@ namespace RazorGenerator.Core
 
         private static Assembly GetAssembly(RazorRuntime runtime)
         {
-            // Change RazorGenerator.Core.dll to RazorGenerator.Core.v3.dll or RazorGenerator.Core.v4.dll
             int runtimeValue = (int)runtime;
-            var assemblyPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, "v" + runtimeValue + ".dll");
+            string assemblyDirectory = AssemblyDirectory ?? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            
+            // Look for the assembly at vX\RazorGenerator.vX.dll. If not, assume it is at RazorGenerator.vX.dll
+            string assemblyName = "RazorGenerator.Core.v" + runtimeValue + ".dll";
+            string hostFile = Path.Combine(assemblyDirectory, "v" + runtimeValue, assemblyName);
+            hostFile = File.Exists(hostFile) ? hostFile : Path.Combine(assemblyDirectory, "v" + runtimeValue + ".dll");
 
-            return Assembly.LoadFrom(assemblyPath);
+            return Assembly.LoadFrom(hostFile);
         }
 
         internal static string GuessHost(string projectRoot, string projectRelativePath, out RazorRuntime runtime)

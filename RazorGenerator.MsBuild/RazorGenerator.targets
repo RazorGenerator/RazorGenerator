@@ -2,8 +2,8 @@
     <PropertyGroup>
         <RazorGeneratorMsBuildPath Condition=" '$(RazorGeneratorMsBuildPath)' == '' ">$(MSBuildThisFileDirectory)\RazorGenerator.MsBuild.dll</RazorGeneratorMsBuildPath>
         <RazorViewsCodeGenDirectory Condition=" '$(RazorViewsCodeGenDirectory)' == '' ">$(MsBuildProjectDirectory)\obj\CodeGen\</RazorViewsCodeGenDirectory>
-
-        <CompileDependsOn>
+      
+        <CompileDependsOn Condition=" '$(PrecompileRazorFiles)' == 'true' ">
             PrecompileRazorFiles;
             $(CompileDependsOn);
         </CompileDependsOn>
