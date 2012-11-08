@@ -134,11 +134,26 @@ namespace RazorGenerator.Core
             string assemblyDirectory = AssemblyDirectory ?? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             
             // Look for the assembly at vX\RazorGenerator.vX.dll. If not, assume it is at RazorGenerator.vX.dll
+            string runtimeDirectory = Path.Combine(assemblyDirectory, "v" + runtimeValue);
             string assemblyName = "RazorGenerator.Core.v" + runtimeValue + ".dll";
-            string hostFile = Path.Combine(assemblyDirectory, "v" + runtimeValue, assemblyName);
-            hostFile = File.Exists(hostFile) ? hostFile : Path.Combine(assemblyDirectory, "v" + runtimeValue + ".dll");
-
-            return Assembly.LoadFrom(hostFile);
+            if (Directory.Exists(runtimeDirectory)) 
+            {
+                // If we have a vX directory, load everything from there.
+                Assembly assembly = null;
+                foreach (var file in Directory.EnumerateFiles(runtimeDirectory, "*.dll")) 
+                {
+                    Assembly loadedAssembly = Assembly.LoadFrom(file);
+                    if (Path.GetFileName(file).Equals(assemblyName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        assembly = loadedAssembly;
+                    }
+                }
+                return assembly;
+            }
+            else 
+            {
+                return Assembly.LoadFrom(Path.Combine(assemblyDirectory, assemblyName));
+            }
         }
 
         internal static string GuessHost(string projectRoot, string projectRelativePath, out RazorRuntime runtime)
