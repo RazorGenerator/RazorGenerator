@@ -9,6 +9,8 @@ namespace TemplateSample
         {
             RenderTestTemplate();
             RenderMailTemplate();
+            RenderListTemplate();
+            Console.ReadKey();
         }
 
         private static void RenderTestTemplate()
@@ -42,6 +44,16 @@ namespace TemplateSample
 
             // Run it
             Console.WriteLine(preprocessedTemplate.TransformText());
+        }
+
+        private static void RenderListTemplate()
+        {
+            var listTemplate = new ListTemplate
+            {
+                Foos = new[] { "one", "two", "three" }
+            };
+
+            Console.WriteLine(listTemplate.TransformText());
         }
     }
 }

@@ -1,0 +1,17 @@
+﻿@* Generator: Template *@
+@using TemplateSample
+@functions{
+    public IEnumerable<string> Foos { get; set; }
+}
+@{
+    var itemTemplate = new ItemTemplate();
+}
+
+<ul>
+    @foreach (var foo in Foos)
+    {
+        itemTemplate.Foo = foo; 
+        itemTemplate.Clear();
+        @itemTemplate.TransformText()
+    }
+</ul>

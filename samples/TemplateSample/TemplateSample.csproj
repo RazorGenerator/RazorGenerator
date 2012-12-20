@@ -45,6 +45,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomTemplateBase.cs" />
+    <None Include="ListTemplate.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ListTemplate.generated.cs</LastGenOutput>
+    </None>
+    <Compile Include="ItemTemplate.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ItemTemplate.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="ListTemplate.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ListTemplate.cshtml</DependentUpon>
+    </Compile>
     <Compile Include="MailTemplate.generated.cs">
       <DependentUpon>MailTemplate.cshtml</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -65,6 +79,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ItemTemplate.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ItemTemplate.generated.cs</LastGenOutput>
+    </None>
     <None Include="MailTemplate.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>MailTemplate.generated.cs</LastGenOutput>

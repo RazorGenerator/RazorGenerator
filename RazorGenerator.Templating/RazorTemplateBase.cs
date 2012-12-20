@@ -52,5 +52,15 @@ namespace RazorGenerator.Templating
                 return _generatingEnvironment.ToString();
             }
         }
+
+        public void Clear()
+        {
+            _generatingEnvironment.Clear();
+
+            if (Layout != null)
+            {
+                Layout._content = "";
+            }
+        }
     }
 }
