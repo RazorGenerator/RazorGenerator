@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+using System.IO;
 
 namespace RazorGenerator.Templating
 {
@@ -61,6 +62,11 @@ namespace RazorGenerator.Templating
             {
                 Layout._content = "";
             }
+        }
+
+        public void WriteTo(TextWriter writer, object value)
+        {
+            writer.Write(Convert.ToString(value, CultureInfo.InvariantCulture));
         }
     }
 }

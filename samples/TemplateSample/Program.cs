@@ -10,6 +10,7 @@ namespace TemplateSample
             RenderTestTemplate();
             RenderMailTemplate();
             RenderListTemplate();
+            RenderHelperTestTemplate();
             Console.ReadKey();
         }
 
@@ -54,6 +55,12 @@ namespace TemplateSample
             };
 
             Console.WriteLine(listTemplate.TransformText());
+        }
+
+        private static void RenderHelperTestTemplate()
+        {
+            var helperTestTemplate = new HelperTestTemplate();
+            Console.WriteLine(helperTestTemplate.TransformText());
         }
     }
 }

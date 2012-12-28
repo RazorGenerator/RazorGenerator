@@ -1,0 +1,30 @@
+﻿@* Generator: Template *@
+@helper FormatFoo(string foo) {
+	@foo.ToUpper()
+}
+
+@{
+    var foos = new[] {
+        "foo one",
+        "foo two",
+        "foo three"
+    };
+}
+
+** HelperTestTemplate **
+
+Foos:
+<ul>
+    @foreach (var foo in foos)
+    {
+        <li>@foo</li>
+    }
+</ul>
+
+Formatted foos:
+<ul>
+    @foreach (var foo in foos)
+    {
+        <li>@FormatFoo(foo)</li>
+    }
+</ul>

@@ -49,6 +49,12 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>ListTemplate.generated.cs</LastGenOutput>
     </None>
+    <Compile Include="HelperTestTemplate.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HelperTestTemplate.cshtml</DependentUpon>
+    </Compile>
+    <Compile Include="HelperTestTemplateSupport.cs" />
     <Compile Include="ItemTemplate.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -104,6 +110,12 @@
       <Project>{B536BE55-3549-49AE-9CE6-066062B6E916}</Project>
       <Name>RazorGenerator.Templating</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HelperTestTemplate.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>HelperTestTemplate.generated.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
