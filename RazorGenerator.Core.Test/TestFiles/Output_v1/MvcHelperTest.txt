@@ -37,20 +37,25 @@ return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
 
 
                                                            
+    string css = "my-css";
     if (gamerTag.IsEmpty()) {
         throw new ArgumentException(CommonResources.Argument_Cannot_Be_Null_Or_Empty, "gamerTag");
     }
 
-WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    <iframe frameborder=\"0\" height=\"140\" scrolling=\"no\" src=\"http://gamercard.xbo" +
-"x.com/");
+WebViewPage.WriteLiteralTo(@__razor_helper_writer, "    <iframe class=\"");
 
 
-                                             WebViewPage.WriteTo(@__razor_helper_writer, HttpUtility.UrlPathEncode(gamerTag));
+WebViewPage.WriteTo(@__razor_helper_writer, css);
+
+WebViewPage.WriteLiteralTo(@__razor_helper_writer, "\" frameborder=\"0\" height=\"140\" scrolling=\"no\" src=\"http://gamercard.xbox.com/");
+
+
+                                                          WebViewPage.WriteTo(@__razor_helper_writer, HttpUtility.UrlPathEncode(gamerTag));
 
 WebViewPage.WriteLiteralTo(@__razor_helper_writer, ".card\" width=\"204\">");
 
 
-                                                                                                     WebViewPage.WriteTo(@__razor_helper_writer, gamerTag);
+                                                                                                                  WebViewPage.WriteTo(@__razor_helper_writer, gamerTag);
 
 WebViewPage.WriteLiteralTo(@__razor_helper_writer, "</iframe>\r\n");
 

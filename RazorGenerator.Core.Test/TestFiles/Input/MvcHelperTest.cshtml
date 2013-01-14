@@ -3,8 +3,9 @@
 @using Resources
 
 @helper GamerTag(this HtmlHelper helper, string gamerTag) {
+    string css = "my-css";
     if (gamerTag.IsEmpty()) {
         throw new ArgumentException(CommonResources.Argument_Cannot_Be_Null_Or_Empty, "gamerTag");
     }
-    <iframe frameborder="0" height="140" scrolling="no" src="http://gamercard.xbox.com/@(HttpUtility.UrlPathEncode(gamerTag)).card" width="204">@gamerTag</iframe>
+    <iframe class="@css" frameborder="0" height="140" scrolling="no" src="http://gamercard.xbox.com/@(HttpUtility.UrlPathEncode(gamerTag)).card" width="204">@gamerTag</iframe>
 }

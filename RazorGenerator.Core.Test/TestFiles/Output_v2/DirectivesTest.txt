@@ -29,7 +29,7 @@ namespace RazorGenerator.Core.Test
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "v.v.v.v")]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute()]
-    internal class DirectivesTest
+    internal class DirectivesTest : System.Web.WebPages.HelperPage
     {
     }
 }

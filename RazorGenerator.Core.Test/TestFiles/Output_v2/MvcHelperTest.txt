@@ -29,7 +29,7 @@ namespace RazorGenerator.Core.Test
     using Resources;
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "v.v.v.v")]
-    public static class MvcHelperTest
+    public class MvcHelperTest : System.Web.WebPages.HelperPage
     {
 
 #line default
@@ -39,32 +39,38 @@ public static System.Web.WebPages.HelperResult GamerTag(this HtmlHelper helper, 
 #line hidden
 return new System.Web.WebPages.HelperResult(__razor_helper_writer => {
                                                            
+    string css = "my-css";
     if (gamerTag.IsEmpty()) {
         throw new ArgumentException(CommonResources.Argument_Cannot_Be_Null_Or_Empty, "gamerTag");
     }
 
-WebViewPage.WriteLiteralTo(__razor_helper_writer, "    <iframe");
+WriteLiteralTo(__razor_helper_writer, "    <iframe");
 
-WebViewPage.WriteLiteralTo(__razor_helper_writer, " frameborder=\"0\"");
-
-WebViewPage.WriteLiteralTo(__razor_helper_writer, " height=\"140\"");
-
-WebViewPage.WriteLiteralTo(__razor_helper_writer, " scrolling=\"no\"");
-
-WriteAttributeTo(__razor_helper_writer, "src", Tuple.Create(" src=\"", 304), Tuple.Create("\"", 379)
-, Tuple.Create(Tuple.Create("", 310), Tuple.Create("http://gamercard.xbox.com/", 310), true)
-         , Tuple.Create(Tuple.Create("", 336), Tuple.Create<System.Object, System.Int32>(HttpUtility.UrlPathEncode(gamerTag)
-, 336), false)
-, Tuple.Create(Tuple.Create("", 374), Tuple.Create(".card", 374), true)
+WriteAttributeTo(__razor_helper_writer, "class", Tuple.Create(" class=\"", 288), Tuple.Create("\"", 300)
+, Tuple.Create(Tuple.Create("", 296), Tuple.Create<System.Object, System.Int32>(css
+, 296), false)
 );
 
-WebViewPage.WriteLiteralTo(__razor_helper_writer, " width=\"204\"");
+WriteLiteralTo(__razor_helper_writer, " frameborder=\"0\"");
 
-WebViewPage.WriteLiteralTo(__razor_helper_writer, ">");
+WriteLiteralTo(__razor_helper_writer, " height=\"140\"");
 
-                                                                                                      WebViewPage.WriteTo(__razor_helper_writer, gamerTag);
+WriteLiteralTo(__razor_helper_writer, " scrolling=\"no\"");
 
-WebViewPage.WriteLiteralTo(__razor_helper_writer, "</iframe>\r\n");
+WriteAttributeTo(__razor_helper_writer, "src", Tuple.Create(" src=\"", 345), Tuple.Create("\"", 420)
+, Tuple.Create(Tuple.Create("", 351), Tuple.Create("http://gamercard.xbox.com/", 351), true)
+                      , Tuple.Create(Tuple.Create("", 377), Tuple.Create<System.Object, System.Int32>(HttpUtility.UrlPathEncode(gamerTag)
+, 377), false)
+, Tuple.Create(Tuple.Create("", 415), Tuple.Create(".card", 415), true)
+);
+
+WriteLiteralTo(__razor_helper_writer, " width=\"204\"");
+
+WriteLiteralTo(__razor_helper_writer, ">");
+
+                                                                                                                               WriteTo(__razor_helper_writer, gamerTag);
+
+WriteLiteralTo(__razor_helper_writer, "</iframe>\r\n");
 
 
 });

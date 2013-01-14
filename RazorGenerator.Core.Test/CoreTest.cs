@@ -15,7 +15,7 @@ namespace RazorGenerator.Core.Test
         { 
             "WebPageTest",
             "WebPageHelperTest",
-            "MvcViewTest",
+             "MvcViewTest",
             "MvcHelperTest",
             "TemplateTest",
             "_ViewStart",

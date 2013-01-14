@@ -57,6 +57,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MvcHelperTransformer.cs" />
     <Compile Include="MvcViewTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\AddPageVirtualPathAttribute.cs" />
@@ -70,7 +71,6 @@
     <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\SetTypeNamespace.cs" />
     <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\SetTypeVisibility.cs" />
     <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\ExcludeFromCodeCoverageTransformer.cs" />
-    <Compile Include="..\RazorGenerator.Core.v1\ExportedTransformers\MvcHelperTransformer.cs" />
     <Compile Include="..\RazorGenerator.Core.v1\ExportedTransformers\TemplateTransformer.cs" />
     <Compile Include="..\RazorGenerator.Core.v1\ExportedTransformers\WebPagesHelperTransformer.cs" />
     <Compile Include="..\RazorGenerator.Core.v1\ExportedTransformers\WebPagesTransformer.cs" />
