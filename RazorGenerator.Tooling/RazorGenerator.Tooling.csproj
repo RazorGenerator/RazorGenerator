@@ -70,14 +70,6 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
     <Reference Include="VSLangProj">
     </Reference>
     <Reference Include="VSLangProj2">
@@ -151,14 +143,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RazorGenerator.Core.v1\RazorGenerator.Core.v1.csproj">
-      <Project>{1A99F351-138E-440B-A4E9-B8651FEEA593}</Project>
-      <Name>RazorGenerator.Core.v1</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RazorGenerator.Core.v2\RazorGenerator.Core.v2.csproj">
-      <Project>{8AC6362A-CF3F-441B-B0B4-B9907F4CBB46}</Project>
-      <Name>RazorGenerator.Core.v2</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RazorGenerator.Core\RazorGenerator.Core.csproj">
       <Project>{AF040852-112F-494D-B1D0-B50888928DB6}</Project>
       <Name>RazorGenerator.Core</Name>
@@ -175,10 +159,23 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Condition="Exists($(VsSdkTargets))" Project="$(VsSdkTargets)" />
+  <PropertyGroup>
+    <CreateVsixContainerDependsOn>$(CreateVsixContainerDependsOn);_CreateSourceItems</CreateVsixContainerDependsOn>
+  </PropertyGroup>
+  
+  <!-- Copy the Core.v1 and v2 binaries inside the v1 and v2 directories of the vsix. This is to resolve bug 72 -->
+  <Target Name="_CreateSourceItems">
+     <ItemGroup>
+         <VSIXSourceItem Include="..\RazorGenerator.Core.v1\bin\$(Configuration)\*.dll" Exclude="..\RazorGenerator.Core.v1\bin\$(Configuration)\RazorGenerator.Core.dll">
+            <VSIXSubPath>v1</VSIXSubPath>
+         </VSIXSourceItem>
+         <VSIXSourceItem Include="..\RazorGenerator.Core.v2\bin\$(Configuration)\*.dll" Exclude="..\RazorGenerator.Core.v2\bin\$(Configuration)\RazorGenerator.Core.dll">
+            <VSIXSubPath>v2</VSIXSubPath>
+         </VSIXSourceItem>
+     </ItemGroup>
+  </Target>
   <Target Name="InstallPlugin" DependsOnTargets="Build">
     <MakeDir Directories="$(DevEnvDir)\Extensions\$(AssemblyName)" />
-    <Copy SkipUnchangedFiles="true" ContinueOnError="true" SourceFiles="$(OutputPath)System.Razor.dll;$(OutputPath)System.Razor.Web.dll;$(OutputPath)$(TargetFileName)" DestinationFolder="$(DevEnvDir)\Extensions\$(AssemblyName)" />
-    <Copy SkipUnchangedFiles="true" ContinueOnError="true" SourceFiles="$(OutputPath)System.Razor.pdb;$(OutputPath)System.Razor.Web.pdb;$(OutputPath)$(TargetName).pdb" DestinationFolder="$(DevEnvDir)\Extensions\$(AssemblyName)" />
     <Copy SkipUnchangedFiles="true" ContinueOnError="true" SourceFiles="$(OutputPath)source.extension.vsixmanifest" DestinationFiles="$(DevEnvDir)\Extensions\$(AssemblyName)\extension.vsixmanifest" />
   </Target>
   <Target Name="AfterBuild">
