@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeTransformers\ExcludeFromCodeCoverageTransformer.cs" />
+    <Compile Include="CodeTransformers\MakeTypePartial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CodeTransformers\AddPageVirtualPathAttribute.cs" />
     <Compile Include="CodeTransformers\AggregateCodeTransformer.cs" />

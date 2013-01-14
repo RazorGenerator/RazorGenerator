@@ -30,6 +30,7 @@ namespace RazorGenerator.Core
             new SetBaseType(typeof(WebViewPage)),
             new RemoveLineHiddenPragmas(),
             new MvcWebConfigTransformer(),
+            new MakeTypePartial(),
         };
         private bool _isSpecialPage;
 

@@ -29,7 +29,7 @@ namespace RazorGenerator.Core.Test
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "v.v.v.v")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/Views/Account/Users.cshtml")]
-    public class VirtualPathAttributeTest : System.Web.Mvc.WebViewPage<dynamic>
+    public partial class VirtualPathAttributeTest : System.Web.Mvc.WebViewPage<dynamic>
     {
         public VirtualPathAttributeTest()
         {
