@@ -27,7 +27,7 @@ function Set-CustomTool {
     param($item, [string]$customTool, [bool]$force = $false)
     
     $customToolProperty = $_.Properties.Item("CustomTool")
-    if ($force -or !$customToolProperty.Value) {
+    if ($force -or ($customTool -ne $customToolProperty.Value)) {
         $customToolProperty.Value = $customTool
         $_.Object.RunCustomTool()
         return $true
@@ -43,11 +43,12 @@ function Get-RazorFiles {
     (Resolve-ProjectName $ProjectName).ProjectItems | Get-ProjectFiles | Where { $_.Name.EndsWith('.cshtml')  }
 }
 
-function Enable-RazorGenerator {
-    param(
-        [parameter(ValueFromPipelineByPropertyName = $true)]
-        [string]$ProjectName
+function Change-CustomTool {
+    param (
+        [string]$ProjectName,
+        [string]$CustomTool
     )
+    
     Process {
         $solutionExplorer = ($dte.Windows | Where { $_.Type -eq "vsWindowTypeSolutionExplorer" }).Object
         $project = (Resolve-ProjectName $projectName)
@@ -56,7 +57,7 @@ function Enable-RazorGenerator {
 		$SolutionName = [IO.Path]::GetFileNameWithoutExtension($dte.Solution.FullName)
         
         Get-RazorFiles $ProjectName | % { 
-            if (Set-CustomTool $_ "RazorGenerator") {
+            if (Set-CustomTool $_ $CustomTool) {
                 $relativePath = Get-RelativePath $projectPath $_
                 if ($relativePath) {
                     $solutionExplorer.GetItem("$SolutionName\$ProjectName$relativePath").UIHierarchyItems.Expanded = $false
@@ -64,6 +65,24 @@ function Enable-RazorGenerator {
             }
         }
     }
+}
+
+function Enable-RazorGenerator {
+    param(
+        [parameter(ValueFromPipelineByPropertyName = $true)]
+        [string]$ProjectName
+    )
+    
+    Change-CustomTool $ProjectName "RazorGenerator"
+    
+}
+
+function Disable-RazorGenerator {
+    param(
+        [parameter(ValueFromPipelineByPropertyName = $true)]
+        [string]$ProjectName
+    )
+    Change-CustomTool $ProjectName ""
 }
 
 function Redo-RazorGenerator {
@@ -90,4 +109,4 @@ function Get-RelativePath {
     }
 }
 
-Export-ModuleMember Enable-RazorGenerator, Redo-RazorGenerator
+Export-ModuleMember Enable-RazorGenerator, Redo-RazorGenerator, Disable-RazorGenerator
