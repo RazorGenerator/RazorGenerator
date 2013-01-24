@@ -11,6 +11,7 @@ namespace RazorGenerator.Core
         public static readonly string GenerateAbsolutePathLinePragmas = "GenerateAbsolutePathLinePragmas";
         public static readonly string NamespaceKey = "Namespace";
         public static readonly string ExcludeFromCodeCoverage = "ExcludeFromCodeCoverage";
+        public static readonly string SuffixFileName = "ClassSuffix";
         private readonly List<RazorCodeTransformerBase> _transformers = new List<RazorCodeTransformerBase>();
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
@@ -51,6 +52,12 @@ namespace RazorGenerator.Core
             if (ReadSwitchValue(directives, ExcludeFromCodeCoverage) == true)
             {
                 _transformers.Add(new ExcludeFromCodeCoverageTransformer());
+            }
+
+            string suffix;
+            if (directives.TryGetValue(SuffixFileName, out suffix))
+            {
+                _transformers.Add(new SuffixFileNameTransformer(suffix));
             }
 
             base.Initialize(razorHost, directives);

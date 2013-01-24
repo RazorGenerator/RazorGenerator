@@ -86,6 +86,9 @@
     <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\SetTypeNamespace.cs">
       <Link>CodeTransformers\SetTypeNamespace.cs</Link>
     </Compile>
+    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\SuffixFileNameTransformer.cs">
+      <Link>CodeTransformers\SuffixFileNameTransformer.cs</Link>
+    </Compile>
     <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\SetTypeVisibility.cs">
       <Link>CodeTransformers\SetTypeVisibility.cs</Link>
     </Compile>

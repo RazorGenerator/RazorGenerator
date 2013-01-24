@@ -22,6 +22,7 @@ namespace RazorGenerator.Core.Test
             "DirectivesTest",
             "TemplateWithBaseTypeTest",
             "VirtualPathAttributeTest",
+            "SuffixTransformerTest"
         };
 
         public CoreTest()
