@@ -41,6 +41,11 @@ namespace RazorGenerator.Mvc
             private set;
         }
 
+        public string VirtualPath
+        {
+            get { return _virtualPath; }
+        }
+
         public void Render(ViewContext viewContext, TextWriter writer)
         {
             object instance = null;
