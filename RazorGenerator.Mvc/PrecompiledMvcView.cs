@@ -9,7 +9,7 @@ namespace RazorGenerator.Mvc
 {
     public class PrecompiledMvcView : IView
     {
-        private static Action<WebViewPage, string> _overriddenLayoutSetter;
+        private static Lazy<Action<WebViewPage, string>> _overriddenLayoutSetter = new Lazy<Action<WebViewPage, string>>(() => CreateOverriddenLayoutSetterDelegate());
         private readonly Type _type;
         private readonly string _virtualPath;
         private readonly string _masterPath;
@@ -69,10 +69,9 @@ namespace RazorGenerator.Mvc
 
             if (!String.IsNullOrEmpty(_masterPath))
             {
-                EnsureLayoutSetter();
-                _overriddenLayoutSetter(webViewPage, _masterPath);
+                _overriddenLayoutSetter.Value(webViewPage, _masterPath);
             }
-
+            
             webViewPage.VirtualPath = _virtualPath;
             webViewPage.ViewContext = viewContext;
             webViewPage.ViewData = viewContext.ViewData;
@@ -86,21 +85,6 @@ namespace RazorGenerator.Mvc
 
             var pageContext = new WebPageContext(viewContext.HttpContext, webViewPage, null);
             webViewPage.ExecutePageHierarchy(pageContext, writer, startPage);
-        }
-
-        /// <summary>
-        /// Ensures that the static method CreateOverriddenLayoutSetterDelegate() has 
-        /// been set. This allows for the class to be instantiated without setting the 
-        /// static ctr and causing medium trust exceptions (reflection). 
-        /// However, if the precompiled view uses a layout page then it will be called anyway
-        /// Thus, medium trust != layout
-        /// </summary>
-        private void EnsureLayoutSetter()
-        {
-            if (_overriddenLayoutSetter == null)
-            {
-                _overriddenLayoutSetter = CreateOverriddenLayoutSetterDelegate();
-            }
         }
 
         // Unfortunately, the only way to override the default layout with a custom layout from a
