@@ -11,7 +11,7 @@
     <description>$description$</description>
     <tags>mvc razor</tags>
     <dependencies>
-      <dependency id="WebActivator" version="1.4" />
+      <dependency id="WebActivatorEx" version="2.0.1" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
