@@ -18,6 +18,9 @@
       <frameworkAssembly assemblyName="System.Web.Mvc" targetFramework="net40" />
       <frameworkAssembly assemblyName="System.Web.WebPages" targetFramework="net40" />
     </frameworkAssemblies>
+    <releaseNotes>
+        * v1.5.5:  Updated IsPhyicalPathsNewer to use case insensitive comparison
+    </releaseNotes>
   </metadata>
   <files>
     <file src="NuGet\**\*.*" />

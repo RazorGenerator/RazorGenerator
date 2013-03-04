@@ -1,5 +1,5 @@
 using System.Reflection;
 
-[assembly: AssemblyVersion("1.5.4")]
+[assembly: AssemblyVersion("1.5.5")]
 [assembly: AssemblyProduct("RazorGenerator")]
 [assembly: AssemblyCompany("RazorGenerator contributors")]

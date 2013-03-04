@@ -152,7 +152,7 @@ namespace RazorGenerator.Mvc
 
         private bool IsPhysicalFileNewer(string virtualPath)
         {
-            if (virtualPath.StartsWith(_baseVirtualPath ?? String.Empty, StringComparison.Ordinal))
+            if (virtualPath.StartsWith(_baseVirtualPath ?? String.Empty, StringComparison.OrdinalIgnoreCase))
             {
                 // If a base virtual path is specified, we should remove it as a prefix. Everything that follows should map to a view file on disk.
                 if (!String.IsNullOrEmpty(_baseVirtualPath))
