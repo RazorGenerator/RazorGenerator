@@ -185,7 +185,8 @@ namespace RazorGenerator.Core
                 if (projectFile != null)
                 {
                     var content = File.ReadAllText(projectFile);
-                    if (content.IndexOf("System.Web.Razor, Version=2.0.0.0", StringComparison.OrdinalIgnoreCase) != -1)
+                    if ((content.IndexOf("System.Web.Mvc, Version=4.0.0.0", StringComparison.OrdinalIgnoreCase) != -1) ||
+                        (content.IndexOf("System.Web.Razor, Version=2.0.0.0", StringComparison.OrdinalIgnoreCase) != -1))
                     {
                         // The project references Razor v2
                         razorRuntime = RazorRuntime.Version2;
