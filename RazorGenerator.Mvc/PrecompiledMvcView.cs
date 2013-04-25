@@ -13,6 +13,7 @@ namespace RazorGenerator.Mvc
         private readonly Type _type;
         private readonly string _virtualPath;
         private readonly string _masterPath;
+        private readonly IViewPageActivator _viewPageActivator;
 
 
         public PrecompiledMvcView(string virtualPath, Type type, bool runViewStartPages, IEnumerable<string> fileExtension)
@@ -21,12 +22,26 @@ namespace RazorGenerator.Mvc
         }
 
         public PrecompiledMvcView(string virtualPath, string masterPath, Type type, bool runViewStartPages, IEnumerable<string> fileExtension)
+            : this(virtualPath, masterPath, type, runViewStartPages, fileExtension, null)
+        {
+        }
+
+        public PrecompiledMvcView(
+            string virtualPath,
+            string masterPath,
+            Type type,
+            bool runViewStartPages,
+            IEnumerable<string> fileExtension,
+            IViewPageActivator viewPageActivator)
         {
             _type = type;
             _virtualPath = virtualPath;
             _masterPath = masterPath;
             RunViewStartPages = runViewStartPages;
             ViewStartFileExtensions = fileExtension;
+            _viewPageActivator = viewPageActivator
+                ?? DependencyResolver.Current.GetService<IViewPageActivator>() /* For compatibility, remove this line within next version */
+                ?? DefaultViewPageActivator.Current;
         }
 
         public bool RunViewStartPages
@@ -48,19 +63,7 @@ namespace RazorGenerator.Mvc
 
         public void Render(ViewContext viewContext, TextWriter writer)
         {
-            object instance = null;
-            if (DependencyResolver.Current != null)
-            {
-                var viewPageActivator = DependencyResolver.Current.GetService<IViewPageActivator>();
-                if (viewPageActivator != null)
-                    instance = viewPageActivator.Create(viewContext.Controller.ControllerContext, _type);
-                else
-                    instance = DependencyResolver.Current.GetService(_type);
-            }
-            if (instance == null)
-                instance = Activator.CreateInstance(_type);
-
-            WebViewPage webViewPage = instance as WebViewPage;
+            WebViewPage webViewPage = _viewPageActivator.Create(viewContext.Controller.ControllerContext, _type) as WebViewPage;
 
             if (webViewPage == null)
             {

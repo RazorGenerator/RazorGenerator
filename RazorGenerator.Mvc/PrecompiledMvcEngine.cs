@@ -19,6 +19,7 @@ namespace RazorGenerator.Mvc
         private readonly IDictionary<string, Type> _mappings;
         private readonly string _baseVirtualPath;
         private readonly Lazy<DateTime> _assemblyLastWriteTime;
+        private readonly IViewPageActivator _viewPageActivator;
 
         public PrecompiledMvcEngine(Assembly assembly)
             : this(assembly, null)
@@ -26,6 +27,11 @@ namespace RazorGenerator.Mvc
         }
 
         public PrecompiledMvcEngine(Assembly assembly, string baseVirtualPath)
+            : this(assembly, null, null)
+        {
+        }
+
+        public PrecompiledMvcEngine(Assembly assembly, string baseVirtualPath, IViewPageActivator viewPageActivator)
         {
             _assemblyLastWriteTime = new Lazy<DateTime>(() => assembly.GetLastWriteTimeUtc(fallback: DateTime.MaxValue));
             _baseVirtualPath = NormalizeBaseVirtualPath(baseVirtualPath);
@@ -67,6 +73,9 @@ namespace RazorGenerator.Mvc
                          select new KeyValuePair<string, Type>(CombineVirtualPaths(_baseVirtualPath, pageVirtualPath.VirtualPath), type)
                          ).ToDictionary(t => t.Key, t => t.Value, StringComparer.OrdinalIgnoreCase);
             this.ViewLocationCache = new PrecompiledViewLocationCache(assembly.FullName, this.ViewLocationCache);
+            _viewPageActivator = viewPageActivator 
+                ?? DependencyResolver.Current.GetService<IViewPageActivator>() /* For compatibility, remove this line within next version */
+                ?? DefaultViewPageActivator.Current;
         }
 
         /// <summary>
@@ -113,7 +122,7 @@ namespace RazorGenerator.Mvc
             Type type;
             if (_mappings.TryGetValue(viewPath, out type))
             {
-                return new PrecompiledMvcView(viewPath, masterPath, type, runViewStartPages, base.FileExtensions);
+                return new PrecompiledMvcView(viewPath, masterPath, type, runViewStartPages, base.FileExtensions, _viewPageActivator);
             }
             return null;
         }
@@ -136,11 +145,7 @@ namespace RazorGenerator.Mvc
 
             if (_mappings.TryGetValue(virtualPath, out type))
             {
-                if (DependencyResolver.Current != null)
-                {
-                    return DependencyResolver.Current.GetService(type);
-                }
-                return Activator.CreateInstance(type);
+                return _viewPageActivator.Create((ControllerContext)null, type);
             }
             return null;
         }

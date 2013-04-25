@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyExtensions.cs" />
+    <Compile Include="DefaultViewPageActivator.cs" />
     <Compile Include="PrecompiledMvcEngine.cs" />
     <Compile Include="PrecompiledMvcView.cs" />
     <Compile Include="PrecompiledViewLocationCache.cs" />
