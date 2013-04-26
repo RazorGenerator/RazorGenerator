@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using RazorGenerator.Core;
@@ -10,6 +12,7 @@ namespace RazorGenerator.MsBuild
 {
     public class RazorCodeGen : Task
     {
+        private static readonly Regex _namespaceRegex = new Regex(@"($|\.)(\d)");
         private readonly List<ITaskItem> _generatedFiles = new List<ITaskItem>();
 
         public ITaskItem[] FilesToPrecompile { get; set; }
@@ -134,6 +137,7 @@ namespace RazorGenerator.MsBuild
             projectRelativePath = Path.GetDirectoryName(projectRelativePath);
             // To keep the namespace consistent with VS, need to generate a namespace based on the folder path if no namespace is specified.
             itemNamespace = projectRelativePath.Trim(Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '.');
+            itemNamespace = _namespaceRegex.Replace(itemNamespace, "$1_$2");
 
             if (!String.IsNullOrEmpty(RootNamespace))
             {
