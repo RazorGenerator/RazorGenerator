@@ -42,7 +42,7 @@
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="ReflectionMagic">
-      <HintPath>..\packages\ReflectionMagic.1.0.1\lib\net40\ReflectionMagic.dll</HintPath>
+      <HintPath>..\packages\ReflectionMagic.2.0.0\lib\net40\ReflectionMagic.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -74,11 +74,10 @@
     </PreBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <!-- Sign the assembly if the environment variable is set -->
+  <PropertyGroup Condition="'$(PRIVATE_SNK_FILE)' != ''">
+    <AssemblyOriginatorKeyFile>$(PRIVATE_SNK_FILE)</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
 </Project>
