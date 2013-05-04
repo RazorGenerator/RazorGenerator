@@ -27,7 +27,7 @@ namespace RazorGenerator.Mvc
         }
 
         public PrecompiledMvcEngine(Assembly assembly, string baseVirtualPath)
-            : this(assembly, null, null)
+            : this(assembly, baseVirtualPath, null)
         {
         }
 
