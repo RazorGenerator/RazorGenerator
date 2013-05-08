@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -136,9 +137,27 @@ namespace RazorGenerator.MsBuild
             }
             projectRelativePath = Path.GetDirectoryName(projectRelativePath);
             // To keep the namespace consistent with VS, need to generate a namespace based on the folder path if no namespace is specified.
-            itemNamespace = projectRelativePath.Trim(Path.DirectorySeparatorChar).Replace(Path.DirectorySeparatorChar, '.');
+            // Also replace any non-alphanumeric characters with underscores.
+            itemNamespace = projectRelativePath.Trim(Path.DirectorySeparatorChar);
+            var stringBuilder = new StringBuilder();
+            foreach (char c in itemNamespace)
+            {
+                if (c == Path.DirectorySeparatorChar)
+                {
+                    stringBuilder.Append('.');
+                }
+                else if (!Char.IsLetterOrDigit(c))
+                {
+                    stringBuilder.Append('_');
+                }
+                else
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+            itemNamespace = stringBuilder.ToString();
             itemNamespace = _namespaceRegex.Replace(itemNamespace, "$1_$2");
-
+            
             if (!String.IsNullOrEmpty(RootNamespace))
             {
                 itemNamespace = RootNamespace + '.' + itemNamespace;
