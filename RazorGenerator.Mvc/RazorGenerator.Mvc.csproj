@@ -48,8 +48,10 @@
   <ItemGroup>
     <Compile Include="AssemblyExtensions.cs" />
     <Compile Include="DefaultViewPageActivator.cs" />
+    <Compile Include="CompositePrecompiledMvcEngine.cs" />
     <Compile Include="PrecompiledMvcEngine.cs" />
     <Compile Include="PrecompiledMvcView.cs" />
+    <Compile Include="PrecompiledViewAssembly.cs" />
     <Compile Include="PrecompiledViewLocationCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\CommonAssemblyInfo.cs">

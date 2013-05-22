@@ -1,11 +1,12 @@
-﻿using System.Web.Mvc;
+﻿using System.Web;
+using System.Web.Mvc;
 using System.Web.WebPages;
 using RazorGenerator.Mvc;
 
 namespace PrecompiledMvcLibrary
 {
 
-    public static class PreApplicationStartCode
+    public class PreApplicationStartCode
     {
         private static bool _startMethodExecuted = false;
 
@@ -17,6 +18,14 @@ namespace PrecompiledMvcLibrary
             }
 
             var engine = new PrecompiledMvcEngine(typeof(PreApplicationStartCode).Assembly);
+
+            // If you have multiple assemblies with precompiled views,
+            // use CompositePrecompiledMvcEngine:
+            //
+            //var engine = new CompositePrecompiledMvcEngine(
+            //    PrecompiledViewAssembly.OfType<YourType>(),
+            //    PrecompiledViewAssembly.OfType<PreApplicationStartCode>(
+            //        usePhysicalViewsIfNewer: HttpContext.Current.IsDebuggingEnabled));
 
             ViewEngines.Engines.Insert(0, engine);
 
