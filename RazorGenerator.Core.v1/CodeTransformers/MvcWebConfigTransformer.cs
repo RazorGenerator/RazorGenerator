@@ -41,26 +41,34 @@ namespace RazorGenerator.Core
                 virtualDirectories.Add(virtualPath, new VirtualDirectoryMapping(currentPath, isAppRoot: isAppRoot));
             }
 
-            var config = WebConfigurationManager.OpenMappedWebConfiguration(configFileMap, directoryVirtualPath);
-
-            // We use dynamic here because we could be dealing both with a 1.0 or a 2.0 RazorPagesSection, which
-            // are not type compatible (http://razorgenerator.codeplex.com/workitem/26)
-            dynamic section = config.GetSection(RazorPagesSection.SectionName);
-            if (section != null)
+            try
             {
-                string baseType = section.PageBaseType;
-                if (!DefaultBaseType.Equals(baseType, StringComparison.OrdinalIgnoreCase))
-                {
-                    _transformers.Add(new SetBaseType(baseType));
-                }
-
+                var config = WebConfigurationManager.OpenMappedWebConfiguration(configFileMap, directoryVirtualPath);
+            
+                // We use dynamic here because we could be dealing both with a 1.0 or a 2.0 RazorPagesSection, which
+                // are not type compatible (http://razorgenerator.codeplex.com/workitem/26)
+                dynamic section = config.GetSection(RazorPagesSection.SectionName);
                 if (section != null)
                 {
-                    foreach (NamespaceInfo n in section.Namespaces)
+                    string baseType = section.PageBaseType;
+                    if (!DefaultBaseType.Equals(baseType, StringComparison.OrdinalIgnoreCase))
                     {
-                        razorHost.NamespaceImports.Add(n.Namespace);
+                        _transformers.Add(new SetBaseType(baseType));
+                    }
+            
+                    if (section != null)
+                    {
+                        foreach (NamespaceInfo n in section.Namespaces)
+                        {
+                            razorHost.NamespaceImports.Add(n.Namespace);
+                        }
                     }
                 }
+            }
+            catch (IndexOutOfRangeException)
+            {
+                // Bug in Mono framework.
+                // Configure namespaces using the RazorGenerator directives file instead.
             }
             base.Initialize(razorHost, directives);
         }
