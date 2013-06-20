@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Compilation;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.WebPages;
 
@@ -165,7 +166,7 @@ namespace RazorGenerator.Mvc
                     virtualPath = '~' + virtualPath.Substring(_baseVirtualPath.Length);
                 }
 
-                string path = HttpContext.Current.Request.MapPath(virtualPath);
+                string path = HostingEnvironment.MapPath(virtualPath);
                 return File.Exists(path) && File.GetLastWriteTimeUtc(path) > _assemblyLastWriteTime.Value;
             }
             return false;
