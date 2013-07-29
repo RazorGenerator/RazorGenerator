@@ -17,24 +17,27 @@ namespace RazorGenerator.Core
         private readonly string _baseDirectory;
         private readonly bool _loadExtensions;
         private readonly RazorRuntime _defaultRuntime;
+        private readonly string _assemblyDirectory;
         private CompositionContainer _container;
 
         public HostManager(string baseDirectory)
-            : this(baseDirectory, loadExtensions: true, defaultRuntime: RazorRuntime.Version1)
+            : this(baseDirectory, loadExtensions: true, defaultRuntime: RazorRuntime.Version1, assemblyDirectory: GetAssesmblyDirectory())
         {
         }
 
-        public HostManager(string baseDirectory, bool loadExtensions, RazorRuntime defaultRuntime)
+        public HostManager(string baseDirectory, bool loadExtensions, RazorRuntime defaultRuntime, string assemblyDirectory)
         {
             _loadExtensions = loadExtensions;
             _baseDirectory = baseDirectory;
             _defaultRuntime = defaultRuntime;
-        }
+            _assemblyDirectory = assemblyDirectory;
 
-        /// <summary>
-        /// Work around for VS 2012's shadow copying
-        /// </summary>
-        internal static string AssemblyDirectory { get; set; }
+            // Repurposing loadExtensions to mean unit-test scenarios. Don't bind to the AssemblyResolve in unit tests
+            if (_loadExtensions)
+            {
+                AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+            }
+        }
 
         public IRazorHost CreateHost(string fullPath, string projectRelativePath)
         {
@@ -95,7 +98,7 @@ namespace RazorGenerator.Core
             }
         }
 
-        private static CompositionContainer InitCompositionContainer(string baseDirectory, bool loadExtensions, RazorRuntime runtime)
+        private CompositionContainer InitCompositionContainer(string baseDirectory, bool loadExtensions, RazorRuntime runtime)
         {
             // Retrieve available hosts
             var hostsAssembly = GetAssembly(runtime);
@@ -128,31 +131,24 @@ namespace RazorGenerator.Core
                    select export.ContractName;
         }
 
-        private static Assembly GetAssembly(RazorRuntime runtime)
+        private Assembly GetAssembly(RazorRuntime runtime)
         {
             int runtimeValue = (int)runtime;
-            string assemblyDirectory = AssemblyDirectory ?? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            // TODO: Check if we can switch to using CodeBase instead of Location
             
             // Look for the assembly at vX\RazorGenerator.vX.dll. If not, assume it is at RazorGenerator.vX.dll
-            string runtimeDirectory = Path.Combine(assemblyDirectory, "v" + runtimeValue);
+            string runtimeDirectory = Path.Combine(_assemblyDirectory, "v" + runtimeValue);
             string assemblyName = "RazorGenerator.Core.v" + runtimeValue + ".dll";
-            if (Directory.Exists(runtimeDirectory)) 
+            string runtimeDirPath = Path.Combine(runtimeDirectory, assemblyName);
+            if (File.Exists(runtimeDirPath)) 
             {
-                // If we have a vX directory, load everything from there.
-                Assembly assembly = null;
-                foreach (var file in Directory.EnumerateFiles(runtimeDirectory, "*.dll")) 
-                {
-                    Assembly loadedAssembly = Assembly.LoadFrom(file);
-                    if (Path.GetFileName(file).Equals(assemblyName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        assembly = loadedAssembly;
-                    }
-                }
+                Assembly assembly = Assembly.LoadFrom(runtimeDirPath);
+                
                 return assembly;
             }
             else 
             {
-                return Assembly.LoadFrom(Path.Combine(assemblyDirectory, assemblyName));
+                return Assembly.LoadFrom(Path.Combine(_assemblyDirectory, assemblyName));
             }
         }
 
@@ -215,11 +211,43 @@ namespace RazorGenerator.Core
             throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, RazorGeneratorResources.GeneratorFailureMessage, availableHosts), innerException);
         }
 
+        private Assembly OnAssemblyResolve(object sender, ResolveEventArgs eventArgs)
+        {
+            var nameToResolve = new AssemblyName(eventArgs.Name);
+            string path = Path.Combine(_assemblyDirectory, "v" + nameToResolve.Version.Major, nameToResolve.Name) + ".dll";
+            if (File.Exists(path))
+            {
+                return Assembly.LoadFrom(path);
+            }
+            return null;
+        }
+
+        /// <remarks>
+        /// Attempts to locate where the RazorGenerator.Core assembly is being loaded from. This allows us to locate the v1 and v2 assemblies and the corresponding 
+        /// System.Web.* binaries
+        /// Assembly.CodeBase points to the original location when the file is shadow copied, so we'll attempt to use that first.
+        /// </remarks>
+        private static string GetAssesmblyDirectory()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Uri uri;
+            if (Uri.TryCreate(assembly.CodeBase, UriKind.Absolute, out uri) && uri.IsFile)
+            {
+                return Path.GetDirectoryName(uri.LocalPath);
+            }
+            return Path.GetDirectoryName(assembly.Location);
+        }
+
         public void Dispose()
         {
             if (_container != null)
             {
                 _container.Dispose();
+            }
+
+            if (_loadExtensions)
+            {
+                AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
             }
         }
     }

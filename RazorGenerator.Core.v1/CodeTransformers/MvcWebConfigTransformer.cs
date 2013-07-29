@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web.Configuration;
 using System.Web.WebPages.Razor.Configuration;
+using System.Linq;
 
 namespace RazorGenerator.Core
 {
@@ -44,10 +45,7 @@ namespace RazorGenerator.Core
             try
             {
                 var config = WebConfigurationManager.OpenMappedWebConfiguration(configFileMap, directoryVirtualPath);
-            
-                // We use dynamic here because we could be dealing both with a 1.0 or a 2.0 RazorPagesSection, which
-                // are not type compatible (http://razorgenerator.codeplex.com/workitem/26)
-                dynamic section = config.GetSection(RazorPagesSection.SectionName);
+                RazorPagesSection section = config.GetSection(RazorPagesSection.SectionName) as RazorPagesSection;
                 if (section != null)
                 {
                     string baseType = section.PageBaseType;
@@ -55,7 +53,7 @@ namespace RazorGenerator.Core
                     {
                         _transformers.Add(new SetBaseType(baseType));
                     }
-            
+
                     if (section != null)
                     {
                         foreach (NamespaceInfo n in section.Namespaces)

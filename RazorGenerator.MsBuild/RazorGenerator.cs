@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -68,11 +67,12 @@ namespace RazorGenerator.MsBuild
                     string outputPath = Path.Combine(CodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + ".cs";
                     if (!RequiresRecompilation(filePath, outputPath))
                     {
+                        Log.LogMessage(MessageImportance.Low, "Skipping file {0} since {1} is already up to date", filePath, outputPath);
                         continue;
                     }
                     EnsureDirectory(outputPath);
 
-                    Log.LogMessage(MessageImportance.Low, "Generating: " + filePath);
+                    Log.LogMessage(MessageImportance.Low, "Precompiling {0} at path {1}", filePath, outputPath);
                     var host = hostManager.CreateHost(filePath, projectRelativePath);
                     host.DefaultNamespace = itemNamespace;
 
@@ -98,7 +98,7 @@ namespace RazorGenerator.MsBuild
                     }
                     catch (Exception exception)
                     {
-                        Log.LogError(exception.Message);
+                        Log.LogErrorFromException(exception, showStackTrace: true, showDetail: true, file: null);
                         return false;
                     }
                     if (hasErrors)

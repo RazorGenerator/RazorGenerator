@@ -25,18 +25,13 @@ namespace RazorGenerator.Core.Test
             "SuffixTransformerTest"
         };
 
-        public CoreTest()
-        {
-            HostManager.AssemblyDirectory = Environment.CurrentDirectory;
-        }
-
         [Theory]
         [PropertyData("V1Tests")]
         [PropertyData("V2Tests")]
         public void TestTransformerType(string testName, RazorRuntime runtime)
         {
             string workingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            using (var razorGenerator = new HostManager(workingDirectory, loadExtensions: false, defaultRuntime: runtime))
+            using (var razorGenerator = new HostManager(workingDirectory, loadExtensions: false, defaultRuntime: runtime, assemblyDirectory: Environment.CurrentDirectory))
             {
                 string inputFile = SaveInputFile(workingDirectory, testName);
                 var host = razorGenerator.CreateHost(inputFile, testName + ".cshtml");
