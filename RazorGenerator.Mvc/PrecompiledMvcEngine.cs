@@ -168,7 +168,7 @@ namespace RazorGenerator.Mvc
                 // If a base virtual path is specified, we should remove it as a prefix. Everything that follows should map to a view file on disk.
                 if (!String.IsNullOrEmpty(baseVirtualPath))
                 {
-                    virtualPath = '~' + virtualPath.Substring(baseVirtualPath.Length);
+                    virtualPath = "~/" + virtualPath.Substring(baseVirtualPath.Length);
                 }
 
                 string path = HostingEnvironment.MapPath(virtualPath);
