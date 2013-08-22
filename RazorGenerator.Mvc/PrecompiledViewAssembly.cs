@@ -26,7 +26,7 @@ namespace RazorGenerator.Mvc
                 throw new ArgumentNullException("assembly");
             }
 
-            _baseVirtualPath = NormalizeBaseVirtualPath(baseVirtualPath);
+            _baseVirtualPath = PrecompiledMvcEngine.NormalizeBaseVirtualPath(baseVirtualPath);
             _assembly = assembly;
             _assemblyLastWriteTime = new Lazy<DateTime>(() => _assembly.GetLastWriteTimeUtc(fallback: DateTime.MaxValue));
         }
@@ -75,35 +75,7 @@ namespace RazorGenerator.Mvc
 
         public bool IsPhysicalFileNewer(string virtualPath)
         {
-            if (virtualPath.StartsWith(_baseVirtualPath ?? String.Empty, StringComparison.OrdinalIgnoreCase))
-            {
-                // If a base virtual path is specified, we should remove it as a prefix. Everything that follows should map to a view file on disk.
-                if (!String.IsNullOrEmpty(_baseVirtualPath))
-                {
-                    virtualPath = '~' + virtualPath.Substring(_baseVirtualPath.Length);
-                }
-
-                string path = HttpContext.Current.Request.MapPath(virtualPath);
-                return File.Exists(path) && File.GetLastWriteTimeUtc(path) > _assemblyLastWriteTime.Value;
-            }
-            return false;
-        }
-
-        private static string NormalizeBaseVirtualPath(string virtualPath)
-        {
-            if (!String.IsNullOrEmpty(virtualPath))
-            {
-                // For a virtual path to combine properly, it needs to start with a ~/ and end with a /.
-                if (!virtualPath.StartsWith("~/", StringComparison.Ordinal))
-                {
-                    virtualPath = "~/" + virtualPath;
-                }
-                if (!virtualPath.EndsWith("/", StringComparison.Ordinal))
-                {
-                    virtualPath += "/";
-                }
-            }
-            return virtualPath;
+            return PrecompiledMvcEngine.IsPhysicalFileNewer(virtualPath, _baseVirtualPath, _assemblyLastWriteTime);
         }
 
         private static string CombineVirtualPaths(string baseVirtualPath, string virtualPath)

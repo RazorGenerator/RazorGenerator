@@ -158,21 +158,26 @@ namespace RazorGenerator.Mvc
 
         private bool IsPhysicalFileNewer(string virtualPath)
         {
-            if (virtualPath.StartsWith(_baseVirtualPath ?? String.Empty, StringComparison.OrdinalIgnoreCase))
+            return IsPhysicalFileNewer(virtualPath, _baseVirtualPath, _assemblyLastWriteTime);
+        }
+
+        internal static bool IsPhysicalFileNewer(string virtualPath, string baseVirtualPath, Lazy<DateTime> assemblyLastWriteTime)
+        {
+            if (virtualPath.StartsWith(baseVirtualPath ?? String.Empty, StringComparison.OrdinalIgnoreCase))
             {
                 // If a base virtual path is specified, we should remove it as a prefix. Everything that follows should map to a view file on disk.
-                if (!String.IsNullOrEmpty(_baseVirtualPath))
+                if (!String.IsNullOrEmpty(baseVirtualPath))
                 {
-                    virtualPath = '~' + virtualPath.Substring(_baseVirtualPath.Length);
+                    virtualPath = '~' + virtualPath.Substring(baseVirtualPath.Length);
                 }
 
                 string path = HostingEnvironment.MapPath(virtualPath);
-                return File.Exists(path) && File.GetLastWriteTimeUtc(path) > _assemblyLastWriteTime.Value;
+                return File.Exists(path) && File.GetLastWriteTimeUtc(path) > assemblyLastWriteTime.Value;
             }
             return false;
         }
 
-        private static string NormalizeBaseVirtualPath(string virtualPath)
+        internal static string NormalizeBaseVirtualPath(string virtualPath)
         {
             if (!String.IsNullOrEmpty(virtualPath))
             {
