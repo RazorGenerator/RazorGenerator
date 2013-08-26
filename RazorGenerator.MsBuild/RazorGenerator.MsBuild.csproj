@@ -59,12 +59,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Install.ps1" />
-    <None Include="NuGet.import.targets">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="RazorGenerator.targets">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="RazorGenerator.MsBuild.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
     <None Include="RazorGenerator.MsBuild.nuspec" />
