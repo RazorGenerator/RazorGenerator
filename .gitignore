@@ -8,3 +8,4 @@ App_Data
 /packages
 /Results
 *.vsix
+nuget.exe
