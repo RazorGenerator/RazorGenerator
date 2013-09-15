@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -139,7 +140,12 @@ namespace RazorGenerator.MsBuild
             // To keep the namespace consistent with VS, need to generate a namespace based on the folder path if no namespace is specified.
             // Also replace any non-alphanumeric characters with underscores.
             itemNamespace = projectRelativePath.Trim(Path.DirectorySeparatorChar);
-            var stringBuilder = new StringBuilder();
+            if (String.IsNullOrEmpty(itemNamespace))
+            {
+                return RootNamespace;
+            }
+
+            var stringBuilder = new StringBuilder(itemNamespace.Length);
             foreach (char c in itemNamespace)
             {
                 if (c == Path.DirectorySeparatorChar)

@@ -80,7 +80,7 @@ namespace RazorGenerator.Core
             }
             catch (Exception exception)
             {
-                ThrowHostError(exception);
+                ThrowHostError(projectRelativePath, exception);
             }
 
             if (codeTransformer == null)
@@ -154,20 +154,15 @@ namespace RazorGenerator.Core
 
         internal static string GuessHost(string projectRoot, string projectRelativePath, out RazorRuntime runtime)
         {
-            bool? isMvcProject = IsMvcProject(projectRoot, out runtime);
-            var mvcHelperRegex = new Regex(@"(^|\\)Views(\\.*)+Helpers?", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
-            if (mvcHelperRegex.IsMatch(projectRelativePath))
+            bool isMvcProject = IsMvcProject(projectRoot, out runtime) ?? false;
+            if (isMvcProject)
             {
-                return "MvcHelper";
-            }
-            var mvcViewRegex = new Regex(@"(^|\\)Views\\", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
-            if (mvcViewRegex.IsMatch(projectRelativePath))
-            {
+                var mvcHelperRegex = new Regex(@"(^|\\)Views(\\.*)+Helpers?", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
+                if (mvcHelperRegex.IsMatch(projectRelativePath))
+                {
+                    return "MvcHelper";
+                }
                 return "MvcView";
-            }
-            if (Path.GetFileNameWithoutExtension(projectRelativePath).Contains("Helper") && isMvcProject.HasValue)
-            {
-                return isMvcProject.Value ? "MvcHelper" : "WebPagesHelper";
             }
             return null;
         }
@@ -205,10 +200,10 @@ namespace RazorGenerator.Core
             }
         }
 
-        private void ThrowHostError(Exception innerException = null)
+        private void ThrowHostError(string file, Exception innerException = null)
         {
             string availableHosts = String.Join(", ", GetAvailableHosts());
-            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, RazorGeneratorResources.GeneratorFailureMessage, availableHosts), innerException);
+            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, RazorGeneratorResources.GeneratorFailureMessage, file, availableHosts), innerException);
         }
 
         private Assembly OnAssemblyResolve(object sender, ResolveEventArgs eventArgs)
