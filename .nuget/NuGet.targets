@@ -30,10 +30,10 @@
        <NuGetCommand Condition=" '$(OS)' == 'Windows_NT'">"$(NuGetExePath)"</NuGetCommand>
        <NuGetCommand Condition=" '$(OS)' != 'Windows_NT' ">mono --runtime=v4.0.30319 $(NuGetExePath)</NuGetCommand>
 
-       <PackageOutputDir Condition="$(PackageOutputDir) == ''">$(TargetDir.Trim('\\'))</PackageOutputDir>
+       <PackageOutputDir Condition="$(PackageOutputDir) == ''">$([System.IO.Path]::GetFullPath('$(MsBuildThisFileDirectory)..\artifacts'))</PackageOutputDir>
 
         <!-- Commands -->
-       <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -p Configuration=$(Configuration) -o "$(PackageOutputDir)" -symbols</BuildCommand>
+       <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -p Configuration=$(Configuration) -o "$(PackageOutputDir)" -symbols $(BuildPackageFlags)</BuildCommand>
 
        <!-- Make the build depend on restore packages -->
        <BuildDependsOn Condition="$(BuildPackage) == 'true'">
@@ -59,6 +59,9 @@
    </Target>
 
    <Target Name="BuildPackage" DependsOnTargets="CheckPrerequisites">
+        <MakeDir Directories="$(PackageOutputDir)"
+                     Condition=" !Exists('$(PackageOutputDir)') " />
+                     
        <Exec Command="$(BuildCommand)" 
              Condition=" '$(OS)' != 'Windows_NT' " />
              
