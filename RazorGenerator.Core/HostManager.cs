@@ -1,8 +1,8 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.ComponentModel.Composition.Primitives;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace RazorGenerator.Core
         private readonly bool _loadExtensions;
         private readonly RazorRuntime _defaultRuntime;
         private readonly string _assemblyDirectory;
-        private CompositionContainer _container;
+        private ComposablePartCatalog _catalog;
 
         public HostManager(string baseDirectory)
             : this(baseDirectory, loadExtensions: true, defaultRuntime: RazorRuntime.Version1, assemblyDirectory: GetAssesmblyDirectory())
@@ -50,14 +50,7 @@ namespace RazorGenerator.Core
         public IRazorHost CreateHost(string fullPath, string projectRelativePath, CodeDomProvider codeDomProvider)
         {
             var directives = DirectivesParser.ParseDirectives(_baseDirectory, fullPath);
-            var codeTransformer = GetRazorCodeTransformer(projectRelativePath, directives);
 
-            var host = _container.GetExport<IHostProvider>().Value;
-            return host.GetRazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
-        }
-
-        private IRazorCodeTransformer GetRazorCodeTransformer(string projectRelativePath, IDictionary<string, string> directives)
-        {
             string hostName;
             RazorRuntime runtime = _defaultRuntime;
             if (!directives.TryGetValue("Generator", out hostName))
@@ -72,15 +65,31 @@ namespace RazorGenerator.Core
                 runtime = razorVersion == "2" ? RazorRuntime.Version2 : RazorRuntime.Version1;
             }
 
-            EnsureCompositionContainer(runtime);
+            if (_catalog == null)
+            {
+                _catalog = InitCompositionCatalog(_baseDirectory, _loadExtensions, runtime);
+            }
+
+            using (var container = new CompositionContainer(_catalog))
+            {
+                var codeTransformer = GetRazorCodeTransformer(container, projectRelativePath, hostName);
+                var host = container.GetExport<IHostProvider>().Value;
+                return host.GetRazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
+            }
+        }
+
+        private IRazorCodeTransformer GetRazorCodeTransformer(CompositionContainer container, string projectRelativePath, string hostName)
+        {
+
             IRazorCodeTransformer codeTransformer = null;
             try
             {
-                codeTransformer = _container.GetExportedValue<IRazorCodeTransformer>(hostName);
+                codeTransformer = container.GetExportedValue<IRazorCodeTransformer>(hostName);
             }
             catch (Exception exception)
             {
-                ThrowHostError(projectRelativePath, exception);
+                string availableHosts = String.Join(", ", GetAvailableHosts(container));
+                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, RazorGeneratorResources.GeneratorFailureMessage, projectRelativePath, availableHosts), exception);
             }
 
             if (codeTransformer == null)
@@ -90,15 +99,7 @@ namespace RazorGenerator.Core
             return codeTransformer;
         }
 
-        private void EnsureCompositionContainer(RazorRuntime runtime)
-        {
-            if (_container == null)
-            {
-                _container = InitCompositionContainer(_baseDirectory, _loadExtensions, runtime);
-            }
-        }
-
-        private CompositionContainer InitCompositionContainer(string baseDirectory, bool loadExtensions, RazorRuntime runtime)
+        private ComposablePartCatalog InitCompositionCatalog(string baseDirectory, bool loadExtensions, RazorRuntime runtime)
         {
             // Retrieve available hosts
             var hostsAssembly = GetAssembly(runtime);
@@ -117,15 +118,13 @@ namespace RazorGenerator.Core
                 AddCatalogIfHostsDirectoryExists(catalog, solutionDirectory);
             }
 
-            var container = new CompositionContainer(catalog);
-            container.ComposeParts();
-            return container;
+            return catalog;
         }
 
-        private IEnumerable<string> GetAvailableHosts()
+        private static IEnumerable<string> GetAvailableHosts(CompositionContainer container)
         {
             // We need for a way to figure out what the exporting type is. This could return arbitrary exports that are not ISingleFileGenerators
-            return from part in _container.Catalog.Parts
+            return from part in container.Catalog.Parts
                    from export in part.ExportDefinitions
                    where !String.IsNullOrEmpty(export.ContractName)
                    select export.ContractName;
@@ -135,18 +134,18 @@ namespace RazorGenerator.Core
         {
             int runtimeValue = (int)runtime;
             // TODO: Check if we can switch to using CodeBase instead of Location
-            
+
             // Look for the assembly at vX\RazorGenerator.vX.dll. If not, assume it is at RazorGenerator.vX.dll
             string runtimeDirectory = Path.Combine(_assemblyDirectory, "v" + runtimeValue);
             string assemblyName = "RazorGenerator.Core.v" + runtimeValue + ".dll";
             string runtimeDirPath = Path.Combine(runtimeDirectory, assemblyName);
-            if (File.Exists(runtimeDirPath)) 
+            if (File.Exists(runtimeDirPath))
             {
                 Assembly assembly = Assembly.LoadFrom(runtimeDirPath);
-                
+
                 return assembly;
             }
-            else 
+            else
             {
                 return Assembly.LoadFrom(Path.Combine(_assemblyDirectory, assemblyName));
             }
@@ -200,12 +199,6 @@ namespace RazorGenerator.Core
             }
         }
 
-        private void ThrowHostError(string file, Exception innerException = null)
-        {
-            string availableHosts = String.Join(", ", GetAvailableHosts());
-            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, RazorGeneratorResources.GeneratorFailureMessage, file, availableHosts), innerException);
-        }
-
         private Assembly OnAssemblyResolve(object sender, ResolveEventArgs eventArgs)
         {
             var nameToResolve = new AssemblyName(eventArgs.Name);
@@ -235,9 +228,9 @@ namespace RazorGenerator.Core
 
         public void Dispose()
         {
-            if (_container != null)
+            if (_catalog != null)
             {
-                _container.Dispose();
+                _catalog.Dispose();
             }
 
             if (_loadExtensions)
