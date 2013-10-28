@@ -62,7 +62,18 @@ namespace RazorGenerator.Core
             if (directives.TryGetValue("RazorVersion", out razorVersion))
             {
                 // If the directive explicitly specifies a host, use that.
-                runtime = razorVersion == "2" ? RazorRuntime.Version2 : RazorRuntime.Version1;
+                switch (razorVersion)
+                {
+                    case "1":
+                        runtime = RazorRuntime.Version1;
+                        break;
+                    case "2":
+                        runtime = RazorRuntime.Version2;
+                        break;
+                    default:
+                        runtime = RazorRuntime.Version3;
+                        break;
+                }
             }
 
             if (_catalog == null)
@@ -180,6 +191,12 @@ namespace RazorGenerator.Core
                     {
                         // The project references Razor v2
                         razorRuntime = RazorRuntime.Version2;
+                    }
+                    else if ((content.IndexOf("System.Web.Mvc, Version=5.0.0.0", StringComparison.OrdinalIgnoreCase) != -1) ||
+                        (content.IndexOf("System.Web.Razor, Version=3.0.0.0", StringComparison.OrdinalIgnoreCase) != -1))
+                    {
+                        // The project references Razor v3
+                        razorRuntime = RazorRuntime.Version3;
                     }
                     return content.IndexOf("System.Web.Mvc", StringComparison.OrdinalIgnoreCase) != -1;
                 }

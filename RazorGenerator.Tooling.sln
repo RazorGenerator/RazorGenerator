@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Core", "RazorGenerator.Core\RazorGenerator.Core.csproj", "{AF040852-112F-494D-B1D0-B50888928DB6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Core.Test", "RazorGenerator.Core.Test\RazorGenerator.Core.Test.csproj", "{31008D4B-EF1A-43B9-8908-B35818324FFC}"
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Core.v1", "RazorGenerator.Core.v1\RazorGenerator.Core.v1.csproj", "{1A99F351-138E-440B-A4E9-B8651FEEA593}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Core.v2", "RazorGenerator.Core.v2\RazorGenerator.Core.v2.csproj", "{8AC6362A-CF3F-441B-B0B4-B9907F4CBB46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Core.v3", "RazorGenerator.Core.v3\RazorGenerator.Core.v3.csproj", "{1B52667F-2486-4F11-ADAF-4C223241C8DF}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -94,6 +96,16 @@ Global
 		{8AC6362A-CF3F-441B-B0B4-B9907F4CBB46}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8AC6362A-CF3F-441B-B0B4-B9907F4CBB46}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8AC6362A-CF3F-441B-B0B4-B9907F4CBB46}.Release|x86.ActiveCfg = Release|Any CPU
+		{1B52667F-2486-4F11-ADAF-4C223241C8DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B52667F-2486-4F11-ADAF-4C223241C8DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B52667F-2486-4F11-ADAF-4C223241C8DF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1B52667F-2486-4F11-ADAF-4C223241C8DF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1B52667F-2486-4F11-ADAF-4C223241C8DF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1B52667F-2486-4F11-ADAF-4C223241C8DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B52667F-2486-4F11-ADAF-4C223241C8DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B52667F-2486-4F11-ADAF-4C223241C8DF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1B52667F-2486-4F11-ADAF-4C223241C8DF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1B52667F-2486-4F11-ADAF-4C223241C8DF}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

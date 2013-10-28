@@ -162,17 +162,20 @@
   <PropertyGroup>
     <CreateVsixContainerDependsOn>$(CreateVsixContainerDependsOn);_CreateSourceItems</CreateVsixContainerDependsOn>
   </PropertyGroup>
-  
   <!-- Copy the Core.v1 and v2 binaries inside the v1 and v2 directories of the vsix. This is to resolve bug 72 -->
   <Target Name="_CreateSourceItems">
-     <ItemGroup>
-         <VSIXSourceItem Include="..\RazorGenerator.Core.v1\bin\$(Configuration)\*.dll" Exclude="..\RazorGenerator.Core.v1\bin\$(Configuration)\RazorGenerator.Core.dll">
-            <VSIXSubPath>v1</VSIXSubPath>
-         </VSIXSourceItem>
-         <VSIXSourceItem Include="..\RazorGenerator.Core.v2\bin\$(Configuration)\*.dll" Exclude="..\RazorGenerator.Core.v2\bin\$(Configuration)\RazorGenerator.Core.dll">
-            <VSIXSubPath>v2</VSIXSubPath>
-         </VSIXSourceItem>
-     </ItemGroup>
+    <ItemGroup>
+      <VSIXSourceItem Include="LICENSE.txt" />
+      <VSIXSourceItem Include="..\RazorGenerator.Core.v1\bin\$(Configuration)\*.dll" Exclude="..\RazorGenerator.Core.v1\bin\$(Configuration)\RazorGenerator.Core.dll">
+        <VSIXSubPath>v1</VSIXSubPath>
+      </VSIXSourceItem>
+      <VSIXSourceItem Include="..\RazorGenerator.Core.v2\bin\$(Configuration)\*.dll" Exclude="..\RazorGenerator.Core.v2\bin\$(Configuration)\RazorGenerator.Core.dll">
+        <VSIXSubPath>v2</VSIXSubPath>
+      </VSIXSourceItem>
+      <VSIXSourceItem Include="..\RazorGenerator.Core.v3\bin\$(Configuration)\*.dll" Exclude="..\RazorGenerator.Core.v3\bin\$(Configuration)\RazorGenerator.Core.dll">
+        <VSIXSubPath>v3</VSIXSubPath>
+      </VSIXSourceItem>
+    </ItemGroup>
   </Target>
   <Target Name="InstallPlugin" DependsOnTargets="Build">
     <MakeDir Directories="$(DevEnvDir)\Extensions\$(AssemblyName)" />
