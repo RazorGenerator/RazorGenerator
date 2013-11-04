@@ -19,5 +19,6 @@
       <file src="bin\$configuration$\RazorGenerator.Core.dll;" target="tools" />
       <file src="..\RazorGenerator.Core.v1\bin\$configuration$\*.dll" target="tools\v1" exclude="..\RazorGenerator.Core.v1\bin\$configuration$\RazorGenerator.Core.dll" />
       <file src="..\RazorGenerator.Core.v2\bin\$configuration$\*.dll" target="tools\v2" exclude="..\RazorGenerator.Core.v2\bin\$configuration$\RazorGenerator.Core.dll" />
+      <file src="..\RazorGenerator.Core.v3\bin\$configuration$\*.dll" target="tools\v3" exclude="..\RazorGenerator.Core.v3\bin\$configuration$\RazorGenerator.Core.dll" />
   </files>
 </package>

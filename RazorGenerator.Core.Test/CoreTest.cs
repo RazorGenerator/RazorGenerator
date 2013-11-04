@@ -28,6 +28,7 @@ namespace RazorGenerator.Core.Test
         [Theory]
         [PropertyData("V1Tests")]
         [PropertyData("V2Tests")]
+        [PropertyData("V3Tests")]
         public void TestTransformerType(string testName, RazorRuntime runtime)
         {
             string workingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -56,6 +57,14 @@ namespace RazorGenerator.Core.Test
             get
             {
                 return _testNames.Select(c => new object[] { c, RazorRuntime.Version2 });
+            }
+        }
+
+        public static IEnumerable<object[]> V3Tests
+        {
+            get
+            {
+                return _testNames.Select(c => new object[] { c, RazorRuntime.Version3 });
             }
         }
 
