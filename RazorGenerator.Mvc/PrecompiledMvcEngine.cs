@@ -100,6 +100,8 @@ namespace RazorGenerator.Mvc
 
         protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
         {
+            virtualPath = EnsureVirtualPathPrefix(virtualPath);
+
             if (UsePhysicalViewsIfNewer && IsPhysicalFileNewer(virtualPath))
             {
                 // If the physical file on disk is newer and the user's opted in this behavior, serve it instead.
@@ -110,11 +112,15 @@ namespace RazorGenerator.Mvc
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
+            partialPath = EnsureVirtualPathPrefix(partialPath);
+
             return CreateViewInternal(partialPath, masterPath: null, runViewStartPages: false);
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
+            viewPath = EnsureVirtualPathPrefix(viewPath);
+
             return CreateViewInternal(viewPath, masterPath, runViewStartPages: true);
         }
 
@@ -130,6 +136,7 @@ namespace RazorGenerator.Mvc
 
         public object CreateInstance(string virtualPath)
         {
+            virtualPath = EnsureVirtualPathPrefix(virtualPath);
             Type type;
 
             if (!PreemptPhysicalFiles && VirtualPathProvider.FileExists(virtualPath))
@@ -153,6 +160,8 @@ namespace RazorGenerator.Mvc
 
         public bool Exists(string virtualPath)
         {
+            virtualPath = EnsureVirtualPathPrefix(virtualPath);
+
             return _mappings.ContainsKey(virtualPath);
         }
 
@@ -177,15 +186,25 @@ namespace RazorGenerator.Mvc
             return false;
         }
 
+        private static string EnsureVirtualPathPrefix(string virtualPath)
+        {
+            if (!String.IsNullOrEmpty(virtualPath))
+            {
+                // For a virtual path lookups to succeed, it needs to start with a ~/.
+                if (!virtualPath.StartsWith("~/", StringComparison.Ordinal))
+                {
+                    virtualPath = "~/" + virtualPath.TrimStart(new [] { '/', '~' });
+                }
+            }
+            return virtualPath;
+        }
+
         internal static string NormalizeBaseVirtualPath(string virtualPath)
         {
             if (!String.IsNullOrEmpty(virtualPath))
             {
                 // For a virtual path to combine properly, it needs to start with a ~/ and end with a /.
-                if (!virtualPath.StartsWith("~/", StringComparison.Ordinal))
-                {
-                    virtualPath = "~/" + virtualPath;
-                }
+                EnsureVirtualPathPrefix(virtualPath);
                 if (!virtualPath.EndsWith("/", StringComparison.Ordinal))
                 {
                     virtualPath += "/";
