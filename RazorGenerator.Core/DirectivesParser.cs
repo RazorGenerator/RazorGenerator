@@ -68,7 +68,7 @@ namespace RazorGenerator.Core
                 var key = item.Groups["Key"].Value;
                 var value = item.Groups["Value"].Value;
 
-                directives.Add(key, value);
+                directives[key] = value;
             }
         }
     }
