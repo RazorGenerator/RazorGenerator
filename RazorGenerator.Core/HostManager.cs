@@ -187,13 +187,15 @@ namespace RazorGenerator.Core
                 {
                     var content = File.ReadAllText(projectFile);
                     if ((content.IndexOf("System.Web.Mvc, Version=4.0.0.0", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("System.Web.Razor, Version=2.0.0.0", StringComparison.OrdinalIgnoreCase) != -1))
+                        (content.IndexOf("System.Web.Razor, Version=2.0.0.0", StringComparison.OrdinalIgnoreCase) != -1) ||
+                        (content.IndexOf("Microsoft.AspNet.Mvc.4.0.0", StringComparison.OrdinalIgnoreCase) != -1))
                     {
                         // The project references Razor v2
                         razorRuntime = RazorRuntime.Version2;
                     }
                     else if ((content.IndexOf("System.Web.Mvc, Version=5.0.0.0", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("System.Web.Razor, Version=3.0.0.0", StringComparison.OrdinalIgnoreCase) != -1))
+                        (content.IndexOf("System.Web.Razor, Version=3.0.0.0", StringComparison.OrdinalIgnoreCase) != -1) ||
+                        (content.IndexOf("Microsoft.AspNet.Mvc.5.0.0", StringComparison.OrdinalIgnoreCase) != -1))
                     {
                         // The project references Razor v3
                         razorRuntime = RazorRuntime.Version3;
