@@ -48,9 +48,9 @@ namespace RazorGenerator.Core
         {
             base.Initialize(razorHost, directives);
 
-
-            string baseClass = razorHost.DefaultBaseClass;
             _isSpecialPage = IsSpecialPage(razorHost.FullPath);
+            FixupDefaultClassNameIfTemplate(razorHost);
+
 
             // The CSharpRazorCodeGenerator decides to generate line pragmas based on if the file path is available. Set it to an empty string if we 
             // do not want to generate them.
@@ -58,6 +58,17 @@ namespace RazorGenerator.Core
             razorHost.CodeGenerator = new CSharpRazorCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultNamespace, path, razorHost);
             razorHost.CodeGenerator.GenerateLinePragmas = razorHost.EnableLinePragmas;
             razorHost.Parser = new MvcCSharpRazorCodeParser();
+        }
+
+        private void FixupDefaultClassNameIfTemplate(RazorHost razorHost)
+        {
+            string filePath = Path.GetDirectoryName(razorHost.FullPath).TrimEnd(Path.DirectorySeparatorChar);
+            if (filePath.EndsWith("EditorTemplates", StringComparison.OrdinalIgnoreCase) || 
+                filePath.EndsWith("DisplayTemplates", StringComparison.OrdinalIgnoreCase))
+            {
+                // Fixes #133: For EditorTemplates \ DisplayTemplates, we'll prefix the file with an underscore to prevent name collisions
+                razorHost.DefaultClassName = "_" + razorHost.DefaultClassName;
+            }
         }
 
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
