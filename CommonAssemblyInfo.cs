@@ -5,4 +5,3 @@ using System.Reflection;
 [assembly: AssemblyProduct("RazorGenerator")]
 [assembly: AssemblyCompany("RazorGenerator contributors")]
 [assembly: AssemblyInformationalVersion("2.2.3")]
-[assembly: CLSCompliant(true)]
