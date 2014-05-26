@@ -13,6 +13,7 @@
     <frameworkAssemblies>
         <frameworkAssembly assemblyName="mscorlib" />
     </frameworkAssemblies>
+    <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
       <file src="bin\$configuration$\RazorGenerator.MsBuild.targets" target="build" />
