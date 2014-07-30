@@ -66,8 +66,8 @@ namespace RazorGenerator.Core
             if (filePath.EndsWith("EditorTemplates", StringComparison.OrdinalIgnoreCase) || 
                 filePath.EndsWith("DisplayTemplates", StringComparison.OrdinalIgnoreCase))
             {
-                // Fixes #133: For EditorTemplates \ DisplayTemplates, we'll prefix the file with an underscore to prevent name collisions
-                razorHost.DefaultClassName = "_" + razorHost.DefaultClassName;
+                // Fixes #133: For EditorTemplates \ DisplayTemplates, we'll suffix the file with an underscore to prevent name collisions
+                razorHost.DefaultClassName = razorHost.DefaultClassName + '_';
             }
         }
 
