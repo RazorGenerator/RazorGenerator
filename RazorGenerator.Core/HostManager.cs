@@ -186,20 +186,21 @@ namespace RazorGenerator.Core
                 if (projectFile != null)
                 {
                     var content = File.ReadAllText(projectFile);
-                    if ((content.IndexOf("System.Web.Mvc, Version=4.0.0.0", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("System.Web.Razor, Version=2.0.0.0", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("Microsoft.AspNet.Mvc.4.0.0", StringComparison.OrdinalIgnoreCase) != -1))
+                    if ((content.IndexOf("System.Web.Mvc, Version=4", StringComparison.OrdinalIgnoreCase) != -1) ||
+                        (content.IndexOf("System.Web.Razor, Version=2", StringComparison.OrdinalIgnoreCase) != -1) ||
+                        (content.IndexOf("Microsoft.AspNet.Mvc.4", StringComparison.OrdinalIgnoreCase) != -1))
                     {
                         // The project references Razor v2
                         razorRuntime = RazorRuntime.Version2;
                     }
-                    else if ((content.IndexOf("System.Web.Mvc, Version=5.0.0.0", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("System.Web.Razor, Version=3.0.0.0", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("Microsoft.AspNet.Mvc.5.0.0", StringComparison.OrdinalIgnoreCase) != -1))
+                    else if ((content.IndexOf("System.Web.Mvc, Version=5", StringComparison.OrdinalIgnoreCase) != -1) ||
+                        (content.IndexOf("System.Web.Razor, Version=3", StringComparison.OrdinalIgnoreCase) != -1) ||
+                        (content.IndexOf("Microsoft.AspNet.Mvc.5", StringComparison.OrdinalIgnoreCase) != -1))
                     {
                         // The project references Razor v3
                         razorRuntime = RazorRuntime.Version3;
                     }
+
                     return content.IndexOf("System.Web.Mvc", StringComparison.OrdinalIgnoreCase) != -1;
                 }
             }
