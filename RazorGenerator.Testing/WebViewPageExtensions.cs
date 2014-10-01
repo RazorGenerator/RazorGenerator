@@ -33,12 +33,12 @@ namespace RazorGenerator.Testing
 
         public static string Render<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext, TModel model = default(TModel))
         {
-            view.Initialize(httpContext);
+            var writer = new StringWriter();
+            view.Initialize(httpContext, writer);
 
             view.ViewData.Model = model;
 
             var webPageContext = new WebPageContext(view.ViewContext.HttpContext, page: null, model: null);
-            var writer = new StringWriter();
 
             // Using private reflection to access some internals
             // Note: ideally we would not have to do this, but WebPages is just not mockable enough :(
@@ -78,7 +78,7 @@ namespace RazorGenerator.Testing
             return doc;
         }
 
-        private static void Initialize<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext)
+        private static void Initialize<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext, TextWriter writer)
         {
             EnsureStaticMembersInitialised();
 
@@ -87,7 +87,7 @@ namespace RazorGenerator.Testing
 
             var controllerContext = new ControllerContext(context, routeData, new Mock<ControllerBase>().Object);
 
-            view.ViewContext = new ViewContext(controllerContext, new Mock<IView>().Object, view.ViewData, new TempDataDictionary(), new StringWriter());
+            view.ViewContext = new ViewContext(controllerContext, new Mock<IView>().Object, view.ViewData, new TempDataDictionary(), writer);
 
             view.InitHelpers();
         }
