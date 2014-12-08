@@ -32,16 +32,30 @@ namespace RazorGenerator.Core.Test
         public void TestTransformerType(string testName, RazorRuntime runtime)
         {
             string workingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            using (var razorGenerator = new HostManager(workingDirectory, loadExtensions: false, defaultRuntime: runtime, assemblyDirectory: Environment.CurrentDirectory))
+            try
             {
-                string inputFile = SaveInputFile(workingDirectory, testName);
-                var host = razorGenerator.CreateHost(inputFile, testName + ".cshtml");
-                host.DefaultNamespace = GetType().Namespace;
-                host.EnableLinePragmas = false;
+                using (var razorGenerator = new HostManager(workingDirectory, loadExtensions: false, defaultRuntime: runtime, assemblyDirectory: Environment.CurrentDirectory))
+                {
+                    string inputFile = SaveInputFile(workingDirectory, testName);
+                    var host = razorGenerator.CreateHost(inputFile, testName + ".cshtml", string.Empty);
+                    host.DefaultNamespace = GetType().Namespace;
+                    host.EnableLinePragmas = false;
 
-                var output = host.GenerateCode();
-                AssertOutput(testName, output, runtime);
+                    var output = host.GenerateCode();
+                    AssertOutput(testName, output, runtime);
+                }
             }
+            finally
+            {
+                try
+                {
+                    Directory.Delete(workingDirectory);
+                }
+                catch
+                {
+                }
+            }
+
         }
 
         public static IEnumerable<object[]> V1Tests

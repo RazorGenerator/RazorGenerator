@@ -21,6 +21,12 @@ namespace RazorGenerator.Core
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
+            if (ReadSwitchValue(directives, GeneratePrettyNamesTransformer.DirectiveName) == true)
+            {
+                var trimLeadingUnderscores = ReadSwitchValue(directives, TrimLeadingUnderscoresKey) ?? false;
+                _transformers.Add(new GeneratePrettyNamesTransformer(trimLeadingUnderscores));
+            }
+
             string typeVisibility;
             if (directives.TryGetValue(TypeVisibilityKey, out typeVisibility))
             {
@@ -41,12 +47,6 @@ namespace RazorGenerator.Core
             {
                 // Rewrite line pragamas to generate bin relative paths instead of absolute paths.
                 _transformers.Add(new RewriteLinePragmas());
-            }
-
-            if (ReadSwitchValue(directives, TrimLeadingUnderscoresKey) != false)
-            {
-                // This should in theory be a different transformer.
-                razorHost.DefaultClassName = razorHost.DefaultClassName.TrimStart('_');
             }
 
             if (ReadSwitchValue(directives, ExcludeFromCodeCoverage) == true)

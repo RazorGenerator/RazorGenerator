@@ -39,17 +39,18 @@ namespace RazorGenerator.Core
             }
         }
 
-        public IRazorHost CreateHost(string fullPath, string projectRelativePath)
+        public IRazorHost CreateHost(string fullPath, string projectRelativePath, string vsNamespace)
         {
             using (var codeDomProvider = new CSharpCodeProvider())
             {
-                return CreateHost(fullPath, projectRelativePath, codeDomProvider);
+                return CreateHost(fullPath, projectRelativePath, codeDomProvider, vsNamespace);
             }
         }
 
-        public IRazorHost CreateHost(string fullPath, string projectRelativePath, CodeDomProvider codeDomProvider)
+        public IRazorHost CreateHost(string fullPath, string projectRelativePath, CodeDomProvider codeDomProvider, string vsNamespace)
         {
             var directives = DirectivesParser.ParseDirectives(_baseDirectory, fullPath);
+            directives["VsNamespace"] = vsNamespace;
 
             string hostName;
             RazorRuntime runtime = _defaultRuntime;

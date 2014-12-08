@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeTransformers\ExcludeFromCodeCoverageTransformer.cs" />
+    <Compile Include="CodeTransformers\GeneratePrettyNamesTransformer.cs" />
     <Compile Include="CodeTransformers\MakeTypePartial.cs" />
     <Compile Include="CodeTransformers\SuffixFileNameTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

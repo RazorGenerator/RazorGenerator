@@ -66,8 +66,7 @@ namespace RazorGenerator
 
             using (var hostManager = new HostManager(projectDirectory))
             {
-                var host = hostManager.CreateHost(InputFilePath, projectRelativePath, GetCodeProvider());
-                host.DefaultNamespace = FileNameSpace;
+                var host = hostManager.CreateHost(InputFilePath, projectRelativePath, GetCodeProvider(), FileNameSpace);
                 host.Error += (o, eventArgs) =>
                 {
                     GeneratorError(0, eventArgs.ErrorMessage, eventArgs.LineNumber, eventArgs.ColumnNumber);

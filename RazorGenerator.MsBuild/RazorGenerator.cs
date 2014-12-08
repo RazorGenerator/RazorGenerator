@@ -74,8 +74,7 @@ namespace RazorGenerator.MsBuild
                     EnsureDirectory(outputPath);
 
                     Log.LogMessage(MessageImportance.Low, "Precompiling {0} at path {1}", filePath, outputPath);
-                    var host = hostManager.CreateHost(filePath, projectRelativePath);
-                    host.DefaultNamespace = itemNamespace;
+                    var host = hostManager.CreateHost(filePath, projectRelativePath, itemNamespace);
 
                     bool hasErrors = false;
                     host.Error += (o, eventArgs) =>

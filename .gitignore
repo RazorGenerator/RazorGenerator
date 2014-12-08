@@ -10,3 +10,4 @@ App_Data
 /artifacts
 *.vsix
 nuget.exe
+*.sln.ide
