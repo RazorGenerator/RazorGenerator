@@ -1,0 +1,22 @@
+﻿@using PrecompiledMvcLibrary.Views.Shared
+
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Message</h2>
+<p>
+    To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
+</p>
+
+@if (Model != null)
+{
+    <h2>@Model</h2>
+}
+
+<h2>
+    I'm in an assembly!
+</h2>
+
+@Html.RouteLink("Link text", "RouteTest", null, new {id="link-using-routes"});

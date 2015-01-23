@@ -55,5 +55,10 @@ namespace MvcSample.Controllers
 
             return View();
         }
+
+        public ActionResult UsingRoutes()
+        {
+            return View();
+        }
     }
 }

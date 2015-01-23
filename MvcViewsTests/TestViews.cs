@@ -5,6 +5,9 @@ using RazorGenerator.Testing;
 
 namespace MvcViewsTests
 {
+    using System.Web.Routing;
+    using MvcSample;
+
     [TestClass]
     public class TestViews
     {
@@ -76,6 +79,24 @@ namespace MvcViewsTests
 
             // Verify that it looks correct
             Assert.IsTrue(output.Contains(title));
+        }
+
+        [TestMethod]
+        public void TestUsingRoutes()
+        {
+            // Instantiate the view directly
+            var view = new UsingRoutes();
+
+            // Set up the data that needs to be access by the view
+            MvcApplication.RegisterRoutes(RouteTable.Routes);
+
+            // Render it in an HtmlDocument
+            var output = view.RenderAsHtml();
+
+            // Verify that it looks correct
+            var element = output.GetElementbyId("link-using-routes");
+            Assert.IsNotNull(element);
+            Assert.AreEqual("/Home/UsingRoutes", element.Attributes["href"].Value);
         }
     }
 }

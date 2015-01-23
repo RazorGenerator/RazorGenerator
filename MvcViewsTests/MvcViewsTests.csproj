@@ -89,6 +89,10 @@
       <Project>{54BBBD3E-7862-4687-8A9C-39DC707012BD}</Project>
       <Name>RazorGenerator.Testing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\samples\MvcSample\MvcSample.csproj">
+      <Project>{B451EEF4-D35B-4D1D-96B5-0ED6057CCF07}</Project>
+      <Name>MvcSample</Name>
+    </ProjectReference>
     <ProjectReference Include="..\samples\PrecompiledMvcLibrary\PrecompiledMvcLibrary.csproj">
       <Project>{7737AB96-07CC-4940-A298-E949EC4B9EAA}</Project>
       <Name>PrecompiledMvcLibrary</Name>

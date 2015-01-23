@@ -124,6 +124,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>About.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Home\UsingRoutes.generated.cs">
+      <DependentUpon>UsingRoutes.cshtml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Views\Home\ExternalPrecompiled.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -158,6 +163,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Views\Home\UsingRoutes.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>UsingRoutes.generated.cs</LastGenOutput>
+    </None>
     <None Include="Views\_ViewStart.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>_ViewStart.cs</LastGenOutput>
