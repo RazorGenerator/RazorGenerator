@@ -20,8 +20,6 @@ namespace RazorGenerator.Testing
 
         private static readonly DummyViewEngine _viewEngine = new DummyViewEngine();
 
-        private static readonly Mock<RouteBase> _mockRoute = new Mock<RouteBase>();
-
         private static readonly Dictionary<string, RouteValueDictionary> _urls = new Dictionary<string, RouteValueDictionary>();
 
         private static readonly Dictionary<string, ViewPlaceholder> _views = new Dictionary<string, ViewPlaceholder>();
@@ -80,7 +78,7 @@ namespace RazorGenerator.Testing
 
         private static void Initialize<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext, TextWriter writer)
         {
-            EnsureStaticMembersInitialised();
+            EnsureDummyViewEngineRegistered();
 
             var context = httpContext ?? CreateMockContext();
             var routeData = new RouteData();
@@ -144,12 +142,6 @@ namespace RazorGenerator.Testing
             originalNode.ParentNode.ReplaceChild(newNode, originalNode);
         }
 
-        private static void EnsureStaticMembersInitialised()
-        {
-            EnsureDummyViewEngineRegistered();
-            EnsureMockRouteRegistered();
-        }
-
         private static void EnsureDummyViewEngineRegistered()
         {
             lock (_lockObject)
@@ -158,31 +150,6 @@ namespace RazorGenerator.Testing
                 {
                     ViewEngines.Engines.Clear();
                     ViewEngines.Engines.Insert(0, _viewEngine);
-                }
-            }
-        }
-
-        /// <summary>
-        ///   Registers a mock route that allows parameters used to generate URLs to be checked by unit tests
-        ///   Everything has to go via the generated HTML, so the data is stored against a GUID, which is rendered
-        ///   to the view and subsequently replaced with a strongly-typed ActionUrlNode
-        /// </summary>
-        private static void EnsureMockRouteRegistered()
-        {
-            lock (_lockObject)
-            {
-                if (!RouteTable.Routes.Contains(_mockRoute.Object))
-                {
-                    RouteTable.Routes.Clear();
-                    RouteTable.Routes.Add(_mockRoute.Object);
-                    _mockRoute
-                        .Setup(x => x.GetVirtualPath(It.IsAny<RequestContext>(), It.IsAny<RouteValueDictionary>()))
-                        .Returns<RequestContext, RouteValueDictionary>((_, routeDictionary) =>
-                                                                         {
-                                                                             var key = Guid.NewGuid().ToString();
-                                                                             _urls.Add(key, routeDictionary);
-                                                                             return new VirtualPathData(_mockRoute.Object, key);
-                                                                         });
                 }
             }
         }
