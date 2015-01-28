@@ -171,28 +171,5 @@ namespace RazorGenerator
         {
             return GetProjectItem().ContainingProject;
         }
-
-        /// <summary>
-        /// Returns the VSLangProj.VSProjectItem object that corresponds to the project item the code 
-        /// generator was called on
-        /// </summary>
-        /// <returns>The VSLangProj.VSProjectItem of the project item the code generator was called on</returns>
-        protected VSProjectItem GetVSProjectItem()
-        {
-            return (VSProjectItem)GetProjectItem().Object;
-        }
-
-        /// <summary>
-        /// Returns the VSLangProj.VSProject object of the project containing the project item the code 
-        /// generator was called on
-        /// </summary>
-        /// <returns>
-        /// The VSLangProj.VSProject object of the project containing the project item 
-        /// the code generator was called on
-        /// </returns>
-        protected VSProject GetVSProject()
-        {
-            return (VSProject)GetProject().Object;
-        }
     }
 }

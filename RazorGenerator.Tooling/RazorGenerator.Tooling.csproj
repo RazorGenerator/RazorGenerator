@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>RazorGenerator</RootNamespace>
     <AssemblyName>RazorGenerator</AssemblyName>
-    <VsSdkTargets>$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\VSSDK\Microsoft.VsSDK.targets</VsSdkTargets>
+    <VsSdkTargets>$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\VSSDK\Microsoft.VsSDK.targets</VsSdkTargets>
     <StartAction>Program</StartAction>
     <StartProgram>$(MSBuildProgramFiles32)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe</StartProgram>
     <StartArguments>/rootsuffix Exp /log</StartArguments>
@@ -29,9 +29,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="Exists($(VsSdkTargets))">
-    <CommonRegAttributes>$(VSSDK100Install)VisualStudioIntegration\Common\Source\CSharp\RegistrationAttributes</CommonRegAttributes>
-  </PropertyGroup>
   <Choose>
     <When Condition="Exists($(VsSdkTargets))">
       <PropertyGroup>
@@ -45,11 +42,8 @@
     </When>
   </Choose>
   <ItemGroup>
-    <Reference Include="EnvDTE">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="EnvDTE80">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Designer.Interfaces" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -69,14 +63,6 @@
     <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System">
       <Name>System</Name>
-    </Reference>
-    <Reference Include="VSLangProj">
-    </Reference>
-    <Reference Include="VSLangProj2">
-      <HintPath>$(DevEnvDir)\VSLangProj2.dll</HintPath>
-    </Reference>
-    <Reference Include="VSLangProj80">
-      <HintPath>$(DevEnvDir)\VSLangProj80.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

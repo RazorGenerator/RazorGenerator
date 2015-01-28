@@ -15,7 +15,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.VisualStudio.Shell;
 using RazorGenerator.Core;
-using VSLangProj80;
 
 namespace RazorGenerator
 {
@@ -27,7 +26,7 @@ namespace RazorGenerator
     /// </summary>
     [ComVisible(true)]
     [Guid("52B316AA-1997-4c81-9969-83604C09EEB4")]
-    [CodeGeneratorRegistration(typeof(RazorGenerator), "C# Razor Generator", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true)]
+    [CodeGeneratorRegistration(typeof(RazorGenerator), "C# Razor Generator", "{FAE04EC1-301F-11D3-BF4B-00C04F79EFBC}", GeneratesDesignTimeSource = true)]
     [ProvideObject(typeof(RazorGenerator))]
     public class RazorGenerator : BaseCodeGeneratorWithSite
     {
