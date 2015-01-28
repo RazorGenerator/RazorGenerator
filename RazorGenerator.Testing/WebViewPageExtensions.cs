@@ -80,7 +80,7 @@ namespace RazorGenerator.Testing
         {
             EnsureDummyViewEngineRegistered();
 
-            var context = httpContext ?? CreateMockContext();
+            var context = httpContext ?? A.HttpContext.Build();
             var routeData = new RouteData();
 
             var controllerContext = new ControllerContext(context, routeData, new Mock<ControllerBase>().Object);
@@ -153,42 +153,7 @@ namespace RazorGenerator.Testing
                 }
             }
         }
-
-        /// <summary>
-        /// Creates a basic HttpContext mock for rendering a view.
-        /// </summary>
-        /// <returns>A mocked HttpContext object</returns>
-        private static HttpContextBase CreateMockContext()
-        {
-            // Use Moq for faking context objects as it can setup all members
-            // so that by default, calls to the members return a default/null value 
-            // instead of a not implemented exception.
-
-            // members were we want specific values returns are setup explicitly.
-
-            // mock the request object
-            var mockRequest = new Mock<HttpRequestBase>(MockBehavior.Loose);
-            mockRequest.Setup(m => m.IsLocal).Returns(false);
-            mockRequest.Setup(m => m.ApplicationPath).Returns("/");
-            mockRequest.Setup(m => m.ServerVariables).Returns(new NameValueCollection());
-            mockRequest.Setup(m => m.RawUrl).Returns(string.Empty);
-            mockRequest.Setup(m => m.Cookies).Returns(new HttpCookieCollection());
-
-            // mock the response object
-            var mockResponse = new Mock<HttpResponseBase>(MockBehavior.Loose);
-            mockResponse.Setup(m => m.ApplyAppPathModifier(It.IsAny<string>())).Returns<string>((virtualPath) => virtualPath);
-            mockResponse.Setup(m => m.Cookies).Returns(new HttpCookieCollection());
-
-            // mock the httpcontext
-
-            var mockHttpContext = new Mock<HttpContextBase>(MockBehavior.Loose);
-            mockHttpContext.Setup(m => m.Items).Returns(new Hashtable());
-            mockHttpContext.Setup(m => m.Request).Returns(mockRequest.Object);
-            mockHttpContext.Setup(m => m.Response).Returns(mockResponse.Object);
-
-            return mockHttpContext.Object;
-        }
-
+        
         class DummyViewEngine : IViewEngine
         {
             public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)

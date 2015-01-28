@@ -5,7 +5,9 @@ using RazorGenerator.Testing;
 
 namespace MvcViewsTests
 {
+    using System.Web;
     using System.Web.Routing;
+    using Moq;
     using MvcSample;
 
     [TestClass]
@@ -97,6 +99,24 @@ namespace MvcViewsTests
             var element = output.GetElementbyId("link-using-routes");
             Assert.IsNotNull(element);
             Assert.AreEqual("/Home/UsingRoutes", element.Attributes["href"].Value);
+        }
+
+        [TestMethod]
+        public void TestMockHttpContext()
+        {
+            // Instantiate the view directly
+            var view = new MockHttpContext();
+
+            // Set up the data that needs to be access by the view
+            var mockHttpRequest = new Mock<HttpRequestBase>(MockBehavior.Loose);
+            mockHttpRequest.Setup(m => m.IsAuthenticated).Returns(true);
+
+            // Render it in an HtmlDocument
+            var output = view.RenderAsHtml(A.HttpContext.With(mockHttpRequest.Object).Build());
+
+            // Verify that it looks correct
+            var element = output.GetElementbyId("user-authenticated");
+            Assert.IsNotNull(element);   
         }
     }
 }

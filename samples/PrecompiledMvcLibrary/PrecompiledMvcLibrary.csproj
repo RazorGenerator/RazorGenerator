@@ -124,6 +124,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>About.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Home\MockHttpContext.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MockHttpContext.cshtml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Home\UsingRoutes.generated.cs">
       <DependentUpon>UsingRoutes.cshtml</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -163,6 +168,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Views\Home\MockHttpContext.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>MockHttpContext.generated.cs</LastGenOutput>
+    </Content>
     <None Include="Views\Home\UsingRoutes.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>UsingRoutes.generated.cs</LastGenOutput>
