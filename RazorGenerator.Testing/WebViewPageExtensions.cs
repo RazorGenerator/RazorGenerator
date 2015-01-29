@@ -80,7 +80,7 @@ namespace RazorGenerator.Testing
         {
             EnsureDummyViewEngineRegistered();
 
-            var context = httpContext ?? A.HttpContext.Build();
+            var context = httpContext ?? new HttpContextBuilder().Build();
             var routeData = new RouteData();
 
             var controllerContext = new ControllerContext(context, routeData, new Mock<ControllerBase>().Object);

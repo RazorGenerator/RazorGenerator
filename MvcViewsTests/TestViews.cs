@@ -112,7 +112,7 @@ namespace MvcViewsTests
             mockHttpRequest.Setup(m => m.IsAuthenticated).Returns(true);
 
             // Render it in an HtmlDocument
-            var output = view.RenderAsHtml(A.HttpContext.With(mockHttpRequest.Object).Build());
+            var output = view.RenderAsHtml(new HttpContextBuilder().With(mockHttpRequest.Object).Build());
 
             // Verify that it looks correct
             var element = output.GetElementbyId("user-authenticated");

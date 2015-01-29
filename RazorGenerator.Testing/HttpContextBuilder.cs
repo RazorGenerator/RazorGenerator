@@ -4,11 +4,6 @@
     using System.Collections.Specialized;
     using System.Web;
     using Moq;
-    
-    public partial class A
-    {
-        public static HttpContextBuilder HttpContext = new HttpContextBuilder();
-    }
 
     public class HttpContextBuilder
     {
