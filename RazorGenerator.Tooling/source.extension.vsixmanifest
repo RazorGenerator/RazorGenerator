@@ -9,11 +9,6 @@
     <MoreInfoUrl>http://razorgenerator.codeplex.com/</MoreInfoUrl>
     <License>LICENSE.txt</License>
     <SupportedProducts>
-      <VisualStudio Version="10.0">
-        <Edition>Ultimate</Edition>
-        <Edition>Premium</Edition>
-        <Edition>Pro</Edition>
-      </VisualStudio>
       <VisualStudio Version="11.0">
         <Edition>Ultimate</Edition>
         <Edition>Premium</Edition>

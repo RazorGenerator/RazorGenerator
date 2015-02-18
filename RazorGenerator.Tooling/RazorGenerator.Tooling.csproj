@@ -9,8 +9,10 @@
     <AssemblyName>RazorGenerator</AssemblyName>
     <VsSdkTargets>$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\VSSDK\Microsoft.VsSDK.targets</VsSdkTargets>
     <StartAction>Program</StartAction>
-    <StartProgram>$(MSBuildProgramFiles32)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe</StartProgram>
+    <StartProgram>$(MSBuildProgramFiles32)\Microsoft Visual Studio $(VisualStudioVersion)\Common7\IDE\devenv.exe</StartProgram>
     <StartArguments>/rootsuffix Exp /log</StartArguments>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -172,8 +174,9 @@
       <FilesToCopy Include="$(OutputPath)\*.vsix" />
     </ItemGroup>
     <PropertyGroup>
-      <VsixOut>$(MsBuildProjectDirectory)\..\Results</VsixOut>
+      <VsixOut>$(MsBuildProjectDirectory)\..\artifacts</VsixOut>
     </PropertyGroup>
+    <Error Text="$(VsSdkTargets) could not be found. A VSIX cannot be built." Condition="!Exists($(VsSdkTargets))" />
     <MakeDir Directories="$(VsixOut)" Condition=" !Exists('$(VsixOut)') " />
     <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(VsixOut)" />
   </Target>
