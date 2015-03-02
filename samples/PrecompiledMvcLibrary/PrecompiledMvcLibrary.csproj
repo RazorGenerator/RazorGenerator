@@ -81,8 +81,8 @@
     <Content Include="Areas\MyPluggableArea\Views\Web.config" />
     <None Include="Helpers\ListHelper.cshtml">
       <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ListHelper.cs</LastGenOutput>
       <CustomToolNamespace>ASP</CustomToolNamespace>
+      <LastGenOutput>ListHelper.generated.cs</LastGenOutput>
     </None>
     <Compile Include="Areas\MyPluggableArea\Controllers\FooController.cs" />
     <Compile Include="Areas\MyPluggableArea\MyAreaAreaRegistration.cs" />
@@ -91,7 +91,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Index.cshtml</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\ListHelper.cs">
+    <Compile Include="Helpers\ListHelper.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ListHelper.cshtml</DependentUpon>
