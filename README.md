@@ -77,6 +77,12 @@ As an alternative, you can create a file named `razorgenerator.directives` in th
 
 ## History
 
+#### 3/19/2015 RazorGenerator.Templating 2.3.3
+
+Add PCL support to RazorGenerator.Templating.
+
+https://github.com/RazorGenerator/RazorGenerator/pull/1
+
 #### 9/2/2014 VSIX 1.6.4
 
 - Improve MVC version detection logic. https://razorgenerator.codeplex.com/discussions/459467
