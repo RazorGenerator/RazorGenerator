@@ -11,3 +11,4 @@ App_Data
 *.vsix
 nuget.exe
 *.sln.ide
+.vs
