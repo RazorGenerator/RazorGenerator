@@ -9,13 +9,20 @@
         </CompileDependsOn>
     </PropertyGroup>
 
-    <ItemGroup>
-        <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' " Include="**\*.cshtml" />
-        <RazorOutputFiles Include="@(RazorSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).cs')" />
-    </ItemGroup>
+    <Target Name="_ResolveRazorFiles">
+        <ItemGroup>
+            <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' and '%(Extension)' == '.cshtml' "
+                Include="@(Content)" />
+            <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' "
+                Include="**\*.cshtml" />
+            <RazorOutputFiles
+                Include="@(RazorSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).cs')" />
+        </ItemGroup>
+    </Target>
 
     <UsingTask AssemblyFile="$(RazorGeneratorMsBuildPath)" TaskName="RazorCodeGen" />
     <Target Name="PrecompileRazorFiles"
+                    DependsOnTargets="_ResolveRazorFiles"
                     Inputs="@(RazorSrcFiles)"
                     Outputs="@(RazorOutputFiles)">
         <RazorCodeGen ProjectRoot="$(MsBuildProjectDirectory)"
