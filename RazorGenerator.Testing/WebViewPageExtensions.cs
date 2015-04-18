@@ -32,9 +32,8 @@ namespace RazorGenerator.Testing
         public static string Render<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext, TModel model = default(TModel))
         {
             var writer = new StringWriter();
-            view.Initialize(httpContext, writer);
-
             view.ViewData.Model = model;
+            view.Initialize(httpContext, writer);
 
             var webPageContext = new WebPageContext(view.ViewContext.HttpContext, page: null, model: null);
 
