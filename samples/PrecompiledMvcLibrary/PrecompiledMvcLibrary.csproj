@@ -139,6 +139,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ExternalPrecompiled.cshtml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Home\ViewData.Model.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewData.Model.cshtml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Shared\Error.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -172,6 +177,10 @@
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>MockHttpContext.generated.cs</LastGenOutput>
     </Content>
+    <None Include="Views\Home\ViewData.Model.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>ViewData.Model.generated.cs</LastGenOutput>
+    </None>
     <None Include="Views\Home\UsingRoutes.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>UsingRoutes.generated.cs</LastGenOutput>

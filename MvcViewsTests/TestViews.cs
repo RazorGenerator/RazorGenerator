@@ -9,6 +9,7 @@ namespace MvcViewsTests
     using System.Web.Routing;
     using Moq;
     using MvcSample;
+    using ASP;
 
     [TestClass]
     public class TestViews
@@ -117,6 +118,14 @@ namespace MvcViewsTests
             // Verify that it looks correct
             var element = output.GetElementbyId("user-authenticated");
             Assert.IsNotNull(element);   
+        }
+
+        [TestMethod]
+        public void TestHtmlHelperViewDataModel()
+        {
+            var view = new _Views_Home_ViewData_Model_cshtml();
+            string model = "Model";
+            view.Render(model);
         }
     }
 }

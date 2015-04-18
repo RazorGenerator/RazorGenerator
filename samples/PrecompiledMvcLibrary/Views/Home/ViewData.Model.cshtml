@@ -1,0 +1,10 @@
+﻿@model string
+
+@{
+    var model = this.Model;
+    var model2 = this.Html.ViewData.Model;
+    if (model != model2)
+    {
+        throw new InvalidOperationException();
+    }
+}
