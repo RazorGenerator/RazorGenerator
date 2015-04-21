@@ -204,7 +204,7 @@ namespace RazorGenerator.Mvc
             if (!String.IsNullOrEmpty(virtualPath))
             {
                 // For a virtual path to combine properly, it needs to start with a ~/ and end with a /.
-                EnsureVirtualPathPrefix(virtualPath);
+                virtualPath = EnsureVirtualPathPrefix(virtualPath);
                 if (!virtualPath.EndsWith("/", StringComparison.Ordinal))
                 {
                     virtualPath += "/";
