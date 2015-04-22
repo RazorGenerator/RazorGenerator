@@ -1,12 +1,12 @@
 # RazorGenerator
 
-RazorGenerator.Mvc: [![NuGet Status](http://img.shields.io/nuget/v/RazorGenerator.Mvc.svg?style=flat-square)](https://wwww.nuget.org/packages/RazorGenerator.Mvc)
+RazorGenerator.Mvc: [![NuGet Status](http://img.shields.io/nuget/v/RazorGenerator.Mvc.svg?style=flat-square)](https://www.nuget.org/packages/RazorGenerator.Mvc)
 
-RazorGenerator.MsBuild: [![NuGet Status](http://img.shields.io/nuget/v/RazorGenerator.MsBuild.svg?style=flat-square)](https://wwww.nuget.org/packages/RazorGenerator.MsBuild)
+RazorGenerator.MsBuild: [![NuGet Status](http://img.shields.io/nuget/v/RazorGenerator.MsBuild.svg?style=flat-square)](https://www.nuget.org/packages/RazorGenerator.MsBuild)
 
-RazorGenerator.Testing: [![NuGet Status](http://img.shields.io/nuget/v/RazorGenerator.Testing.svg?style=flat-square)](https://wwww.nuget.org/packages/RazorGenerator.Testing)
+RazorGenerator.Testing: [![NuGet Status](http://img.shields.io/nuget/v/RazorGenerator.Testing.svg?style=flat-square)](https://www.nuget.org/packages/RazorGenerator.Testing)
 
-RazorGenerator.Templating: [![NuGet Status](http://img.shields.io/nuget/v/RazorGenerator.Templating.svg?style=flat-square)](https://wwww.nuget.org/packages/RazorGenerator.Templating)
+RazorGenerator.Templating: [![NuGet Status](http://img.shields.io/nuget/v/RazorGenerator.Templating.svg?style=flat-square)](https://www.nuget.org/packages/RazorGenerator.Templating)
 
 TeamCity Build Status: [![Build status](http://razorgen-ci.cloudapp.net/app/rest/builds/buildType:\(id:RazorGenerator_RazorGenerator\)/statusIcon)](http://razorgen-ci.cloudapp.net/viewType.html?buildTypeId=btN&guest=1)
 
