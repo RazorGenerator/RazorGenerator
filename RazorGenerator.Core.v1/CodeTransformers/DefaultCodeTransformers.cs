@@ -98,7 +98,10 @@ namespace RazorGenerator.Core
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
-            razorHost.DefaultBaseClass = _typeName;
+            String baseTypeName;
+            if (!directives.TryGetValue("DefaultBaseClass", out baseTypeName))
+                baseTypeName = _typeName;
+            razorHost.DefaultBaseClass = baseTypeName;
         }
     }
 
