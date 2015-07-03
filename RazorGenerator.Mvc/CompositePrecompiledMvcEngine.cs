@@ -68,6 +68,8 @@ namespace RazorGenerator.Mvc
 
         protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
         {
+            virtualPath = EnsureVirtualPathPrefix(virtualPath);
+
             ViewMapping mapping;
             if (!_mappings.TryGetValue(virtualPath, out mapping))
             {
@@ -84,11 +86,15 @@ namespace RazorGenerator.Mvc
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
+            partialPath = EnsureVirtualPathPrefix(partialPath);
+
             return CreateViewInternal(partialPath, masterPath: null, runViewStartPages: false);
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
+            viewPath = EnsureVirtualPathPrefix(viewPath);
+
             return CreateViewInternal(viewPath, masterPath, runViewStartPages: true);
         }
 
@@ -104,6 +110,8 @@ namespace RazorGenerator.Mvc
 
         public object CreateInstance(string virtualPath)
         {
+            virtualPath = EnsureVirtualPathPrefix(virtualPath);
+
             ViewMapping mapping;
 
             if (!_mappings.TryGetValue(virtualPath, out mapping))
@@ -128,7 +136,22 @@ namespace RazorGenerator.Mvc
 
         public bool Exists(string virtualPath)
         {
+            virtualPath = EnsureVirtualPathPrefix(virtualPath);
+
             return _mappings.ContainsKey(virtualPath);
+        }
+
+        private static string EnsureVirtualPathPrefix(string virtualPath)
+        {
+            if (!String.IsNullOrEmpty(virtualPath))
+            {
+                // For a virtual path lookups to succeed, it needs to start with a ~/.
+                if (!virtualPath.StartsWith("~/", StringComparison.Ordinal))
+                {
+                    virtualPath = "~/" + virtualPath.TrimStart(new[] { '/', '~' });
+                }
+            }
+            return virtualPath;
         }
 
         private struct ViewMapping
