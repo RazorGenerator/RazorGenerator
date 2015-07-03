@@ -68,6 +68,8 @@ namespace RazorGenerator.Mvc
 
         protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
         {
+            virtualPath = PrecompiledMvcEngine.EnsureVirtualPathPrefix(virtualPath);
+
             ViewMapping mapping;
             if (!_mappings.TryGetValue(virtualPath, out mapping))
             {
@@ -84,11 +86,15 @@ namespace RazorGenerator.Mvc
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
+            partialPath = PrecompiledMvcEngine.EnsureVirtualPathPrefix(partialPath);
+
             return CreateViewInternal(partialPath, masterPath: null, runViewStartPages: false);
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
+            viewPath = PrecompiledMvcEngine.EnsureVirtualPathPrefix(viewPath);
+
             return CreateViewInternal(viewPath, masterPath, runViewStartPages: true);
         }
 
@@ -104,6 +110,8 @@ namespace RazorGenerator.Mvc
 
         public object CreateInstance(string virtualPath)
         {
+            virtualPath = PrecompiledMvcEngine.EnsureVirtualPathPrefix(virtualPath);
+
             ViewMapping mapping;
 
             if (!_mappings.TryGetValue(virtualPath, out mapping))
@@ -128,6 +136,8 @@ namespace RazorGenerator.Mvc
 
         public bool Exists(string virtualPath)
         {
+            virtualPath = PrecompiledMvcEngine.EnsureVirtualPathPrefix(virtualPath);
+
             return _mappings.ContainsKey(virtualPath);
         }
 

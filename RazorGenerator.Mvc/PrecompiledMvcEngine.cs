@@ -186,7 +186,7 @@ namespace RazorGenerator.Mvc
             return false;
         }
 
-        private static string EnsureVirtualPathPrefix(string virtualPath)
+        internal static string EnsureVirtualPathPrefix(string virtualPath)
         {
             if (!String.IsNullOrEmpty(virtualPath))
             {
