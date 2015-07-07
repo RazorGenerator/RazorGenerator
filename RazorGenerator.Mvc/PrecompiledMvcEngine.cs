@@ -17,10 +17,10 @@ namespace RazorGenerator.Mvc
 {
     public class PrecompiledMvcEngine : VirtualPathProviderViewEngine, IVirtualPathFactory
     {
-        private readonly IDictionary<string, Type> _mappings;
-        private readonly string _baseVirtualPath;
-        private readonly Lazy<DateTime> _assemblyLastWriteTime;
-        private readonly IViewPageActivator _viewPageActivator;
+        protected readonly IDictionary<string, Type> Mappings;
+        protected readonly string BaseVirtualPath;
+        protected readonly Lazy<DateTime> AssemblyLastWriteTime;
+        protected readonly IViewPageActivator ViewPageActivator;
 
         public PrecompiledMvcEngine(Assembly assembly)
             : this(assembly, null)
@@ -34,8 +34,8 @@ namespace RazorGenerator.Mvc
 
         public PrecompiledMvcEngine(Assembly assembly, string baseVirtualPath, IViewPageActivator viewPageActivator)
         {
-            _assemblyLastWriteTime = new Lazy<DateTime>(() => assembly.GetLastWriteTimeUtc(fallback: DateTime.MaxValue));
-            _baseVirtualPath = NormalizeBaseVirtualPath(baseVirtualPath);
+            AssemblyLastWriteTime = new Lazy<DateTime>(() => assembly.GetLastWriteTimeUtc(fallback: DateTime.MaxValue));
+            BaseVirtualPath = NormalizeBaseVirtualPath(baseVirtualPath);
 
             base.AreaViewLocationFormats = new[] {
                 "~/Areas/{2}/Views/{1}/{0}.cshtml", 
@@ -67,14 +67,14 @@ namespace RazorGenerator.Mvc
                 "cshtml", 
             };
 
-            _mappings = (from type in assembly.GetTypes()
+            Mappings = (from type in assembly.GetTypes()
                          where typeof(WebPageRenderingBase).IsAssignableFrom(type)
                          let pageVirtualPath = type.GetCustomAttributes(inherit: false).OfType<PageVirtualPathAttribute>().FirstOrDefault()
                          where pageVirtualPath != null
-                         select new KeyValuePair<string, Type>(CombineVirtualPaths(_baseVirtualPath, pageVirtualPath.VirtualPath), type)
+                         select new KeyValuePair<string, Type>(CombineVirtualPaths(BaseVirtualPath, pageVirtualPath.VirtualPath), type)
                          ).ToDictionary(t => t.Key, t => t.Value, StringComparer.OrdinalIgnoreCase);
             this.ViewLocationCache = new PrecompiledViewLocationCache(assembly.FullName, this.ViewLocationCache);
-            _viewPageActivator = viewPageActivator 
+            ViewPageActivator = viewPageActivator 
                 ?? DependencyResolver.Current.GetService<IViewPageActivator>() /* For compatibility, remove this line within next version */
                 ?? DefaultViewPageActivator.Current;
         }
@@ -127,14 +127,14 @@ namespace RazorGenerator.Mvc
         private IView CreateViewInternal(string viewPath, string masterPath, bool runViewStartPages)
         {
             Type type;
-            if (_mappings.TryGetValue(viewPath, out type))
+            if (Mappings.TryGetValue(viewPath, out type))
             {
-                return new PrecompiledMvcView(viewPath, masterPath, type, runViewStartPages, base.FileExtensions, _viewPageActivator);
+                return new PrecompiledMvcView(viewPath, masterPath, type, runViewStartPages, base.FileExtensions, ViewPageActivator);
             }
             return null;
         }
 
-        public object CreateInstance(string virtualPath)
+        public virtual object CreateInstance(string virtualPath)
         {
             virtualPath = EnsureVirtualPathPrefix(virtualPath);
             Type type;
@@ -151,23 +151,23 @@ namespace RazorGenerator.Mvc
                 return BuildManager.CreateInstanceFromVirtualPath(virtualPath, typeof(WebViewPage));
             }
 
-            if (_mappings.TryGetValue(virtualPath, out type))
+            if (Mappings.TryGetValue(virtualPath, out type))
             {
-                return _viewPageActivator.Create((ControllerContext)null, type);
+                return ViewPageActivator.Create((ControllerContext)null, type);
             }
             return null;
         }
 
-        public bool Exists(string virtualPath)
+        public virtual bool Exists(string virtualPath)
         {
             virtualPath = EnsureVirtualPathPrefix(virtualPath);
 
-            return _mappings.ContainsKey(virtualPath);
+            return Mappings.ContainsKey(virtualPath);
         }
 
-        private bool IsPhysicalFileNewer(string virtualPath)
+        protected virtual bool IsPhysicalFileNewer(string virtualPath)
         {
-            return IsPhysicalFileNewer(virtualPath, _baseVirtualPath, _assemblyLastWriteTime);
+            return IsPhysicalFileNewer(virtualPath, BaseVirtualPath, AssemblyLastWriteTime);
         }
 
         internal static bool IsPhysicalFileNewer(string virtualPath, string baseVirtualPath, Lazy<DateTime> assemblyLastWriteTime)
