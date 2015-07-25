@@ -17,10 +17,11 @@ namespace RazorGenerator.Mvc
 {
     public class PrecompiledMvcEngine : VirtualPathProviderViewEngine, IVirtualPathFactory
     {
-        protected readonly IDictionary<string, Type> Mappings;
-        protected readonly string BaseVirtualPath;
-        protected readonly Lazy<DateTime> AssemblyLastWriteTime;
-        protected readonly IViewPageActivator ViewPageActivator;
+        private readonly IDictionary<string, Type> _mappings;
+        private readonly IViewPageActivator _viewPageActivator;
+
+        protected string BaseVirtualPath { get; private set; }
+        protected Lazy<DateTime> AssemblyLastWriteTime { get; private set; }
 
         public PrecompiledMvcEngine(Assembly assembly)
             : this(assembly, null)
@@ -67,14 +68,14 @@ namespace RazorGenerator.Mvc
                 "cshtml", 
             };
 
-            Mappings = (from type in assembly.GetTypes()
+            _mappings = (from type in assembly.GetTypes()
                          where typeof(WebPageRenderingBase).IsAssignableFrom(type)
                          let pageVirtualPath = type.GetCustomAttributes(inherit: false).OfType<PageVirtualPathAttribute>().FirstOrDefault()
                          where pageVirtualPath != null
                          select new KeyValuePair<string, Type>(CombineVirtualPaths(BaseVirtualPath, pageVirtualPath.VirtualPath), type)
                          ).ToDictionary(t => t.Key, t => t.Value, StringComparer.OrdinalIgnoreCase);
             this.ViewLocationCache = new PrecompiledViewLocationCache(assembly.FullName, this.ViewLocationCache);
-            ViewPageActivator = viewPageActivator 
+            _viewPageActivator = viewPageActivator 
                 ?? DependencyResolver.Current.GetService<IViewPageActivator>() /* For compatibility, remove this line within next version */
                 ?? DefaultViewPageActivator.Current;
         }
@@ -127,14 +128,14 @@ namespace RazorGenerator.Mvc
         private IView CreateViewInternal(string viewPath, string masterPath, bool runViewStartPages)
         {
             Type type;
-            if (Mappings.TryGetValue(viewPath, out type))
+            if (_mappings.TryGetValue(viewPath, out type))
             {
-                return new PrecompiledMvcView(viewPath, masterPath, type, runViewStartPages, base.FileExtensions, ViewPageActivator);
+                return new PrecompiledMvcView(viewPath, masterPath, type, runViewStartPages, base.FileExtensions, _viewPageActivator);
             }
             return null;
         }
 
-        public virtual object CreateInstance(string virtualPath)
+        public object CreateInstance(string virtualPath)
         {
             virtualPath = EnsureVirtualPathPrefix(virtualPath);
             Type type;
@@ -151,18 +152,18 @@ namespace RazorGenerator.Mvc
                 return BuildManager.CreateInstanceFromVirtualPath(virtualPath, typeof(WebViewPage));
             }
 
-            if (Mappings.TryGetValue(virtualPath, out type))
+            if (_mappings.TryGetValue(virtualPath, out type))
             {
-                return ViewPageActivator.Create((ControllerContext)null, type);
+                return _viewPageActivator.Create((ControllerContext)null, type);
             }
             return null;
         }
 
-        public virtual bool Exists(string virtualPath)
+        public bool Exists(string virtualPath)
         {
             virtualPath = EnsureVirtualPathPrefix(virtualPath);
 
-            return Mappings.ContainsKey(virtualPath);
+            return _mappings.ContainsKey(virtualPath);
         }
 
         protected virtual bool IsPhysicalFileNewer(string virtualPath)
