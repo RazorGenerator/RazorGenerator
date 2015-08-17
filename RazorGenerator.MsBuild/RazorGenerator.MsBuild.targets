@@ -12,7 +12,7 @@
     <Target Name="_ResolveRazorFiles">
         <ItemGroup>
             <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' and '%(Extension)' == '.cshtml' "
-                Include="@(Content)" />
+                Include="@(Content);@(None)" />
             <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' "
                 Include="**\*.cshtml" />
             <RazorOutputFiles
