@@ -35,6 +35,13 @@ namespace RazorGenerator.Templating
             WriteLiteral(Convert.ToString(value, CultureInfo.InvariantCulture));
         }
 
+        public void Write(bool value)    { WriteLiteral(value.ToString()); }
+        public void Write(int value)     { WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
+        public void Write(long value)    { WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
+        public void Write(float value)   { WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
+        public void Write(double value)  { WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
+        public void Write(decimal value) { WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
+
         public string RenderBody()
         {
             return _content;
@@ -68,5 +75,12 @@ namespace RazorGenerator.Templating
         {
             writer.Write(Convert.ToString(value, CultureInfo.InvariantCulture));
         }
+
+        public void WriteTo(TextWriter writer, bool value)     { writer.Write(value.ToString()); }
+        public void WriteTo(TextWriter writer, int value)      { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
+        public void WriteTo(TextWriter writer, long value)     { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
+        public void WriteTo(TextWriter writer, float value)    { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
+        public void WriteTo(TextWriter writer, double value)   { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
+        public void WriteTo(TextWriter writer, decimal value)  { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
     }
 }
