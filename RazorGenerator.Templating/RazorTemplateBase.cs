@@ -82,6 +82,5 @@ namespace RazorGenerator.Templating
         public void WriteTo(TextWriter writer, float value)    { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
         public void WriteTo(TextWriter writer, double value)   { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
         public void WriteTo(TextWriter writer, decimal value)  { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
-        public void WriteTo(TextWriter writer, DateTime value) { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
     }
 }
