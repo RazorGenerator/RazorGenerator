@@ -35,6 +35,11 @@ namespace RazorGenerator.Templating
             WriteLiteral(Convert.ToString(value, CultureInfo.InvariantCulture));
         }
 
+        public void Write<T>(T value) where T : IConvertible
+        {
+            WriteLiteral(value.ToString(CultureInfo.InvariantCulture));
+        }
+
         public string RenderBody()
         {
             return _content;
@@ -67,6 +72,11 @@ namespace RazorGenerator.Templating
         public void WriteTo(TextWriter writer, object value)
         {
             writer.Write(Convert.ToString(value, CultureInfo.InvariantCulture));
+        }
+
+        public void WriteTo<T>(TextWriter writer, T value) where T : IConvertible
+        {
+            writer.Write(value.ToString(CultureInfo.InvariantCulture));
         }
     }
 }
