@@ -71,6 +71,11 @@ namespace RazorGenerator.Templating
             }
         }
 
+        public void WriteLiteralTo(TextWriter writer, string text)
+        {
+            writer.Write(text);
+        }
+
         public void WriteTo(TextWriter writer, object value)
         {
             writer.Write(Convert.ToString(value, CultureInfo.InvariantCulture));
