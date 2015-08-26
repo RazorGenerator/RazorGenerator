@@ -83,11 +83,20 @@ See above for list of valid values.
 
     @* TrimLeadingUnderscores : true *@
 
+#### Adding generic type parameters
+
+    @* Generator: Template GenericParameters: TKey, TValue *@
+
+
 As an alternative, you can create a file named `razorgenerator.directives` in the Views folder to apply directives globally. e.g. it could contain:
 
     GeneratePrettyNames: true  GenerateAbsolutePathLinePragmas: true
 
 ## History
+
+#### 8/26/2/2015 VSIX 1.9
+
+- Add generic type parameters directive. https://github.com/RazorGenerator/RazorGenerator/issues/34
 
 #### 3/19/2015 RazorGenerator.Templating 2.3.3
 
