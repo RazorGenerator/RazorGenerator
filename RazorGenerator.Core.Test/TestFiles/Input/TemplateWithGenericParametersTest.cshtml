@@ -1,20 +1,11 @@
-﻿@* Generator: Template GenericParameters: T1, T2, T3 *@
-
-@using System.Globalization
-
+﻿@* Generator: Template GenericParameters: TKey, TValue *@
+@functions {
+    public IEnumerable<KeyValuePair<TKey, TValue>> Items { get; set; }
+}
 <?xml version="1.0" ?>
-<tests>
-    @foreach (var result in TestResults) { 
-        <test id="@result.Id">
-            <name>@result.Name</name>
-            <result>
-            @if(result.Passed) {
-                @: Success
-            }
-            else{
-                @: Failed
-            }
-            </result>
-        </test>
+<items>
+    @foreach (var item in Items)
+    {
+        <item key="@item.Key" value="@item.Value" />
     }
-</test>
+</items>

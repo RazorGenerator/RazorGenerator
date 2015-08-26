@@ -13,66 +13,47 @@ namespace RazorGenerator.Core.Test
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "v.v.v.v")]
-    public partial class TemplateWithGenericParametersTest_cshtml<T1, T2, T3> : RazorGenerator.Templating.RazorTemplateBase
-    
+    public partial class TemplateWithGenericParametersTest_cshtml<TKey, TValue> : RazorGenerator.Templating.RazorTemplateBase
     
     
     {
 #line hidden
 
+    public IEnumerable<KeyValuePair<TKey, TValue>> Items { get; set; }
+
         public override void Execute()
         {
 
 
-WriteLiteral("\r\n\r\n");
+WriteLiteral("\r\n");
 
 
-WriteLiteral("\r\n<?xml version=\"1.0\" ?>\r\n<tests>\r\n");
+WriteLiteral("\r\n<?xml version=\"1.0\" ?>\r\n<items>\r\n");
 
 
-     foreach (var result in TestResults) { 
+     foreach (var item in Items)
+    {
 
-WriteLiteral("        <test id=\"");
-
-
-             Write(result.Id);
-
-WriteLiteral("\">\r\n            <name>");
+WriteLiteral("        <item key=\"");
 
 
-             Write(result.Name);
+              Write(item.Key);
 
-WriteLiteral("</name>\r\n            <result>\r\n");
-
-
-             if(result.Passed) {
-
-WriteLiteral("                ");
-
-WriteLiteral(" Success\r\n");
+WriteLiteral("\" value=\"");
 
 
-            }
-            else{
+                                Write(item.Value);
 
-WriteLiteral("                ");
-
-WriteLiteral(" Failed\r\n");
-
-
-            }
-
-WriteLiteral("            </result>\r\n        </test>\r\n");
+WriteLiteral("\" />\r\n");
 
 
     }
 
-WriteLiteral("</test>\r\n");
+WriteLiteral("</items>");
 
 
         }

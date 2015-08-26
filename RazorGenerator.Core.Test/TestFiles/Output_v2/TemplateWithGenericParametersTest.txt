@@ -13,60 +13,44 @@ namespace RazorGenerator.Core.Test
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "v.v.v.v")]
-    public partial class TemplateWithGenericParametersTest_cshtml<T1, T2, T3> : RazorGenerator.Templating.RazorTemplateBase
-    
+    public partial class TemplateWithGenericParametersTest_cshtml<TKey, TValue> : RazorGenerator.Templating.RazorTemplateBase
     
     
     {
-#line hidden
+#line hidden            
+    public IEnumerable<KeyValuePair<TKey, TValue>> Items { get; set; }
+
         public override void Execute()
         {
-WriteLiteral("\r\n\r\n");
+WriteLiteral("\r\n");
 
-WriteLiteral("\r\n<?xml version=\"1.0\" ?>\r\n<tests>\r\n");
+WriteLiteral("<?xml version=\"1.0\" ?>\r\n<items>\r\n");
 
     
-     foreach (var result in TestResults) { 
+     foreach (var item in Items)
+    {
 
-WriteLiteral("        <test");
+WriteLiteral("        <item");
 
-WriteAttribute("id", Tuple.Create(" id=\"", 181), Tuple.Create("\"", 196)
-, Tuple.Create(Tuple.Create("", 186), Tuple.Create<System.Object, System.Int32>(result.Id
-, 186), false)
+WriteAttribute("key", Tuple.Create(" key=\"", 235), Tuple.Create("\"", 250)
+, Tuple.Create(Tuple.Create("", 241), Tuple.Create<System.Object, System.Int32>(item.Key
+, 241), false)
 );
 
-WriteLiteral(">\r\n            <name>");
+WriteAttribute("value", Tuple.Create(" value=\"", 251), Tuple.Create("\"", 270)
+, Tuple.Create(Tuple.Create("", 259), Tuple.Create<System.Object, System.Int32>(item.Value
+, 259), false)
+);
 
-             Write(result.Name);
-
-WriteLiteral("</name>\r\n            <result>\r\n");
-
-            
-             if(result.Passed) {
-
-WriteLiteral("                ");
-
-WriteLiteral(" Success\r\n");
-
-            }
-            else{
-
-WriteLiteral("                ");
-
-WriteLiteral(" Failed\r\n");
-
-            }
-
-WriteLiteral("            </result>\r\n        </test>\r\n");
+WriteLiteral(" />\r\n");
 
     }
 
-WriteLiteral("</test>\r\n");
+WriteLiteral("</items>");
 
         }
     }
