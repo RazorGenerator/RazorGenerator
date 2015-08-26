@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RazorGenerator.Core
 {
@@ -12,6 +13,7 @@ namespace RazorGenerator.Core
         public static readonly string NamespaceKey = "Namespace";
         public static readonly string ExcludeFromCodeCoverage = "ExcludeFromCodeCoverage";
         public static readonly string SuffixFileName = "ClassSuffix";
+        public static readonly string GenericParametersKey = "GenericParameters";
         private readonly List<RazorCodeTransformerBase> _transformers = new List<RazorCodeTransformerBase>();
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
@@ -58,6 +60,13 @@ namespace RazorGenerator.Core
             if (directives.TryGetValue(SuffixFileName, out suffix))
             {
                 _transformers.Add(new SuffixFileNameTransformer(suffix));
+            }
+
+            string genericParameters;
+            if (directives.TryGetValue(GenericParametersKey, out genericParameters))
+            {
+                var parameters = from p in genericParameters.Split(',') select p.Trim();
+                _transformers.Add(new GenericParametersTransformer(parameters));
             }
 
             base.Initialize(razorHost, directives);

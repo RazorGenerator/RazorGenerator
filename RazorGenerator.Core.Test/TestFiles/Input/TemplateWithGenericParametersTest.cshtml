@@ -1,0 +1,11 @@
+﻿@* Generator: Template GenericParameters: TKey, TValue *@
+@functions {
+    public IEnumerable<KeyValuePair<TKey, TValue>> Items { get; set; }
+}
+<?xml version="1.0" ?>
+<items>
+    @foreach (var item in Items)
+    {
+        <item key="@item.Key" value="@item.Value" />
+    }
+</items>

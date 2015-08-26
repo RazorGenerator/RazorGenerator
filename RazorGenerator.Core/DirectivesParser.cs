@@ -61,8 +61,16 @@ namespace RazorGenerator.Core
 
         private static void ParseKeyValueDirectives(Dictionary<string, string> directives, string directivesLine)
         {
+            // Captures directives as key value pairs, e.g.:
+            //
+            //   KEY : VALUE
+            //   KEY : FOO, BAR, BAZ
+
             // TODO: Make this better.
-            var regex = new Regex(@"\b(?<Key>\w+)\s*:\s*(?<Value>[~\\\/\w\.]+)\b", RegexOptions.ExplicitCapture);
+
+            const string valueRegexPattern = @"[~\\\/\w\.]+";
+            var regex = new Regex(@"\b(?<Key>\w+)\s*:\s*(?<Value>" + valueRegexPattern + @"(\s*,\s*" + valueRegexPattern + @")*)\b", RegexOptions.ExplicitCapture);
+
             foreach (Match item in regex.Matches(directivesLine))
             {
                 var key = item.Groups["Key"].Value;

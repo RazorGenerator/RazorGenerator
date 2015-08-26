@@ -21,6 +21,7 @@ namespace RazorGenerator.Core.Test
             "_ViewStart",
             "DirectivesTest",
             "TemplateWithBaseTypeTest",
+            "TemplateWithGenericParametersTest",
             "VirtualPathAttributeTest",
             "SuffixTransformerTest"
         };

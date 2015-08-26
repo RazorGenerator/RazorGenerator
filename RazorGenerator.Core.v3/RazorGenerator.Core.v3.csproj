@@ -59,6 +59,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\GenericParametersTransformer.cs">
+      <Link>CodeTransformers\GenericParametersTransformer.cs</Link>
+    </Compile>
     <Compile Include="..\RazorGenerator.Core.v2\MvcHelperTransformer.cs" />
     <Compile Include="..\RazorGenerator.Core.v2\MvcViewTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
