@@ -49,9 +49,14 @@ See https://github.com/davidebbo/MvcApplicationRazorGeneratorSeparateLibrary for
 
 ## Special Razor directives
 
-These directives go at the top of the cshtml file. Note that when you have multiple directives, they need to be all on the same line, e.g.
+These directives go into a Razor comment at the top of a cshtml file. Multiple directives are simply whitespace-separated within the comment:
 
     @* Generator: Template  GeneratePrettyNames : true *@
+
+You can also have them on separate lines for clarity but must remain part of the _same_ comment, e.g:
+
+    @* Generator: Template  
+       GeneratePrettyNames : true *@
 
 #### Generator type
 
