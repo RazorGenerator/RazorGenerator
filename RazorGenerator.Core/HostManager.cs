@@ -52,12 +52,14 @@ namespace RazorGenerator.Core
             var directives = DirectivesParser.ParseDirectives(_baseDirectory, fullPath);
             directives["VsNamespace"] = vsNamespace;
 
-            string hostName;
             RazorRuntime runtime = _defaultRuntime;
+            var guessedHost = GuessHost(_baseDirectory, projectRelativePath, out runtime);
+
+            string hostName;
             if (!directives.TryGetValue("Generator", out hostName))
             {
                 // Determine the host and runtime from the file \ project
-                hostName = GuessHost(_baseDirectory, projectRelativePath, out runtime);
+                hostName = guessedHost;
             }
             string razorVersion;
             if (directives.TryGetValue("RazorVersion", out razorVersion))
