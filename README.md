@@ -92,6 +92,8 @@ See above for list of valid values.
 
     @* Generator: Template GenericParameters: TKey, TValue *@
 
+#### Add ExcludeForCodeCoverageAttribute to generated files
+    @* ExcludeForCodeCoverage : true *@
 
 As an alternative, you can create a file named `razorgenerator.directives` in the Views folder to apply directives globally. e.g. it could contain:
 
