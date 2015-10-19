@@ -5,7 +5,7 @@ using RazorGenerator.Mvc;
 
 [assembly: WebActivatorEx.PostApplicationStartMethod(typeof($rootnamespace$.App_Start.RazorGeneratorMvcStart), "Start")]
 
-namespace $rootnamespace$.App_Start {
+namespace $rootnamespace$ {
     public static class RazorGeneratorMvcStart {
         public static void Start() {
             var engine = new PrecompiledMvcEngine(typeof(RazorGeneratorMvcStart).Assembly) {
