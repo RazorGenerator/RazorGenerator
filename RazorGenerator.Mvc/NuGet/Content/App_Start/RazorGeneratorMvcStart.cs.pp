@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using System.Web.WebPages;
 using RazorGenerator.Mvc;
 
-[assembly: WebActivatorEx.PostApplicationStartMethod(typeof($rootnamespace$.App_Start.RazorGeneratorMvcStart), "Start")]
+[assembly: WebActivatorEx.PostApplicationStartMethod(typeof($rootnamespace$.RazorGeneratorMvcStart), "Start")]
 
 namespace $rootnamespace$ {
     public static class RazorGeneratorMvcStart {
