@@ -1,9 +1,10 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
+        <PrecompileRazorFiles Condition=" '$(PrecompileRazorFiles)' == '' ">true</PrecompileRazorFiles>
         <RazorGeneratorMsBuildPath Condition=" '$(RazorGeneratorMsBuildPath)' == '' ">$(MSBuildThisFileDirectory)\..\tools\RazorGenerator.MsBuild.dll</RazorGeneratorMsBuildPath>
         <RazorViewsCodeGenDirectory Condition=" '$(RazorViewsCodeGenDirectory)' == '' ">$(MsBuildProjectDirectory)\obj\CodeGen\</RazorViewsCodeGenDirectory>
       
-        <CompileDependsOn>
+        <CompileDependsOn Condition=" '$(PrecompileRazorFiles)' == 'true' ">
             PrecompileRazorFiles;
             $(CompileDependsOn);
         </CompileDependsOn>
