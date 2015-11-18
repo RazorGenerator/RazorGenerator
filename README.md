@@ -32,7 +32,7 @@ It’s on the VS extension gallery, so install it from there. It’s called “R
 - Install the 'RazorGenerator.Mvc' package, which registers a special view engine
 - Go to an MVC Razor view's property and set the **`Custom Tool`** to **`RazorGenerator`**
 - Optionally specify a value for `Custom Tool Namespace` to specify a namespace for the generated file. The project namespace is used by default.
-- Optionally specify one of the generators in the first line of your Razor file. A generator declaration line looks like this: `@* Generator: MvcHelper *@`. If you don't specify this, a generator is picked based on convention (e.g. files under Views are treated as `MvcViews`)
+- Optionally specify one of the generators in the first line of your Razor file. A generator declaration line looks like this: `@* Generator: MvcHelper *@`. If you don't specify this, a generator is picked based on convention (e.g. files under Views are treated as `MvcViews`)  NOTE: The selection has other criteria such as detecting "Helper" in the filename and choosing **`WebPagesHelper`** for those.
 - You'll see a generated .cs file under the .cshtml file, which will be used at runtime instead of the .cshtml file
 - You can also go to the nuget Package Manager Console and run `Enable-RazorGenerator` to enable the Custom Tool on all the views.
 - And to cause all the views to be regenerated, go to the nuget Package Manager Console and run `Redo-RazorGenerator`. This is useful when you update the generator package and it needs to generate different code.
