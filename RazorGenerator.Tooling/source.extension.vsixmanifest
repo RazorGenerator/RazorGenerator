@@ -3,7 +3,7 @@
   <Identifier Id="2FD58EB3-29A2-40A3-BE17-C024CA9A17A2">
     <Name>Razor Generator</Name>
     <Author>RazorGenerator contributors</Author>
-    <Version>1.9.1</Version>
+    <Version>1.10.0</Version>
     <Description xml:space="preserve">Generates source code from Razor files (.cshtml files), allowing them to be compiled into your assemblies. Supports MVC, Web Pages and standalone templates.</Description>
     <Locale>1033</Locale>
     <MoreInfoUrl>http://razorgenerator.codeplex.com/</MoreInfoUrl>
