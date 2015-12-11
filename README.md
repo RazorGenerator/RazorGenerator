@@ -95,6 +95,10 @@ See above for list of valid values.
 #### Add ExcludeForCodeCoverageAttribute to generated files
     @* ExcludeForCodeCoverage : true *@
 
+#### Import additional namespaces during view precompilation
+
+    @* Imports: Microsoft.Web.Mvc, MvcContrib, This.WebSite, This.WebSite.Html, HtmlHelpers.BeginCollectionItem *@
+
 As an alternative, you can create a file named `razorgenerator.directives` in the Views folder to apply directives globally. e.g. it could contain:
 
     GeneratePrettyNames: true  GenerateAbsolutePathLinePragmas: true
