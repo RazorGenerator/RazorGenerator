@@ -14,6 +14,7 @@ namespace RazorGenerator.Core
         public static readonly string ExcludeFromCodeCoverage = "ExcludeFromCodeCoverage";
         public static readonly string SuffixFileName = "ClassSuffix";
         public static readonly string GenericParametersKey = "GenericParameters";
+        public static readonly string ImportsKey = "Imports";
         private readonly List<RazorCodeTransformerBase> _transformers = new List<RazorCodeTransformerBase>();
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
@@ -67,6 +68,13 @@ namespace RazorGenerator.Core
             {
                 var parameters = from p in genericParameters.Split(',') select p.Trim();
                 _transformers.Add(new GenericParametersTransformer(parameters));
+            }
+
+            string imports;
+            if (directives.TryGetValue(ImportsKey, out imports))
+            {
+                var values = from p in imports.Split(',') select p.Trim();
+                _transformers.Add(new SetImports(values, false));
             }
 
             base.Initialize(razorHost, directives);
