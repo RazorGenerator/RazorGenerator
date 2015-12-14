@@ -134,7 +134,7 @@ namespace RazorGenerator.Core
             try
             {
                 Stream stream = File.OpenRead(_fullPath);
-                using (var reader = new StreamReader(stream, Encoding.Default, detectEncodingFromByteOrderMarks: true))
+                using (var reader = new StreamReader(stream, Encoding.UTF8))
                 {
                     results = engine.GenerateCode(reader, className: DefaultClassName, rootNamespace: DefaultNamespace, sourceFileName: _fullPath);
                 }
