@@ -13,5 +13,7 @@ namespace RazorGenerator.Core
         event EventHandler<ProgressEventArgs> Progress;
 
         string GenerateCode();
+
+        CodeLanguageUtil CodeLanguageUtil { get; }
     }
 }

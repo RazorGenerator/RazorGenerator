@@ -41,7 +41,10 @@ namespace RazorGenerator.Core
 
         public IRazorHost CreateHost(string fullPath, string projectRelativePath, string vsNamespace)
         {
-            using (var codeDomProvider = new CSharpCodeProvider())
+
+            CodeLanguageUtil langutil = CodeLanguageUtil.GetLanguageUtilFromFileName(fullPath);
+
+            using (var codeDomProvider = langutil.GetCodeDomProvider())
             {
                 return CreateHost(fullPath, projectRelativePath, codeDomProvider, vsNamespace);
             }
@@ -186,6 +189,10 @@ namespace RazorGenerator.Core
             try
             {
                 var projectFile = Directory.EnumerateFiles(projectRoot, "*.csproj").FirstOrDefault();
+                if (projectFile == null)
+                {
+                    projectFile = Directory.EnumerateFiles(projectRoot, "*.vbproj").FirstOrDefault();
+                }
                 if (projectFile != null)
                 {
                     var content = File.ReadAllText(projectFile);

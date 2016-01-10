@@ -5,6 +5,9 @@ namespace RazorGenerator.Core
 {
     public class RazorCodeTransformerBase : IRazorCodeTransformer
     {
+
+        protected RazorHost _razorHost;
+
         void IRazorCodeTransformer.Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
         {
             Initialize((RazorHost)razorHost, directives);
@@ -12,6 +15,7 @@ namespace RazorGenerator.Core
 
         public virtual void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
+            _razorHost = razorHost;
             // do nothing
         }
 

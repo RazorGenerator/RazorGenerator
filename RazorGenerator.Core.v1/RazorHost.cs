@@ -35,9 +35,10 @@ namespace RazorGenerator.Core
         private readonly CodeDomProvider _codeDomProvider;
         private readonly IDictionary<string, string> _directives;
         private string _defaultClassName;
+        private CodeLanguageUtil _languageutil;
 
         public RazorHost(string baseRelativePath, string fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives)
-            : base(RazorCodeLanguage.GetLanguageByExtension(".cshtml"))
+            : base(RazorCodeLanguage.GetLanguageByExtension(System.IO.Path.GetExtension(fullPath)))
         {
 
             if (codeTransformer == null)
@@ -61,6 +62,7 @@ namespace RazorGenerator.Core
             _fullPath = fullPath;
             _codeDomProvider = codeDomProvider;
             _directives = directives;
+            _languageutil = Core.CodeLanguageUtil.GetLanguageUtilFromFileName(fullPath);
             base.DefaultNamespace = "ASP";
             EnableLinePragmas = true;
 
@@ -111,6 +113,13 @@ namespace RazorGenerator.Core
             }
         }
 
+        public CodeLanguageUtil CodeLanguageUtil
+        {
+            get{
+                return _languageutil;
+            }
+        }
+
         public ParserBase Parser { get; set; }
 
         public RazorCodeGenerator CodeGenerator { get; set; }
@@ -158,9 +167,9 @@ namespace RazorGenerator.Core
                     options.BracingStyle = "C";
 
                     //Generate the code
-                    writer.WriteLine("#pragma warning disable 1591");
+                    writer.WriteLine(CodeLanguageUtil.GetPreGeneratedCodeBlock());
                     _codeDomProvider.GenerateCodeFromCompileUnit(results.GeneratedCode, writer, options);
-                    writer.WriteLine("#pragma warning restore 1591");
+                    writer.WriteLine(CodeLanguageUtil.GetPostGeneratedCodeBlock());
 
                     OnCodeCompletion(100, 100);
                     writer.Flush();

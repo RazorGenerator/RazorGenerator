@@ -33,8 +33,7 @@ namespace RazorGenerator.Core
             // Make all helper methods prefixed by '_' internal
             foreach (var method in generatedClass.Members.OfType<CodeSnippetTypeMember>())
             {
-                method.Text = Regex.Replace(method.Text, "public static System\\.Web\\.WebPages\\.HelperResult _",
-                     "internal static System.Web.WebPages.HelperResult _");
+                method.Text = _razorHost.CodeLanguageUtil.MakeHelperMethodsInternal(method.Text);
             }
         }
     }
