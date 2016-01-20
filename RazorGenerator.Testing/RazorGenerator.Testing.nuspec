@@ -10,10 +10,5 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <tags>mvc razor testing</tags>
-    <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
-      <frameworkAssembly assemblyName="System.Web.Mvc" targetFramework="net40" />
-      <frameworkAssembly assemblyName="System.Web.WebPages" targetFramework="net40" />
-    </frameworkAssemblies>
   </metadata>
 </package>
