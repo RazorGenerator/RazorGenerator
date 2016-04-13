@@ -1,0 +1,16 @@
+﻿@* Generator: MvcHelper *@
+
+@helper WriteList(string[] items) {
+    <ul>
+        @foreach (var s in items) {
+            <li>
+                @s!  (from webapp)
+            </li>
+        }
+    </ul>
+}
+
+// Passing the HtmlHelper explicitely since the one from the System.Web.WebPages.HelperPage base class is not usable
+@helper RenderAboutLink(System.Web.Mvc.HtmlHelper Html) {
+    @Html.ActionLink("About link from helper", "About", "Home");
+}
