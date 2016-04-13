@@ -32,7 +32,7 @@ namespace RazorGenerator.Core
             new MakeTypePartial(),
         };
         private bool _isSpecialPage;
-        private CodeLanguageUtil _languageutil;
+        private CodeLanguageUtil _languageUtil;
 
         internal static IEnumerable<string> MvcNamespaces
         {
@@ -47,7 +47,7 @@ namespace RazorGenerator.Core
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
             base.Initialize(razorHost, directives);
-            _languageutil = razorHost.CodeLanguageUtil;
+            _languageUtil = razorHost.CodeLanguageUtil;
 
             _isSpecialPage = IsSpecialPage(razorHost.FullPath);
             FixupDefaultClassNameIfTemplate(razorHost);
@@ -98,10 +98,10 @@ namespace RazorGenerator.Core
                 {
                     codeTypeReference.BaseType = typeof(ViewStartPage).FullName;
                 }
-                else if (!_languageutil.IsGenericTypeReference( codeTypeReference.BaseType))
+                else if (!_languageUtil.IsGenericTypeReference( codeTypeReference.BaseType))
                 {
                     // Use the default model if it wasn't specified by the user.
-                    codeTypeReference.BaseType = _languageutil.BuildGenericTypeReference(codeTypeReference.BaseType, new string[]{ _languageutil.DefaultModelTypeName});
+                    codeTypeReference.BaseType = _languageUtil.BuildGenericTypeReference(codeTypeReference.BaseType, new string[]{ _languageUtil.DefaultModelTypeName});
                 }
             }
         }

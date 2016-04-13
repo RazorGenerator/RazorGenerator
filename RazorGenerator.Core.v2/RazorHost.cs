@@ -35,7 +35,7 @@ namespace RazorGenerator.Core
         private readonly CodeDomProvider _codeDomProvider;
         private readonly IDictionary<string, string> _directives;
         private string _defaultClassName;
-        private CodeLanguageUtil _languageutil;
+        private CodeLanguageUtil _languageUtil;
 
         public RazorHost(string baseRelativePath, string fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives)
             : base(RazorCodeLanguage.GetLanguageByExtension(System.IO.Path.GetExtension(fullPath)))
@@ -62,7 +62,7 @@ namespace RazorGenerator.Core
             _fullPath = fullPath;
             _codeDomProvider = codeDomProvider;
             _directives = directives;
-            _languageutil = Core.CodeLanguageUtil.GetLanguageUtilFromFileName(fullPath);
+            _languageUtil = Core.CodeLanguageUtil.GetLanguageUtilFromFileName(fullPath);
             base.DefaultNamespace = "ASP";
             EnableLinePragmas = true;
 
@@ -128,7 +128,7 @@ namespace RazorGenerator.Core
         {
             get
             {
-                return _languageutil;
+                return _languageUtil;
             }
         }
 
