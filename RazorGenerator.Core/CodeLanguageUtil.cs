@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace RazorGenerator.Core
 {
@@ -30,20 +31,20 @@ namespace RazorGenerator.Core
 
         public static CodeLanguageUtil GetLanguageUtilFromFileName(string filename)
         {
-            return GetLanguageUtilFromFileExtension(System.IO.Path.GetExtension(filename));
+            return GetLanguageUtilFromFileExtension(Path.GetExtension(filename));
         }
         #endregion
 
 
-        abstract public string BuildGenericTypeReference(string GenericType, IEnumerable<string> GenericArguments);
-        abstract public bool IsGenericTypeReference(string TypeName);
-        abstract public string GetCodeFileExtension();
-        abstract public string GetPreGeneratedCodeBlock();
-        abstract public string GetPostGeneratedCodeBlock();
-        abstract public System.CodeDom.Compiler.CodeDomProvider GetCodeDomProvider();
-        abstract public string DefaultModelTypeName { get; }
-        abstract public string MakeTypeStatic(string codeContent);
-        abstract public string MakeHelperMethodsInternal(string methodText);
-        abstract public string HrefMethod { get; }
+        public abstract string BuildGenericTypeReference(string GenericType, IEnumerable<string> GenericArguments);
+        public abstract bool IsGenericTypeReference(string TypeName);
+        public abstract string GetCodeFileExtension();
+        public abstract string GetPreGeneratedCodeBlock();
+        public abstract string GetPostGeneratedCodeBlock();
+        public abstract System.CodeDom.Compiler.CodeDomProvider GetCodeDomProvider();
+        public abstract string DefaultModelTypeName { get; }
+        public abstract string MakeTypeStatic(string codeContent);
+        public abstract string MakeHelperMethodsInternal(string methodText);
+        public abstract string HrefMethod { get; }
     }
 }
