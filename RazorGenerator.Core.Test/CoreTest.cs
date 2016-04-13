@@ -11,8 +11,8 @@ namespace RazorGenerator.Core.Test
 {
     public class CoreTest
     {
-        private static readonly string[] _testNames = new[]
-        {
+        private static readonly string[] _testNames = new[] 
+        { 
             "WebPageTest",
             "WebPageHelperTest",
              "MvcViewTest",
