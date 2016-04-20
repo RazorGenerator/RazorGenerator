@@ -65,7 +65,9 @@ namespace RazorGenerator.MsBuild
                     var projectRelativePath = GetProjectRelativePath(filePath, projectRoot);
                     string itemNamespace = GetNamespace(file, projectRelativePath);
 
-                    string outputPath = Path.Combine(CodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + ".cs";
+                    CodeLanguageUtil langutil = CodeLanguageUtil.GetLanguageUtilFromFileName(fileName);
+
+                    string outputPath = Path.Combine(CodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + langutil.GetCodeFileExtension();
                     if (!RequiresRecompilation(filePath, outputPath))
                     {
                         Log.LogMessage(MessageImportance.Low, "Skipping file {0} since {1} is already up to date", filePath, outputPath);

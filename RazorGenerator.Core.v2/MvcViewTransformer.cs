@@ -13,7 +13,6 @@ namespace RazorGenerator.Core
     [Export("MvcView", typeof(IRazorCodeTransformer))]
     public class MvcViewTransformer : AggregateCodeTransformer
     {
-        private const string DefaultModelTypeName = "dynamic";
         private const string ViewStartFileName = "_ViewStart";
         private static readonly IEnumerable<string> _namespaces = new[] { 
             "System.Web.Mvc", 
@@ -33,6 +32,7 @@ namespace RazorGenerator.Core
             new MakeTypePartial(),
         };
         private bool _isSpecialPage;
+        private CodeLanguageUtil _languageUtil;
 
         internal static IEnumerable<string> MvcNamespaces
         {
@@ -47,6 +47,7 @@ namespace RazorGenerator.Core
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
             base.Initialize(razorHost, directives);
+            _languageUtil = razorHost.CodeLanguageUtil;
 
             _isSpecialPage = IsSpecialPage(razorHost.FullPath);
             FixupDefaultClassNameIfTemplate(razorHost);
@@ -55,9 +56,25 @@ namespace RazorGenerator.Core
             // The CSharpRazorCodeGenerator decides to generate line pragmas based on if the file path is available. Set it to an empty string if we 
             // do not want to generate them.
             string path = razorHost.EnableLinePragmas ? razorHost.FullPath : String.Empty;
-            razorHost.CodeGenerator = new CSharpRazorCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultNamespace, path, razorHost);
-            razorHost.CodeGenerator.GenerateLinePragmas = razorHost.EnableLinePragmas;
-            razorHost.Parser = new MvcCSharpRazorCodeParser();
+
+            switch (razorHost.CodeLanguage.LanguageName)
+            {
+                case "csharp":
+                    razorHost.CodeGenerator = new CSharpRazorCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultNamespace, path, razorHost);
+                    razorHost.CodeGenerator.GenerateLinePragmas = razorHost.EnableLinePragmas;
+                    razorHost.Parser = new MvcCSharpRazorCodeParser();
+                    break;
+
+                case "vb":
+                    razorHost.CodeGenerator = new VBRazorCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultNamespace, path, razorHost);
+                    razorHost.CodeGenerator.GenerateLinePragmas = razorHost.EnableLinePragmas;
+                    razorHost.Parser = new MvcVBRazorCodeParser();
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException("Unknown language - " + razorHost.CodeLanguage.LanguageName);
+            }
+
         }
 
         private void FixupDefaultClassNameIfTemplate(RazorHost razorHost)
@@ -81,10 +98,10 @@ namespace RazorGenerator.Core
                 {
                     codeTypeReference.BaseType = typeof(ViewStartPage).FullName;
                 }
-                else if (!codeTypeReference.BaseType.Contains('<'))
+                else if (!_languageUtil.IsGenericTypeReference( codeTypeReference.BaseType))
                 {
                     // Use the default model if it wasn't specified by the user.
-                    codeTypeReference.BaseType += '<' + DefaultModelTypeName + '>';
+                    codeTypeReference.BaseType = _languageUtil.BuildGenericTypeReference(codeTypeReference.BaseType, new string[]{ _languageUtil.DefaultModelTypeName});
                 }
             }
         }

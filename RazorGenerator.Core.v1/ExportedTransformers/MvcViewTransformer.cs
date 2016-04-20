@@ -43,24 +43,39 @@ namespace RazorGenerator.Core
         {
             base.Initialize(razorHost, directives);
 
-            razorHost.CodeGenerator = new MvcCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultBaseClass, razorHost.DefaultNamespace, razorHost.FullPath, razorHost);
-            razorHost.CodeGenerator.GenerateLinePragmas = razorHost.EnableLinePragmas;
-            razorHost.Parser = new MvcCSharpRazorCodeParser();
+            switch (razorHost.CodeLanguage.LanguageName)
+            {
+                case "csharp":
+                    razorHost.CodeGenerator = new MvcCSharpCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultBaseClass, razorHost.DefaultNamespace, razorHost.FullPath,razorHost);
+                    razorHost.CodeGenerator.GenerateLinePragmas = razorHost.EnableLinePragmas;
+                    razorHost.Parser = new MvcCSharpRazorCodeParser();
+                    break;
+
+                case "vb":
+                    razorHost.CodeGenerator = new MvcVBDotNetCodeGenerator(razorHost.DefaultClassName, razorHost.DefaultBaseClass, razorHost.DefaultNamespace, razorHost.FullPath, razorHost);
+                    razorHost.CodeGenerator.GenerateLinePragmas = razorHost.EnableLinePragmas;
+                    razorHost.Parser = new MvcVBRazorCodeParser();
+                    break;
+                    
+                default:
+                    throw new ArgumentOutOfRangeException("Unknown language - " + razorHost.CodeLanguage.LanguageName);
+            }
+
         }
 
         /// <summary>
         /// MvcCSharpRazorCodeGenerator has a strong dependency on the MvcHost which is something I don't want to deal with.
         /// This code is essentially copied from the MvcHost
         /// </summary>
-        private sealed class MvcCodeGenerator : MvcCSharpRazorCodeGenerator
+        private sealed class MvcCSharpCodeGenerator : MvcCSharpRazorCodeGenerator
         {
-            private const string DefaultModelTypeName = "dynamic";
             private const string ViewStartFileName = "_ViewStart";
 
-            public MvcCodeGenerator(string className, string baseClass, string rootNamespaceName, string sourceFileName, RazorEngineHost host)
+            public MvcCSharpCodeGenerator(string className, string baseClass, string rootNamespaceName, string sourceFileName, RazorHost host)
                 : base(className, rootNamespaceName, sourceFileName, host)
             {
                 string baseType;
+                
 
                 if (IsSpecialPage(sourceFileName))
                 {
@@ -68,7 +83,42 @@ namespace RazorGenerator.Core
                 }
                 else
                 {
-                    baseType = baseClass + '<' + DefaultModelTypeName + '>';
+                    baseType = host.CodeLanguageUtil.BuildGenericTypeReference( baseClass , new string[] { host.CodeLanguageUtil.DefaultModelTypeName });
+                }
+                SetBaseType(baseType);
+            }
+
+            private bool IsSpecialPage(string path)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(path);
+                return fileName.Equals(ViewStartFileName, StringComparison.OrdinalIgnoreCase);
+            }
+
+            private void SetBaseType(string name)
+            {
+                var baseType = new CodeTypeReference(name);
+                GeneratedClass.BaseTypes.Clear();
+                GeneratedClass.BaseTypes.Add(baseType);
+            }
+        }
+
+        private sealed class MvcVBDotNetCodeGenerator : MvcVBRazorCodeGenerator
+        {
+            private const string ViewStartFileName = "_ViewStart";
+
+            public MvcVBDotNetCodeGenerator(string className, string baseClass, string rootNamespaceName, string sourceFileName, RazorHost host)
+                : base(className, rootNamespaceName, sourceFileName, host)
+            {
+                string baseType;
+
+
+                if (IsSpecialPage(sourceFileName))
+                {
+                    baseType = typeof(ViewStartPage).FullName;
+                }
+                else
+                {
+                    baseType = host.CodeLanguageUtil.BuildGenericTypeReference(baseClass, new string[] { host.CodeLanguageUtil.DefaultModelTypeName });
                 }
                 SetBaseType(baseType);
             }

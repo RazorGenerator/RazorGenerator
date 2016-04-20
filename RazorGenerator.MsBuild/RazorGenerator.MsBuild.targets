@@ -19,6 +19,14 @@
             <RazorOutputFiles
                 Include="@(RazorSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).cs')" />
         </ItemGroup>
+      <ItemGroup>
+        <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' and '%(Extension)' == '.vbhtml' "
+            Include="@(Content);@(None)" />
+        <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' "
+            Include="**\*.vbhtml" />
+        <RazorOutputFiles
+            Include="@(RazorSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).vb')" />
+      </ItemGroup>
     </Target>
 
     <UsingTask AssemblyFile="$(RazorGeneratorMsBuildPath)" TaskName="RazorCodeGen" />

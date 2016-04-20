@@ -79,7 +79,7 @@ namespace RazorGenerator.Core
     {
         public override string ProcessOutput(string codeContent)
         {
-            return codeContent.Replace("public class", "public static class");
+            return _razorHost.CodeLanguageUtil.MakeTypeStatic(codeContent);
         }
     }
 
