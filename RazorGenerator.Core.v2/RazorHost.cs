@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +8,6 @@ using System.Web.Razor.Generator;
 using System.Web.Razor.Parser;
 using System.Web.Razor.Parser.SyntaxTree;
 using System.Web.WebPages;
-using System.IO;
 
 namespace RazorGenerator.Core
 {
@@ -41,7 +39,6 @@ namespace RazorGenerator.Core
         public RazorHost(string baseRelativePath, string fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives)
             : base(RazorCodeLanguage.GetLanguageByExtension(Path.GetExtension(fullPath)))
         {
-
             if (codeTransformer == null)
             {
                 throw new ArgumentNullException("codeTransformer");
