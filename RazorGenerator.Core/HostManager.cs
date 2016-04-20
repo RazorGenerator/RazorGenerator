@@ -278,7 +278,7 @@ namespace RazorGenerator.Core
             }
         }
 
-        internal struct GuessedHost
+        internal class GuessedHost
         {
             public GuessedHost(string host, RazorRuntime runtime)
             {
@@ -286,9 +286,9 @@ namespace RazorGenerator.Core
                 Runtime = runtime;
             }
 
-            public string Host { get; }
+            public string Host { get; private set; }
 
-            public RazorRuntime Runtime { get; }
+            public RazorRuntime Runtime { get; private set; }
         }
     }
 }

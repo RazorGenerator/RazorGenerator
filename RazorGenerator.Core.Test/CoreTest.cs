@@ -26,9 +26,9 @@ namespace RazorGenerator.Core.Test
         };
 
         [Theory]
-        [MemberData(nameof(V1Tests))]
-        [MemberData(nameof(V2Tests))]
-        [MemberData(nameof(V3Tests))]
+        [MemberData("V1Tests")]
+        [MemberData("V2Tests")]
+        [MemberData("V3Tests")]
         public void TestTransformerType(string testName, RazorRuntime runtime)
         {
             string workingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
