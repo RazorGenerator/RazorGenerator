@@ -11,3 +11,4 @@ $msbuild = $potentialMsBuildPaths | Join-Path -ChildPath "msbuild.exe" | ? { Tes
 
 & $msbuild /p:Configuration=Release RazorGenerator.Tooling.sln /v:M
 & $msbuild /p:Configuration=Release RazorGenerator.Runtime.sln /v:M
+& $msbuild /p:Configuration=Release RazorGenerator.Core.Test/RazorGenerator.Core.Test.csproj /t:Test

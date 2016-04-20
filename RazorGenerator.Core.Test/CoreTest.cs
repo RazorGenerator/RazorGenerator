@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Xunit;
-using Xunit.Extensions;
 
 namespace RazorGenerator.Core.Test
 {
@@ -27,9 +26,9 @@ namespace RazorGenerator.Core.Test
         };
 
         [Theory]
-        [PropertyData("V1Tests")]
-        [PropertyData("V2Tests")]
-        [PropertyData("V3Tests")]
+        [MemberData("V1Tests")]
+        [MemberData("V2Tests")]
+        [MemberData("V3Tests")]
         public void TestTransformerType(string testName, RazorRuntime runtime)
         {
             string workingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());

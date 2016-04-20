@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Microsoft.CSharp;
 
 namespace RazorGenerator.Core
 {
@@ -55,8 +54,14 @@ namespace RazorGenerator.Core
             var directives = DirectivesParser.ParseDirectives(_baseDirectory, fullPath);
             directives["VsNamespace"] = vsNamespace;
 
+            string guessedHost = null;
             RazorRuntime runtime = _defaultRuntime;
-            var guessedHost = GuessHost(_baseDirectory, projectRelativePath, out runtime);
+            GuessedHost value;
+            if (TryGuessHost(_baseDirectory, projectRelativePath, out value))
+            {
+                runtime = value.Runtime;
+                guessedHost = value.Host;
+            }
 
             string hostName;
             if (!directives.TryGetValue("Generator", out hostName))
@@ -168,19 +173,23 @@ namespace RazorGenerator.Core
             }
         }
 
-        internal static string GuessHost(string projectRoot, string projectRelativePath, out RazorRuntime runtime)
+        internal static bool TryGuessHost(string projectRoot, string projectRelativePath, out GuessedHost host)
         {
+            RazorRuntime runtime;
             bool isMvcProject = IsMvcProject(projectRoot, out runtime) ?? false;
             if (isMvcProject)
             {
                 var mvcHelperRegex = new Regex(@"(^|\\)Views(\\.*)+Helpers?", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
                 if (mvcHelperRegex.IsMatch(projectRelativePath))
                 {
-                    return "MvcHelper";
+                    host = new GuessedHost("MvcHelper", runtime);
                 }
-                return "MvcView";
+                host = new GuessedHost("MvcView", runtime);
+                return true;
             }
-            return null;
+
+            host = default(GuessedHost);
+            return false;
         }
 
         private static bool? IsMvcProject(string projectRoot, out RazorRuntime razorRuntime)
@@ -267,6 +276,19 @@ namespace RazorGenerator.Core
             {
                 AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
             }
+        }
+
+        internal class GuessedHost
+        {
+            public GuessedHost(string host, RazorRuntime runtime)
+            {
+                Host = host;
+                Runtime = runtime;
+            }
+
+            public string Host { get; private set; }
+
+            public RazorRuntime Runtime { get; private set; }
         }
     }
 }

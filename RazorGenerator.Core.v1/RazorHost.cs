@@ -9,7 +9,6 @@ using System.Web.Razor.Generator;
 using System.Web.Razor.Parser;
 using System.Web.Razor.Parser.SyntaxTree;
 using System.Web.WebPages;
-using System.IO;
 
 namespace RazorGenerator.Core
 {
