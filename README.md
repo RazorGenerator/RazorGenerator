@@ -99,6 +99,9 @@ See above for list of valid values.
 
     @* Imports: Microsoft.Web.Mvc, MvcContrib, This.WebSite, This.WebSite.Html, HtmlHelpers.BeginCollectionItem *@
 
+#### Set BaseType during view precompilation
+    @* BaseType: This.ViewPageBase *@
+
 As an alternative, you can create a file named `razorgenerator.directives` in the Views folder to apply directives globally. e.g. it could contain:
 
     GeneratePrettyNames: true  GenerateAbsolutePathLinePragmas: true

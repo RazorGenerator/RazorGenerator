@@ -15,6 +15,7 @@ namespace RazorGenerator.Core
         public static readonly string SuffixFileName = "ClassSuffix";
         public static readonly string GenericParametersKey = "GenericParameters";
         public static readonly string ImportsKey = "Imports";
+        public static readonly string BaseType = "BaseType";
         private readonly List<RazorCodeTransformerBase> _transformers = new List<RazorCodeTransformerBase>();
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
@@ -75,6 +76,12 @@ namespace RazorGenerator.Core
             {
                 var values = from p in imports.Split(',') select p.Trim();
                 _transformers.Add(new SetImports(values, false));
+            }
+
+            string baseType;
+            if (directives.TryGetValue(BaseType, out baseType))
+            {
+                _transformers.Add(new SetBaseType(baseType, @override: true));
             }
 
             base.Initialize(razorHost, directives);
