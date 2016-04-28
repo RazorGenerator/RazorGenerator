@@ -86,19 +86,28 @@ namespace RazorGenerator.Core
     public class SetBaseType : RazorCodeTransformerBase
     {
         private readonly string _typeName;
-        public SetBaseType(string typeName)
+        private readonly bool _override;
+
+        public SetBaseType(string typeName, bool @override = false)
         {
             _typeName = typeName;
+            _override = @override;
         }
 
-        public SetBaseType(Type type)
-            : this(type.FullName)
+        public SetBaseType(Type type, bool @override = false)
+            : this(type.FullName, @override: @override)
         {
+        }
+
+        private bool IsDefaultBaseClass(string baseClass)
+        {
+            return string.IsNullOrEmpty(baseClass) || typeof(System.Web.WebPages.WebPage).FullName == baseClass;
         }
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
-            razorHost.DefaultBaseClass = _typeName;
+            if (_override || IsDefaultBaseClass(razorHost.DefaultBaseClass))
+                razorHost.DefaultBaseClass = _typeName;
         }
     }
 
