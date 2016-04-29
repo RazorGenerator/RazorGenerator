@@ -12,21 +12,25 @@
 
     <Target Name="_ResolveRazorFiles">
         <ItemGroup>
-            <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' and '%(Extension)' == '.cshtml' "
+            <RazorCsSrcFiles Condition=" '@(RazorCsSrcFiles)' == '' and '%(Extension)' == '.cshtml' "
                 Include="@(Content);@(None)" />
-            <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' "
+            <RazorCsSrcFiles Condition=" '@(RazorCsSrcFiles)' == '' "
                 Include="**\*.cshtml" />
             <RazorOutputFiles
-                Include="@(RazorSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).cs')" />
+                Include="@(RazorCsSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).cs')" />
         </ItemGroup>
-      <ItemGroup>
-        <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' and '%(Extension)' == '.vbhtml' "
-            Include="@(Content);@(None)" />
-        <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' "
-            Include="**\*.vbhtml" />
-        <RazorOutputFiles
-            Include="@(RazorSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).vb')" />
-      </ItemGroup>
+        <ItemGroup>
+            <RazorVbSrcFiles Condition=" '@(RazorVbSrcFiles)' == '' and '%(Extension)' == '.vbhtml' "
+                Include="@(Content);@(None)" />
+            <RazorVbSrcFiles Condition=" '@(RazorVbSrcFiles)' == '' "
+                Include="**\*.vbhtml" />
+            <RazorVbOutputFiles
+                Include="@(RazorVbSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).vb')" />
+         </ItemGroup>
+         <ItemGroup>
+             <RazorSrcFiles Include="@(RazorCsSrcFiles);@(RazorVbSrcFiles)" />
+             <RazorOutputFiles Include="@(RazorCsOutputFiles);@(RazorVbOutputFiles)" />
+         </ItemGroup>
     </Target>
 
     <UsingTask AssemblyFile="$(RazorGeneratorMsBuildPath)" TaskName="RazorCodeGen" />
