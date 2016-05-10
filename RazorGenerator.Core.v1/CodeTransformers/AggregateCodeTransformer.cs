@@ -13,6 +13,8 @@ namespace RazorGenerator.Core
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
+            base.Initialize(razorHost, directives);
+
             foreach (var transformer in CodeTransformers)
             {
                 transformer.Initialize(razorHost, directives);
