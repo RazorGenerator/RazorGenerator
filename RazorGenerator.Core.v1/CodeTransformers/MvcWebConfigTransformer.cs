@@ -51,7 +51,7 @@ namespace RazorGenerator.Core
                     string baseType = section.PageBaseType;
                     if (!DefaultBaseType.Equals(baseType, StringComparison.OrdinalIgnoreCase))
                     {
-                        _transformers.Add(new SetBaseType(baseType));
+                        _transformers.Add(new SetBaseType(baseType, @override: true));
                     }
 
                     if (section != null)
