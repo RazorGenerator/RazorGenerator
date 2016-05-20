@@ -67,6 +67,10 @@ See above for list of valid values.
 #### disabling line pragmas
 
     @* DisableLinePragmas: true *@
+    
+### Changing type visiblity
+ 
+    @* TypeVisibility: internal *@
 
 #### Using absolute paths in line pragmas instead of relative
 
