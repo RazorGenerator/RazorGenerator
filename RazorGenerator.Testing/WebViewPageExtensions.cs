@@ -24,6 +24,11 @@ namespace RazorGenerator.Testing
 
         private static readonly Dictionary<string, ViewPlaceholder> _views = new Dictionary<string, ViewPlaceholder>();
 
+        public static IViewEngine ViewEngine
+        {
+            get { return _viewEngine; }
+        }
+
         public static string Render<TModel>(this WebViewPage<TModel> view, TModel model = default(TModel))
         {
             return Render<TModel>(view, null, model);
