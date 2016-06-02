@@ -103,7 +103,7 @@ namespace RazorGenerator.Mvc
         {
             virtualPath = EnsureVirtualPathPrefix(virtualPath);
 
-            if (UsePhysicalViewsIfNewer() && IsPhysicalFileNewer(virtualPath))
+            if (UsePhysicalViewsIfNewer != null && UsePhysicalViewsIfNewer() && IsPhysicalFileNewer(virtualPath))
             {
                 // If the physical file on disk is newer and the user's opted in this behavior, serve it instead.
                 return false;
@@ -140,13 +140,13 @@ namespace RazorGenerator.Mvc
             virtualPath = EnsureVirtualPathPrefix(virtualPath);
             Type type;
 
-            if (!PreemptPhysicalFiles() && VirtualPathProvider.FileExists(virtualPath))
+            if (PreemptPhysicalFiles != null && !PreemptPhysicalFiles() && VirtualPathProvider.FileExists(virtualPath))
             {
                 // If we aren't pre-empting physical files, use the BuildManager to create _ViewStart instances if the file exists on disk. 
                 return BuildManager.CreateInstanceFromVirtualPath(virtualPath, typeof(WebPageRenderingBase));
             }
 
-            if (UsePhysicalViewsIfNewer() && IsPhysicalFileNewer(virtualPath))
+            if (UsePhysicalViewsIfNewer != null && UsePhysicalViewsIfNewer() && IsPhysicalFileNewer(virtualPath))
             {
                 // If the physical file on disk is newer and the user's opted in this behavior, serve it instead.
                 return BuildManager.CreateInstanceFromVirtualPath(virtualPath, typeof(WebViewPage));
