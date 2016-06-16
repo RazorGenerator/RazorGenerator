@@ -12,18 +12,18 @@
 
     <Target Name="_ResolveRazorFiles">
         <ItemGroup>
+             <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' and ('%(Extension)' == '.cshtml' or '%(Extension)' == '.vbhtml') " Include="@(Content);@(None)" />
+             <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' " Include="**\*.vbhtml;**\*.cshtml" />
+        </ItemGroup>
+        <ItemGroup>
             <RazorCsSrcFiles Condition=" '@(RazorCsSrcFiles)' == '' and '%(Extension)' == '.cshtml' "
-                Include="@(Content);@(None)" />
-            <RazorCsSrcFiles Condition=" '@(RazorCsSrcFiles)' == '' "
-                Include="**\*.cshtml" />
+                Include="@(RazorSrcFiles)" />
             <RazorOutputFiles
                 Include="@(RazorCsSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).cs')" />
         </ItemGroup>
         <ItemGroup>
             <RazorVbSrcFiles Condition=" '@(RazorVbSrcFiles)' == '' and '%(Extension)' == '.vbhtml' "
-                Include="@(Content);@(None)" />
-            <RazorVbSrcFiles Condition=" '@(RazorVbSrcFiles)' == '' "
-                Include="**\*.vbhtml" />
+                Include="@(RazorSrcFiles)" />
             <RazorVbOutputFiles
                 Include="@(RazorVbSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).vb')" />
          </ItemGroup>
