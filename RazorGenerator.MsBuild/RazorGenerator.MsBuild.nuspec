@@ -5,8 +5,8 @@
     <version>$version$</version>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>http://razorgenerator.codeplex.com/license</licenseUrl>
-    <projectUrl>http://razorgenerator.codeplex.com/</projectUrl>
+    <licenseUrl>https://github.com/RazorGenerator/RazorGenerator/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/RazorGenerator/RazorGenerator</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <tags>razorgenerator msbuild</tags>
