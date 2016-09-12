@@ -91,12 +91,14 @@ namespace RazorGenerator.Testing
         {
             EnsureDummyViewEngineRegistered();
 
-            var context = httpContext ?? new HttpContextBuilder().Build();
-            var routeData = new RouteData();
+            if (view.ViewContext == null)
+            { 
+                var context = httpContext ?? new HttpContextBuilder().Build();
+                var routeData = new RouteData();
+                var controllerContext = new ControllerContext(context, routeData, new Mock<ControllerBase>().Object);
 
-            var controllerContext = new ControllerContext(context, routeData, new Mock<ControllerBase>().Object);
-
-            view.ViewContext = new ViewContext(controllerContext, new Mock<IView>().Object, view.ViewData, new TempDataDictionary(), writer);
+                view.ViewContext = new ViewContext(controllerContext, new Mock<IView>().Object, view.ViewData, new TempDataDictionary(), writer);
+            }
 
             view.InitHelpers();
         }
