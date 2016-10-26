@@ -33,53 +33,37 @@ namespace RazorGenerator.Mvc
         {
         }
 
+        public readonly static string[] DefaultAreaLocationFormats= new[] {
+            "~/Areas/{2}/Views/{1}/{0}.cshtml",
+            "~/Areas/{2}/Views/{1}/{0}.vbhtml",
+            "~/Areas/{2}/Views/Shared/{0}.cshtml",
+            "~/Areas/{2}/Views/Shared/{0}.vbhtml",
+        };
+
+        public readonly static string[] DefaultLocationFormats = new[] {
+            "~/Views/{1}/{0}.cshtml",
+            "~/Views/{1}/{0}.vbhtml",
+            "~/Views/Shared/{0}.cshtml",
+            "~/Views/Shared/{0}.vbhtml",
+        };
+
+        public readonly static string[] DefaultFileExtensions = new[] {
+            "cshtml",
+            "vbhtml",
+        };
+
         public PrecompiledMvcEngine(Assembly assembly, string baseVirtualPath, IViewPageActivator viewPageActivator)
         {
+            base.AreaViewLocationFormats = DefaultAreaLocationFormats;
+            base.AreaMasterLocationFormats = DefaultAreaLocationFormats;
+            base.AreaPartialViewLocationFormats = DefaultAreaLocationFormats;
+            base.ViewLocationFormats = DefaultLocationFormats;
+            base.MasterLocationFormats = DefaultLocationFormats;
+            base.PartialViewLocationFormats = DefaultLocationFormats;
+            base.FileExtensions = DefaultFileExtensions;
+
             AssemblyLastWriteTime = new Lazy<DateTime>(() => assembly.GetLastWriteTimeUtc(fallback: DateTime.MaxValue));
             BaseVirtualPath = NormalizeBaseVirtualPath(baseVirtualPath);
-
-            base.AreaViewLocationFormats = new[] {
-                "~/Areas/{2}/Views/{1}/{0}.cshtml", 
-                "~/Areas/{2}/Views/{1}/{0}.vbhtml", 
-                "~/Areas/{2}/Views/Shared/{0}.cshtml", 
-                "~/Areas/{2}/Views/Shared/{0}.vbhtml", 
-            };
-
-            base.AreaMasterLocationFormats = new[] {
-                "~/Areas/{2}/Views/{1}/{0}.cshtml", 
-                "~/Areas/{2}/Views/{1}/{0}.vbhtml", 
-                "~/Areas/{2}/Views/Shared/{0}.cshtml", 
-                "~/Areas/{2}/Views/Shared/{0}.vbhtml", 
-            };
-
-            base.AreaPartialViewLocationFormats = new[] {
-                "~/Areas/{2}/Views/{1}/{0}.cshtml", 
-                "~/Areas/{2}/Views/{1}/{0}.vbhtml", 
-                "~/Areas/{2}/Views/Shared/{0}.cshtml", 
-                "~/Areas/{2}/Views/Shared/{0}.vbhtml", 
-            };
-            base.ViewLocationFormats = new[] {
-                "~/Views/{1}/{0}.cshtml", 
-                "~/Views/{1}/{0}.vbhtml", 
-                "~/Views/Shared/{0}.cshtml", 
-                "~/Views/Shared/{0}.vbhtml", 
-            };
-            base.MasterLocationFormats = new[] {
-                "~/Views/{1}/{0}.cshtml", 
-                "~/Views/{1}/{0}.vbhtml", 
-                "~/Views/Shared/{0}.cshtml", 
-                "~/Views/Shared/{0}.vbhtml", 
-            };
-            base.PartialViewLocationFormats = new[] {
-                "~/Views/{1}/{0}.cshtml", 
-                "~/Views/{1}/{0}.vbhtml", 
-                "~/Views/Shared/{0}.cshtml", 
-                "~/Views/Shared/{0}.vbhtml", 
-            };
-            base.FileExtensions = new[] {
-                "cshtml", 
-                "vbhtml", 
-            };
 
             _mappings = (from type in assembly.GetTypes()
                          where typeof(WebPageRenderingBase).IsAssignableFrom(type)
@@ -88,7 +72,7 @@ namespace RazorGenerator.Mvc
                          select new KeyValuePair<string, Type>(CombineVirtualPaths(BaseVirtualPath, pageVirtualPath.VirtualPath), type)
                          ).ToDictionary(t => t.Key, t => t.Value, StringComparer.OrdinalIgnoreCase);
             this.ViewLocationCache = new PrecompiledViewLocationCache(assembly.FullName, this.ViewLocationCache);
-            _viewPageActivator = viewPageActivator 
+            _viewPageActivator = viewPageActivator
                 ?? DependencyResolver.Current.GetService<IViewPageActivator>() /* For compatibility, remove this line within next version */
                 ?? DefaultViewPageActivator.Current;
         }
@@ -207,7 +191,7 @@ namespace RazorGenerator.Mvc
                 // For a virtual path lookups to succeed, it needs to start with a ~/.
                 if (!virtualPath.StartsWith("~/", StringComparison.Ordinal))
                 {
-                    virtualPath = "~/" + virtualPath.TrimStart(new [] { '/', '~' });
+                    virtualPath = "~/" + virtualPath.TrimStart(new[] { '/', '~' });
                 }
             }
             return virtualPath;
