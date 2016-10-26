@@ -12,11 +12,10 @@
     <tags>mvc razor</tags>
     <dependencies>
       <dependency id="WebActivatorEx" version="2.0.3" />
+      <dependency id="Microsoft.AspNet.Mvc" version="3.0.50813.1" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
-      <frameworkAssembly assemblyName="System.Web.Mvc" targetFramework="net40" />
-      <frameworkAssembly assemblyName="System.Web.WebPages" targetFramework="net40" />
     </frameworkAssemblies>
     <releaseNotes>
         * v1.5.5:  Updated IsPhyicalPathsNewer to use case insensitive comparison
