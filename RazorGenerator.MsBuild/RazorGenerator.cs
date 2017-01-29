@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using RazorGenerator.Core;
+using System.Xml.Linq;
 
 namespace RazorGenerator.MsBuild
 {
@@ -21,7 +22,13 @@ namespace RazorGenerator.MsBuild
         [Required]
         public string ProjectRoot { get; set; }
 
+        [Required]
+        public string ProjectName { get; set; }
+
         public string RootNamespace { get; set; }
+
+        [Required]
+        public bool IncludeNewViewsInProject { get; set; }
 
         [Required]
         public string CodeGenDirectory { get; set; }
@@ -67,7 +74,8 @@ namespace RazorGenerator.MsBuild
 
                     CodeLanguageUtil langutil = CodeLanguageUtil.GetLanguageUtilFromFileName(fileName);
 
-                    string outputPath = Path.Combine(CodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + langutil.GetCodeFileExtension();
+                    var precompiledViewRelativePath = projectRelativePath.TrimStart(Path.DirectorySeparatorChar) + langutil.GetCodeFileExtension();
+                    string outputPath = Path.Combine(CodeGenDirectory, precompiledViewRelativePath);
                     if (!RequiresRecompilation(filePath, outputPath))
                     {
                         Log.LogMessage(MessageImportance.Low, "Skipping file {0} since {1} is already up to date", filePath, outputPath);
@@ -113,6 +121,12 @@ namespace RazorGenerator.MsBuild
                     taskItem.SetMetadata("DependentUpon", "fileName");
 
                     _generatedFiles.Add(taskItem);
+
+                    var viewsGeneratedInProjectRoot = string.Format(@"{0}\", ProjectRoot) == CodeGenDirectory;
+                    if (IncludeNewViewsInProject && viewsGeneratedInProjectRoot)
+                    {
+                        AddNewPrecompiledViewToProject(projectRelativePath, precompiledViewRelativePath, langutil.GetProjectFileExtension());
+                    }
                 }
             }
             return true;
@@ -164,7 +178,7 @@ namespace RazorGenerator.MsBuild
             }
             itemNamespace = stringBuilder.ToString();
             itemNamespace = _namespaceRegex.Replace(itemNamespace, "$1_$2");
-            
+
             if (!String.IsNullOrEmpty(RootNamespace))
             {
                 itemNamespace = RootNamespace + '.' + itemNamespace;
@@ -187,6 +201,99 @@ namespace RazorGenerator.MsBuild
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
+            }
+        }
+
+        /// <summary>
+        /// Add a new precompiled view to the Visual Studio project.
+        /// </summary>
+        /// <param name="viewRelativePath">View relative path inside the project.</param>
+        /// <param name="precompiledViewRelativePath">Precompiled view relative path inside the project.</param>
+        /// <param name="projectExtension">Project file extension.</param>
+        private void AddNewPrecompiledViewToProject(string viewRelativePath, string precompiledViewRelativePath, string projectExtension)
+        {
+            viewRelativePath = viewRelativePath.TrimStart(Path.DirectorySeparatorChar);
+            var projectPath = string.Format(@"{0}\{1}{2}", ProjectRoot, ProjectName, projectExtension);
+            var projectXml = XDocument.Load(projectPath);
+            var projectNamespace = projectXml.Root.Name.Namespace;
+
+            Func<XElement, string, bool> isNodeWithIncludeValue = ((node, includeValue) => (string)node.Attribute("Include") == includeValue);
+            var projectNodes = projectXml.Nodes()
+                                .OfType<XElement>()
+                            .DescendantNodes()
+                                .OfType<XElement>();
+
+            var viewItem = projectNodes
+                            .DescendantNodes()
+                                .OfType<XElement>()
+                            .FirstOrDefault(node => isNodeWithIncludeValue(node, viewRelativePath));
+
+            var existsViewInProject = viewItem != null;
+            if (existsViewInProject)
+            {
+                viewItem.Name = projectNamespace + "Content";
+                AddOrUpdateChildNode(projectNamespace, viewItem, "Generator", "RazorGenerator");
+
+                var lastIndexDirectorySeparator = precompiledViewRelativePath.LastIndexOf(@"\") + 1;
+                var precompiledViewFileName = precompiledViewRelativePath.Substring(lastIndexDirectorySeparator);
+                AddOrUpdateChildNode(projectNamespace, viewItem, "LastGenOutput", precompiledViewFileName);
+
+                var precompiledViewItem = projectNodes
+                            .DescendantNodes()
+                                .OfType<XElement>()
+                            .FirstOrDefault(node => isNodeWithIncludeValue(node, precompiledViewRelativePath));
+
+                var existsPrecompiledViewInProject = precompiledViewItem != null;
+                var precompiledViewItemNodeName = projectNamespace + "Compile";
+                if (!existsPrecompiledViewInProject)
+                {
+                    precompiledViewItem = new XElement(precompiledViewItemNodeName, new XAttribute("Include", precompiledViewRelativePath));
+
+                    AddOrUpdateChildNode(projectNamespace, precompiledViewItem, "AutoGen", "True");
+                    AddOrUpdateChildNode(projectNamespace, precompiledViewItem, "DesignTime", "True");
+
+                    lastIndexDirectorySeparator = viewRelativePath.LastIndexOf(@"\") + 1;
+                    var viewFileName = viewRelativePath.Substring(lastIndexDirectorySeparator);
+                    AddOrUpdateChildNode(projectNamespace, precompiledViewItem, "DependentUpon", viewFileName);
+
+                    var lastItemGroup = projectNodes.LastOrDefault(node => node.Name.LocalName == "ItemGroup");
+                    if (lastItemGroup != null)
+                    {
+                        lastItemGroup.Add(precompiledViewItem);
+                    }
+                }
+                else
+                {
+                    precompiledViewItem.Name = precompiledViewItemNodeName;
+                    AddOrUpdateChildNode(projectNamespace, precompiledViewItem, "AutoGen", "True");
+                    AddOrUpdateChildNode(projectNamespace, precompiledViewItem, "DesignTime", "True");
+
+                    lastIndexDirectorySeparator = viewRelativePath.LastIndexOf(@"\") + 1;
+                    var viewFileName = viewRelativePath.Substring(lastIndexDirectorySeparator);
+                    AddOrUpdateChildNode(projectNamespace, precompiledViewItem, "DependentUpon", viewFileName);
+                }
+                projectXml.Save(projectPath);
+            }
+        }
+
+        /// <summary>
+        /// Add or update a XML child node from a specific parent.
+        /// </summary>
+        /// <param name="nameSpace">XML namespace.</param>
+        /// <param name="parentNode">XML parent node.</param>
+        /// <param name="childNodeName">XML child node name.</param>
+        /// <param name="childNodeValue">XML child node value.</param>
+        private static void AddOrUpdateChildNode(XNamespace nameSpace, XElement parentNode, string childNodeName, string childNodeValue)
+        {
+            var childNode = parentNode.DescendantNodes().OfType<XElement>().FirstOrDefault(node => node.Name.LocalName == childNodeName);
+            if (childNode != null)
+            {
+                childNode.Value = childNodeValue;
+            }
+            else
+            {
+                childNode = new XElement(nameSpace + childNodeName, childNodeValue);
+                parentNode.Add(childNode);
             }
         }
     }

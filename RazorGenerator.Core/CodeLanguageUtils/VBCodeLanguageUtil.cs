@@ -45,6 +45,11 @@ namespace RazorGenerator.Core.CodeLanguageUtils
             return ".vb";
         }
 
+        public override string GetProjectFileExtension()
+        {
+            return ".vbproj";
+        }
+
         public override string GetPostGeneratedCodeBlock()
         {
             return "";
