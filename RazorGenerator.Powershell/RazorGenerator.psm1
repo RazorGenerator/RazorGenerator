@@ -32,7 +32,10 @@ function Set-CustomTool {
     $customToolProperty = $_.Properties.Item("CustomTool")
     if ($force -or ($customTool -ne $customToolProperty.Value)) {
         $customToolProperty.Value = $customTool
+        
+#        Write-Host "RunCustomTool - $( $_.Name ) - $( $customTool )"
         $_.Object.RunCustomTool()
+
         return $true
     }
 }
@@ -44,6 +47,17 @@ function Get-RazorFiles {
     )
     
     (Resolve-ProjectName $projectName).ProjectItems | Get-ProjectFiles | Where { $_.Name.EndsWith('.cshtml')  }
+}
+
+function Get-SolutionExplorerNodes {
+    
+    # `.Object` returns an object that implements `interface UIHierarchy`: https://msdn.microsoft.com/en-us/library/envdte.uihierarchy.aspx
+    $solutionExplorer = ($dte.Windows | Where { $_.Type -eq "vsWindowTypeSolutionExplorer" }).Object 
+
+    $map = New-Object 'System.Collections.Generic.Dictionary[System.String,EnvDTE.UIHierarchyItem]'
+    Fill-SolutionExplorerNodes 1 $map $solutionExplorer.UIHierarchyItems
+
+    Return $map
 }
 
 # Populates a dictionary that maps filenames to *visible* Solution Explorer nodes. The `.Object` property of each UIHierarchyItem is often, but not necessarily always, an EnvDTE.ProjectItem instance.
@@ -101,25 +115,23 @@ function Change-CustomTool {
     )
     
     Process {
-        $solutionExplorer = ($dte.Windows | Where { $_.Type -eq "vsWindowTypeSolutionExplorer" }).Object # returns an object that implements `interface UIHierarchy`: https://msdn.microsoft.com/en-us/library/envdte.uihierarchy.aspx
-        $project = (Resolve-ProjectName $projectName)
-        $projectPath = [IO.Path]::GetDirectoryName($project.FullName)
-        $ProjectName = $project.Name
-		$SolutionName = [IO.Path]::GetFileNameWithoutExtension($dte.Solution.FullName)
         
         Set-StrictMode -Version 2.0
 
-        $map = New-Object 'System.Collections.Generic.Dictionary[System.String,EnvDTE.UIHierarchyItem]'
-        Fill-SolutionExplorerNodes 1 $map $solutionExplorer.UIHierarchyItems
+        $project = (Resolve-ProjectName $projectName)
+        $projectPath = [IO.Path]::GetDirectoryName($project.FullName)
+        $projectName = $project.Name
+        
+        $solutionExplorerNodeMap = Get-SolutionExplorerNodes
 
-        Write-Host ("Map: " + $map.Count)
-
-        Get-RazorFiles $ProjectName | % { 
+        Get-RazorFiles $projectName | % { # `%` means ForEach-Object
+            
+            # If the RazorGenerator CustomTool is applied to a file not previously marked, then collapse the node afterwards because VS will show the new children by default.
             if (Set-CustomTool $_ $CustomTool) {
                 $fileName = $_.Properties.Item("FullPath").Value
                 
                 $uiHierarchyItem = $null
-                If( $map.TryGetValue( $fileName, [ref] $uiHierarchyItem ) ) {
+                If( $solutionExplorerNodeMap.TryGetValue( $fileName, [ref] $uiHierarchyItem ) ) {
                     
                     $uiHierarchyItem.UIHierarchyItems.Expanded = $false
                 }
@@ -129,9 +141,6 @@ function Change-CustomTool {
         Set-StrictMode -Off
     }
 }
-
-# TODO: A `Collapse-RazorNodes` cmdlet that only collapses .cshtml nodes?
-# and call it from `Change-CustomTool`?
 
 function Enable-RazorGenerator {
     param(
@@ -177,14 +186,62 @@ function Get-RelativePath {
     }
 }
 
-function Test-ThisPowerShell {
+# Expands every `.cshtml` file so its `*.generated.cs` files are visible in Solution Explorer.
+function Show-RazorGeneratedFiles {
     param(
         [parameter(ValueFromPipelineByPropertyName = $true)]
-        [string]$ProjectName
+        [string]$projectName
     )
-    Process {
-        Write-Host ("Test: " + $ProjectName)
+
+    Set-StrictMode -Version 2.0
+
+    $project = (Resolve-ProjectName $projectName)
+    $projectPath = [IO.Path]::GetDirectoryName($project.FullName)
+    $projectName = $project.Name
+        
+    $solutionExplorerNodeMap = Get-SolutionExplorerNodes
+
+    Get-RazorFiles $projectName | % { # `%` means ForEach-Object
+    
+        $fileName = $_.Properties.Item("FullPath").Value    
+
+        $uiHierarchyItem = $null
+        If( $solutionExplorerNodeMap.TryGetValue( $fileName, [ref] $uiHierarchyItem ) ) {
+                    
+            $uiHierarchyItem.UIHierarchyItems.Expanded = $true
+        }
     }
+
+    Set-StrictMode -Off
 }
 
-Export-ModuleMember Enable-RazorGenerator, Redo-RazorGenerator, Disable-RazorGenerator, Test-ThisPowerShell
+# Collapses every `.cshtml` file so its `*.generated.cs` files are no-longer visible in Solution Explorer.
+function Hide-RazorGeneratedFiles {
+    param(
+        [parameter(ValueFromPipelineByPropertyName = $true)]
+        [string]$projectName
+    )
+
+    Set-StrictMode -Version 2.0
+
+    $project = (Resolve-ProjectName $projectName)
+    $projectPath = [IO.Path]::GetDirectoryName($project.FullName)
+    $projectName = $project.Name
+        
+    $solutionExplorerNodeMap = Get-SolutionExplorerNodes
+
+    Get-RazorFiles $projectName | % { # `%` means ForEach-Object
+    
+        $fileName = $_.Properties.Item("FullPath").Value    
+
+        $uiHierarchyItem = $null
+        If( $solutionExplorerNodeMap.TryGetValue( $fileName, [ref] $uiHierarchyItem ) ) {
+                    
+            $uiHierarchyItem.UIHierarchyItems.Expanded = $false
+        }
+    }
+
+    Set-StrictMode -Off
+}
+
+Export-ModuleMember Enable-RazorGenerator, Redo-RazorGenerator, Disable-RazorGenerator, Show-RazorGeneratedFiles, Hide-RazorGeneratedFiles
