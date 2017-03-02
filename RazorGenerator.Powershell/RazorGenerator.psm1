@@ -33,7 +33,7 @@ function Set-CustomTool {
     if ($force -or ($customTool -ne $customToolProperty.Value)) {
         $customToolProperty.Value = $customTool
         
-#        Write-Host "RunCustomTool - $( $_.Name ) - $( $customTool )"
+        Write-Debug "RunCustomTool - $( $_.Name ) - $( $customTool )"
         $_.Object.RunCustomTool()
 
         return $true
@@ -74,18 +74,18 @@ function Fill-SolutionExplorerNodes {
         $projectItem = $uiHierarchyItem.Object # $projectItem.GetType() always returns System.__ComObject
         If( $projectItem -ne $null ) {
 
-#            Write-Host "$( $projectItem.GetType().FullName )"
+            Write-Debug "$( $projectItem.GetType().FullName )"
 
             If( !( $projectItem -is [EnvDTE.ProjectItem] ) ) {
-#                Write-Host "Skipping - `$projectItem is not EnvDTE.ProjectItem"
+                Write-Debug "Skipping - `$projectItem is not EnvDTE.ProjectItem"
             }
             ElseIf( $projectItem.FileCount -ne 1 ) {
-#                Write-Host "Skipping - FileCount.Length == $( $projectItem.FileCount )"
+                Write-Debug "Skipping - FileCount.Length == $( $projectItem.FileCount )"
             }
             Else {
                 
                 $fileName = $projectItem.FileNames(1) # `FileNames` is a COM Indexed Property with a base of 1, there is no `FileNames.Length` property, see `FileCount` instead.
-#                Write-Host $fileName
+                Write-Debug $fileName
 
                 If( !$map.ContainsKey( $fileName ) ) { # guard, because Solution Explorer can have multiple nodes for the same file, for simplicity this code only uses the first appearance.
                 
@@ -94,12 +94,12 @@ function Fill-SolutionExplorerNodes {
             }
         }
         Else {
-#            Write-Host "`$projectItem == `$null"
+            Write-Debug "`$projectItem == `$null"
         }
 
-        # Note that if a node is collapsed (e.g. a collapsed project) then `$uiHierarchyItem.UIHierarchyItems.Count == 0` and this function won't recurse.
-        # So this function will not populate the map with all ProjectItems, only those that are visible.
-#        Write-Host "Node `"$( $uiHierarchyItem.Name )`" child count: $( $uiHierarchyItem.UIHierarchyItems.Count )"
+        # Note that if a node is collapsed (e.g. a collapsed project or folder) then `$uiHierarchyItem.UIHierarchyItems.Count == 0` and this function won't recurse.
+        # So this function will not populate the map with *all* ProjectItems, only those that are visible.
+        Write-Debug "Node `"$( $uiHierarchyItem.Name )`" child count: $( $uiHierarchyItem.UIHierarchyItems.Count )"
         If( ( $uiHierarchyItem.UIHierarchyItems -is [EnvDTE.UIHierarchyItems] ) -and ( $uiHierarchyItem.UIHierarchyItems.Count -gt 0 ) ) {
             
             Fill-SolutionExplorerNodes ($depth + 1) $map $uiHierarchyItem.UIHierarchyItems
@@ -126,7 +126,9 @@ function Change-CustomTool {
 
         Get-RazorFiles $projectName | % { # `%` means ForEach-Object
             
-            # If the RazorGenerator CustomTool is applied to a file not previously marked, then collapse the node afterwards because VS will show the new children by default.
+            # If the RazorGenerator CustomTool is applied to a file not previously marked, then collapse the
+            # node afterwards because VS will show the new children by default, so any *.generated.cs files
+            # that are already visible will not be hidden.
             if (Set-CustomTool $_ $CustomTool) {
                 $fileName = $_.Properties.Item("FullPath").Value
                 
@@ -148,10 +150,7 @@ function Enable-RazorGenerator {
         [string]$ProjectName
     )
 
-    Write-Host ("Enable-RazorGenerator")
-    
     Change-CustomTool $ProjectName "RazorGenerator"
-    
 }
 
 function Disable-RazorGenerator {
@@ -159,6 +158,7 @@ function Disable-RazorGenerator {
         [parameter(ValueFromPipelineByPropertyName = $true)]
         [string]$ProjectName
     )
+
     Change-CustomTool $ProjectName ""
 }
 
