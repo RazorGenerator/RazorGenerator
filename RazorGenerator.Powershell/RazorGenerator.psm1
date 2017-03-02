@@ -12,16 +12,18 @@ Function Resolve-ProjectName {
 }
 
 Function Get-ProjectFiles {
-
-    $physicalFolderGuid = "{6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C}" # https://msdn.microsoft.com/en-us/library/bb166496.aspx
-    $solutionFolderGuid = "{66A26720-8FB5-11D2-AA7E-00C04F688DDE}" # https://msdn.microsoft.com/en-us/library/hb23x61k(v=vs.80).aspx
-
-    If( $_.Kind -eq $physicalFolderGuid -or $_.Kind -eq $solutionFolderGuid ) {
-        $_.ProjectItems | Get-ProjectFiles
-    }
-    Else {
-        $_
-    }
+	Begin {
+		$physicalFolderGuid = "{6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C}" # https://msdn.microsoft.com/en-us/library/bb166496.aspx
+		$solutionFolderGuid = "{66A26720-8FB5-11D2-AA7E-00C04F688DDE}" # https://msdn.microsoft.com/en-us/library/hb23x61k(v=vs.80).aspx
+	}
+    Process {
+		If( $_.Kind -eq $physicalFolderGuid -or $_.Kind -eq $solutionFolderGuid ) {
+			$_.ProjectItems | Get-ProjectFiles
+		}
+		Else {
+			$_
+		}
+	}
 }
 
 Function Set-CustomTool {
@@ -64,7 +66,7 @@ Function Get-SolutionExplorerNodes {
     }
     Else {
         
-        Write-Debug "Solution Explorer window not found."
+        Write-Warning "Solution Explorer window not found. No nodes will be collapsed."
     }
 
     Return $map
@@ -104,7 +106,7 @@ Function Fill-SolutionExplorerNodes {
             }
         }
         Else {
-            Write-Debug "`$projectItem == `$null"
+            Write-Debug "`$uiHierarchyItem ($( $uiHierarchyItem.Name )).Object == `$null"
         }
 
         # Note that if a node is collapsed (e.g. a collapsed project or folder) then `$uiHierarchyItem.UIHierarchyItems.Count == 0` and this function won't recurse.
@@ -123,10 +125,10 @@ Function Change-CustomTool {
         [string]$projectName,
         [string]$CustomTool
     )
+	
+	# StrictMode enables errors about nonexistent properties which is useful when working with COM Automation objects.
+	Set-StrictMode -Version 2.0 
     
-    # StrictMode enables errors about nonexistent properties which is useful when working with COM Automation objects.
-    Set-StrictMode -Version 2.0 
-
     $projectName = (Resolve-ProjectName $projectName).Name
         
     $solutionExplorerNodeMap = Get-SolutionExplorerNodes
