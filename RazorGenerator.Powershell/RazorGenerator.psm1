@@ -46,34 +46,49 @@ function Get-RazorFiles {
     (Resolve-ProjectName $projectName).ProjectItems | Get-ProjectFiles | Where { $_.Name.EndsWith('.cshtml')  }
 }
 
-# Populates a dictionary that maps filenames to Solution Explorer nodes.
-# TODO: Make this function "private", because there's no need for it to be exposed to the user as a PowerShell command.
+# Populates a dictionary that maps filenames to *visible* Solution Explorer nodes. The `.Object` property of each UIHierarchyItem is often, but not necessarily always, an EnvDTE.ProjectItem instance.
+# NOTE: The EnvDTE assemblies are loaded as-per the *.psd1 file's RequiredAssemblies directive.
 function Fill-SolutionExplorerNodes {
     param(
+        [int]$depth,
         [System.Collections.Generic.Dictionary[System.String,EnvDTE.UIHierarchyItem]]$map,
         [EnvDTE.UIHierarchyItems]$nodes
     )
 
     ForEach( $uiHierarchyItem in $nodes ) {
-        
-        If( !( $uiHierarchyItem -is [EnvDTE.UIHierarchyItem] ) ) {
-            Continue
-        }
 
-        $projectItem = $uiHierarchyItem.Object
-        If( ( $projectItem -is [EnvDTE.ProjectItem] ) -and ( $projectItem.FileNames.Length -eq 1 ) ) {
-            
-            $fileName = $projectItem.FileNames[0]
-            
-            If( !$map.ContainsKey( $fileName ) ) { # guard, because Solution Explorer can have multiple nodes for the same file, for simplicity this code only uses the first appearance.
+        $projectItem = $uiHierarchyItem.Object # $projectItem.GetType() always returns System.__ComObject
+        If( $projectItem -ne $null ) {
+
+#            Write-Host "$( $projectItem.GetType().FullName )"
+
+            If( !( $projectItem -is [EnvDTE.ProjectItem] ) ) {
+#                Write-Host "Skipping - `$projectItem is not EnvDTE.ProjectItem"
+            }
+            ElseIf( $projectItem.FileCount -ne 1 ) {
+#                Write-Host "Skipping - FileCount.Length == $( $projectItem.FileCount )"
+            }
+            Else {
                 
-                $map.Add( $fileName, $uiHierarchyItem )
+                $fileName = $projectItem.FileNames(1) # `FileNames` is a COM Indexed Property with a base of 1, there is no `FileNames.Length` property, see `FileCount` instead.
+#                Write-Host $fileName
+
+                If( !$map.ContainsKey( $fileName ) ) { # guard, because Solution Explorer can have multiple nodes for the same file, for simplicity this code only uses the first appearance.
+                
+                    $map.Add( $fileName, $uiHierarchyItem )
+                }
             }
         }
+        Else {
+#            Write-Host "`$projectItem == `$null"
+        }
 
-        If( $uiHierarchyItem -is [EnvDTE.UIHierarchyItems] ) { # only recurse children if the node has children
+        # Note that if a node is collapsed (e.g. a collapsed project) then `$uiHierarchyItem.UIHierarchyItems.Count == 0` and this function won't recurse.
+        # So this function will not populate the map with all ProjectItems, only those that are visible.
+#        Write-Host "Node `"$( $uiHierarchyItem.Name )`" child count: $( $uiHierarchyItem.UIHierarchyItems.Count )"
+        If( ( $uiHierarchyItem.UIHierarchyItems -is [EnvDTE.UIHierarchyItems] ) -and ( $uiHierarchyItem.UIHierarchyItems.Count -gt 0 ) ) {
             
-            Fill-SolutionExplorerNodes $map $uiHierarchyItem
+            Fill-SolutionExplorerNodes ($depth + 1) $map $uiHierarchyItem.UIHierarchyItems
         }
     }
 
@@ -92,8 +107,12 @@ function Change-CustomTool {
         $ProjectName = $project.Name
 		$SolutionName = [IO.Path]::GetFileNameWithoutExtension($dte.Solution.FullName)
         
+        Set-StrictMode -Version 2.0
+
         $map = New-Object 'System.Collections.Generic.Dictionary[System.String,EnvDTE.UIHierarchyItem]'
-        Fill-SolutionExplorerNodes $map $solutionExplorer.UIHierarchyItems
+        Fill-SolutionExplorerNodes 1 $map $solutionExplorer.UIHierarchyItems
+
+        Write-Host ("Map: " + $map.Count)
 
         Get-RazorFiles $ProjectName | % { 
             if (Set-CustomTool $_ $CustomTool) {
@@ -106,14 +125,21 @@ function Change-CustomTool {
                 }
             }
         }
+
+        Set-StrictMode -Off
     }
 }
+
+# TODO: A `Collapse-RazorNodes` cmdlet that only collapses .cshtml nodes?
+# and call it from `Change-CustomTool`?
 
 function Enable-RazorGenerator {
     param(
         [parameter(ValueFromPipelineByPropertyName = $true)]
         [string]$ProjectName
     )
+
+    Write-Host ("Enable-RazorGenerator")
     
     Change-CustomTool $ProjectName "RazorGenerator"
     
@@ -151,4 +177,14 @@ function Get-RelativePath {
     }
 }
 
-Export-ModuleMember Enable-RazorGenerator, Redo-RazorGenerator, Disable-RazorGenerator
+function Test-ThisPowerShell {
+    param(
+        [parameter(ValueFromPipelineByPropertyName = $true)]
+        [string]$ProjectName
+    )
+    Process {
+        Write-Host ("Test: " + $ProjectName)
+    }
+}
+
+Export-ModuleMember Enable-RazorGenerator, Redo-RazorGenerator, Disable-RazorGenerator, Test-ThisPowerShell
