@@ -24,7 +24,7 @@
             <RazorOutputFiles
                 Include="@(RazorCsSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).cs')" />
         </ItemGroup>
-        <ItemGroup>
+        <ItemGroup Condition=" '$(PrecompileVbHtmlViews)' == 'true' ">
             <RazorVbSrcFiles Condition=" '@(RazorVbSrcFiles)' == '' and '%(Extension)' == '.vbhtml' "
                 Include="@(RazorSrcFiles)" />
             <RazorVbOutputFiles
