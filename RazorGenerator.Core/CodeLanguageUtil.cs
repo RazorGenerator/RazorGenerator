@@ -39,6 +39,7 @@ namespace RazorGenerator.Core
         public abstract string BuildGenericTypeReference(string GenericType, IEnumerable<string> GenericArguments);
         public abstract bool IsGenericTypeReference(string TypeName);
         public abstract string GetCodeFileExtension();
+        public abstract string GetProjectFileExtension();
         public abstract string GetPreGeneratedCodeBlock();
         public abstract string GetPostGeneratedCodeBlock();
         public abstract System.CodeDom.Compiler.CodeDomProvider GetCodeDomProvider();

@@ -59,6 +59,11 @@ namespace RazorGenerator.Core.CodeLanguageUtils
             return ".cs";
         }
 
+        public override string GetProjectFileExtension()
+        {
+            return ".csproj";
+        }
+
         public override string GetPostGeneratedCodeBlock()
         {
             return "#pragma warning restore 1591";

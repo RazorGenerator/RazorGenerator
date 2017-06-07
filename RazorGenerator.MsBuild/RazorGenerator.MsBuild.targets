@@ -6,6 +6,7 @@
         <PrecompileRazorFiles Condition=" '$(PrecompileRazorFiles)' == '' ">true</PrecompileRazorFiles>
         <RazorGeneratorMsBuildPath Condition=" '$(RazorGeneratorMsBuildPath)' == '' ">$(MSBuildThisFileDirectory)\..\tools\RazorGenerator.MsBuild.dll</RazorGeneratorMsBuildPath>
         <RazorViewsCodeGenDirectory Condition=" '$(RazorViewsCodeGenDirectory)' == '' ">$(MsBuildProjectDirectory)\obj\CodeGen\</RazorViewsCodeGenDirectory>
+        <IncludeNewViewsInProject Condition=" '$(IncludeNewViewsInProject)' == '' ">false</IncludeNewViewsInProject>
       
         <CompileDependsOn Condition=" '$(PrecompileRazorFiles)' == 'true' ">
             PrecompileRazorFiles;
@@ -44,7 +45,9 @@
         <RazorCodeGen ProjectRoot="$(MsBuildProjectDirectory)"
                                     FilesToPrecompile="@(RazorSrcFiles)"
                                     CodeGenDirectory="$(RazorViewsCodeGenDirectory)"
-                                    RootNamespace="$(RootNamespace)">
+                                    RootNamespace="$(RootNamespace)"
+                                    ProjectName="$(MsBuildProjectName)"
+                                    IncludeNewViewsInProject="$(IncludeNewViewsInProject)">
             <Output TaskParameter="GeneratedFiles" ItemName="FilesGenerated" />
         </RazorCodeGen>
         <ItemGroup>
