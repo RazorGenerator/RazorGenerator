@@ -192,7 +192,7 @@ namespace RazorGenerator.Core
             return new Regex( pairPattern, RegexOptions.Compiled | RegexOptions.ExplicitCapture );
         }
 
-        private static void ParseKeyValueDirectives(Dictionary<string, string> directives, string directivesText)
+        public static void ParseKeyValueDirectives(Dictionary<string, string> directives, string directivesText)
         {
             // Captures directives as key value pairs, e.g.:
             //
