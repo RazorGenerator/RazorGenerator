@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace RazorGenerator.Core
@@ -9,15 +10,19 @@ namespace RazorGenerator.Core
     {
         private const string GlobalDirectivesFileName = "razorgenerator.directives";
 
-        public static Dictionary<string, string> ParseDirectives(string baseDirectory, string fullPath)
+        /// <summary>Loads all RazorGenerator directives specified in the Razor (cshtml/vbhtml) file in addition to searching for the first <c>RazorGenerator.directives</c> file in the directory containing the Razor file - or any of its ancestors until reaching <paramref name="baseDirectory"/> (viz. it will not search the ancestors of <paramref name="baseDirectory"/>).</summary>
+        /// <param name="baseDirectory">The base (or root) directory such that parent directories are not considered part of the directory search tree for the global <c>RazorGenerator.directives</c> file.</param>
+        /// <param name="razorFilePath">The file name of the Razor file (i.e. the cshtml or vbhtml file).</param>
+        /// <returns>A dictionary of directive keys and values.</returns>
+        public static Dictionary<string, string> ParseDirectives(string baseDirectory, string razorFilePath)
         {
             var directives = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            string directivesPath;
-            if (TryFindGlobalDirectivesFile(baseDirectory, fullPath, out directivesPath))
+            string globalDirectivesFileName;
+            if (TryFindGlobalDirectivesFile(baseDirectory, razorFilePath, out globalDirectivesFileName))
             {
-                ParseGlobalDirectives(directives, directivesPath);
+                ParseGlobalRazorGeneratorDirectives(directives, globalDirectivesFileName);
             }
-            ParseFileDirectives(directives, fullPath);
+            ParseFileRazorGeneratorDirectives(directives, razorFilePath);
 
             return directives;
         }
@@ -25,58 +30,182 @@ namespace RazorGenerator.Core
         /// <summary>
         /// Attempts to locate the nearest global directive file by 
         /// </summary>
-        private static bool TryFindGlobalDirectivesFile(string baseDirectory, string fullPath, out string path)
+        private static bool TryFindGlobalDirectivesFile(string baseDirectoryPath, string razorFilePath, out string foundGlobalDirectivesFilePath)
         {
-            baseDirectory = baseDirectory.TrimEnd(Path.DirectorySeparatorChar);
-            var directivesDirectory = Path.GetDirectoryName(fullPath).TrimEnd(Path.DirectorySeparatorChar);
-            while (directivesDirectory != null && directivesDirectory.Length >= baseDirectory.Length)
+            // Resolve paths (performed by DirectoryInfo and FileInfo constructors):
+            DirectoryInfo baseDirectory = new DirectoryInfo( baseDirectoryPath );
+            DirectoryInfo currentDirectory = new DirectoryInfo( Path.GetDirectoryName( razorFilePath ) );
+
+            // Sanity-check: Verify that `razorFilePath` is a descendant of `baseDirectory`:
+            if( !currentDirectory.FullName.StartsWith( baseDirectory.FullName, StringComparison.OrdinalIgnoreCase ) )
             {
-                path = Path.Combine(directivesDirectory, GlobalDirectivesFileName);
-                if (File.Exists(path))
+                String message = String.Format( System.Globalization.CultureInfo.InvariantCulture, "The " + nameof(razorFilePath) + " value (\"{0}\") is not a descendant of " + nameof(baseDirectoryPath) + " (\"{1}\").", razorFilePath, baseDirectoryPath );
+                throw new ArgumentException( message, nameof(razorFilePath) );
+            }
+
+            // While the current directory is a descendant of the base directory (assuming that matching initial substrings indicates a descendant<->ancestor relationship)...
+            while( currentDirectory != null && currentDirectory.FullName.Length > baseDirectory.FullName.Length )
+            {
+                String candidatePath = Path.Combine( currentDirectory.FullName, GlobalDirectivesFileName );
+                if( File.Exists( candidatePath ) )
                 {
+                    foundGlobalDirectivesFilePath = candidatePath;
                     return true;
                 }
-                directivesDirectory = Path.GetDirectoryName(directivesDirectory).TrimEnd(Path.DirectorySeparatorChar);
+                else
+                {
+                    currentDirectory = currentDirectory.Parent;
+                }
             }
-            path = null;
+
+            foundGlobalDirectivesFilePath = null;
             return false;
         }
 
-        private static void ParseGlobalDirectives(Dictionary<string, string> directives, string directivesPath)
+        private static void ParseGlobalRazorGeneratorDirectives(Dictionary<string, string> directives, string globalDirectivesFileName)
         {
-            var fileContent = File.ReadAllText(directivesPath);
-            ParseKeyValueDirectives(directives, fileContent);
+            // Global Razor Directives files will be short (a few hundred bytes, tops), so it's okay to read it all into memory:
+
+            string globalDirectivesFileContent = File.ReadAllText(globalDirectivesFileName);
+
+            ParseKeyValueDirectives(directives, globalDirectivesFileContent);
         }
 
-        private static void ParseFileDirectives(Dictionary<string, string> directives, string filePath)
+        private enum State
         {
-            var inputFileContent = File.ReadAllText(filePath);
-            int index = inputFileContent.IndexOf("*@", StringComparison.OrdinalIgnoreCase);
-            if (inputFileContent.TrimStart().StartsWith("@*") && index != -1)
+            Outside,
+            AfterAtSymbol,
+            InsideComment,
+            AfterAsteriskInsideComment
+        }
+
+        private static void ParseFileRazorGeneratorDirectives(Dictionary<string, string> directives, string filePath)
+        {
+            // File Razor Generator Directives must appear as the sole content of the first Razor comment `@* comment-text *@` in the file.
+            // There can be content before this comment.
+
+            // Razor files can be large - so use a simple FSM parser to find the first Razor comment:
+            // Note this is a naive parser that will return incorrect results if Razor comment delimiters are embedded within C# strings, for example, or other syntactical structures. To mitigate this the parser only checks the first 10 lines of the input file.
+
+            StringBuilder sb = new StringBuilder();
+            State state = State.Outside;
+            int lineNumber = 1;
+            const int MaxLinesToInspect = 10;
+
+            // States:
+            // (Outside)---'@'--->(AfterAtSymbol)----'*'--->(InsideComment)--'*'--->(AfterAsteriskInsideComment)----'@'-->+
+            //  ^   |                    |                              ^                                   |             |
+            //  +-<-+--------------<-----+                              +------------------<--------------<-+             |
+            //  ^                                                                                                         |
+            //  +-----------------<-------------------------<---------------------------------<-------------------<-------+
+
+            using( StreamReader reader = new StreamReader( filePath ) )
             {
-                string directivesLine = inputFileContent.Substring(0, index).TrimStart('*', '@');
-                ParseKeyValueDirectives(directives, directivesLine);
+                int nc;
+                char c;
+                while( ( nc = reader.Read() ) > -1 )
+                {
+                    c = (char)nc;
+
+                    switch( state )
+                    {
+                        case State.Outside:
+
+                            if( c == '@' )
+                            {
+                                state = State.AfterAtSymbol;
+                            }
+
+                            break;
+                        case State.AfterAtSymbol:
+
+                            if( c == '*' )
+                            {
+                                state = State.InsideComment;
+                            }
+                            else
+                            {
+                                state = State.Outside;
+                            }
+
+                            break;
+                        case State.InsideComment:
+
+                            if( c == '*' )
+                            {
+                                state = State.AfterAsteriskInsideComment;
+                            }
+                            else
+                            {
+                                sb.Append( c );
+                            }
+
+                            break;
+                        case State.AfterAsteriskInsideComment:
+
+                            if( c == '@' )
+                            {
+                                state = State.Outside;
+                            }
+                            else
+                            {
+                                sb.Append( c );
+                                state = State.InsideComment;
+                            }
+
+                            break;
+                    }
+
+                    if( c == '\n' ) lineNumber++;
+                    if( lineNumber > MaxLinesToInspect && state == State.Outside ) break;
+                }
+            }
+
+            string directivesText = sb.ToString();
+
+            if( !String.IsNullOrWhiteSpace( directivesText ) )
+            {
+                ParseKeyValueDirectives(directives, directivesText);
             }
         }
 
-        private static void ParseKeyValueDirectives(Dictionary<string, string> directives, string directivesLine)
+        private static readonly Regex _directiveKeyValuePattern = CreateDirectiveRegex();
+
+        private static Regex CreateDirectiveRegex()
+        {
+            // Values: at least one word character or tilde, backslash or forwardslash
+            // Keys  : at least one word character, must have a colon (but can have any whitespace around the colon.)
+            // Pairs : Keys are required. Values are optional. Values  be comma-separated.
+
+            // Quick regex reference:
+            // \s - class - any whitespace character
+            // \w - class - any word character
+            // \S - class - any non-whitespace character
+            // \W - class - any non-word character
+            // \b - anchor - match must occur on a word-nonword boundary    , e.g. `\b\w+\s\w+\b` + "them theme them them"    -> [ "them theme", "them them" ]
+            // \B - anchor - match must not occur on a word-nonword boundary, e.g. `\Bend\w*\b`   + "end sends endure lender" -> [ "ends", "ender" ]
+
+            const string valuePattern = @"[~\\\/\w\.]+"; // 
+            const string keyPattern   = @"\b(?<Key>\w+)\s*:\s*";
+            const string pairPattern  = keyPattern + @"(?<Value>" + valuePattern + @"(\s*,\s*" + valuePattern + @")*)\b";
+
+            return new Regex( pairPattern, RegexOptions.Compiled | RegexOptions.ExplicitCapture );
+        }
+
+        private static void ParseKeyValueDirectives(Dictionary<string, string> directives, string directivesText)
         {
             // Captures directives as key value pairs, e.g.:
             //
             //   KEY : VALUE
             //   KEY : FOO, BAR, BAZ
 
-            // TODO: Make this better.
-
-            const string valueRegexPattern = @"[~\\\/\w\.]+";
-            var regex = new Regex(@"\b(?<Key>\w+)\s*:\s*(?<Value>" + valueRegexPattern + @"(\s*,\s*" + valueRegexPattern + @")*)\b", RegexOptions.ExplicitCapture);
-
-            foreach (Match item in regex.Matches(directivesLine))
+            MatchCollection matches = _directiveKeyValuePattern.Matches( directivesText );
+            foreach( Match match in matches )
             {
-                var key = item.Groups["Key"].Value;
-                var value = item.Groups["Value"].Value;
+                String key   = match.Groups["Key"  ].Value;
+                String value = match.Groups["Value"].Value;
 
-                directives[key] = value;
+                directives[ key ] = value;
             }
         }
     }
