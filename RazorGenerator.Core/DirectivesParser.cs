@@ -169,6 +169,8 @@ namespace RazorGenerator.Core
             }
         }
 
+		private static readonly Regex _directivesCommentsPattern = new Regex( @"#[^\r\n]*", RegexOptions.Compiled );
+
         private static readonly Regex _directiveKeyValuePattern = CreateDirectiveRegex();
 
         private static Regex CreateDirectiveRegex()
@@ -185,9 +187,10 @@ namespace RazorGenerator.Core
             // \b - anchor - match must occur on a word-nonword boundary    , e.g. `\b\w+\s\w+\b` + "them theme them them"    -> [ "them theme", "them them" ]
             // \B - anchor - match must not occur on a word-nonword boundary, e.g. `\Bend\w*\b`   + "end sends endure lender" -> [ "ends", "ender" ]
 
-            const string valuePattern = @"[~\\\/\w\.]+"; // 
-            const string keyPattern   = @"\b(?<Key>\w+)\s*:\s*";
-            const string pairPattern  = keyPattern + @"(?<Value>" + valuePattern + @"(\s*,\s*" + valuePattern + @")*)\b";
+            const string valuePattern  = @"[~\\\/\w\.]+"; // 
+			const string valuesPattern = @"(?<Value>" + valuePattern + @"(\s*,\s*" + valuePattern + @")*)";
+            const string keyPattern    = @"(?<Key>\w+)";
+            const string pairPattern   = @"\b" + keyPattern + @"\s*:\s*" + valuesPattern + @"\b";
 
             return new Regex( pairPattern, RegexOptions.Compiled | RegexOptions.ExplicitCapture );
         }
@@ -198,6 +201,12 @@ namespace RazorGenerator.Core
             //
             //   KEY : VALUE
             //   KEY : FOO, BAR, BAZ
+
+			// Strip any comments from the directives text:
+			if( directivesText.IndexOf('#') > -1 )
+			{
+				directivesText = _directivesCommentsPattern.Replace( directivesText, String.Empty );
+			}
 
             MatchCollection matches = _directiveKeyValuePattern.Matches( directivesText );
             foreach( Match match in matches )

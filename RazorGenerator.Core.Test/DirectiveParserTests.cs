@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
+
 using Xunit;
 
 namespace RazorGenerator.Core.Test
@@ -32,7 +30,7 @@ alsonotakey";
 				new KeyValuePair<string, string>( "key3", "value3, value31" ),
 			};
 
-			Assert.Equal( pairs.ToList(), expected.ToList() );
+			Assert.Equal( expected.ToList(), pairs.ToList() );
 		}
 
 		[Fact]
@@ -60,7 +58,7 @@ alsonotakey
 				new KeyValuePair<string, string>( "key5", "value5" ),
 			};
 
-			Assert.Equal( pairs.ToList(), expected.ToList() );
+			Assert.Equal( expected.ToList(), pairs.ToList() );
 		}
 	}
 }
