@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RazorGenerator.Templating
 {
-	public class RazorTemplateBase
+    public class RazorTemplateBase
     {
         public RazorTemplateBase()
         {
@@ -47,6 +47,11 @@ namespace RazorGenerator.Templating
             if (String.IsNullOrEmpty(textToAppend)) return;
 
             this.generatingEnvironment.Append(textToAppend);
+        }
+
+        public IRawString Raw(string value)
+        {
+            return new RawString(value);
         }
 
         public void Write(string value)
@@ -420,6 +425,8 @@ namespace RazorGenerator.Templating
 // As a fix-hack, this assembly will now provide a System.Web.WebPages.HelperResult type:
 namespace System.Web.WebPages
 {
+    using RazorGenerator.Templating;
+
     public class HelperResult : RazorResult
     {
         public HelperResult(Action<TextWriter> action)
