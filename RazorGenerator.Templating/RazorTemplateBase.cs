@@ -9,6 +9,7 @@ namespace RazorGenerator.Templating
     {
         public RazorTemplateBase()
         {
+            this.culture               = CultureInfo.CurrentCulture;
             this.generatingEnvironment = new StringBuilder();
             this.output                = new StringWriter(this.generatingEnvironment); // StringWriter does not own any unmanaged resources, there is no need to call Dispose nor make RazorTemplateBase implement IDisposable.
         }
@@ -20,6 +21,19 @@ namespace RazorGenerator.Templating
 
         public RazorTemplateBase Layout { get; set; }
 
+        private CultureInfo culture;
+        public CultureInfo Culture
+        {
+            get { return this.culture; }
+            set
+            {
+                if (value == null) throw new ArgumentNullException(nameof(value));
+                if (value != this.culture)
+                {
+                    this.culture = value;
+                }
+            }
+        }
 
         public virtual void Execute()
         {
@@ -36,9 +50,15 @@ namespace RazorGenerator.Templating
         {
             if (value == null) return;
 
+            this.WriteLiteral(Convert.ToString(value, this.Culture));
         }
 
         public void Write(bool value)    { this.WriteLiteral(value.ToString()); }
+        public void Write(int value)     { this.WriteLiteral(value.ToString(this.Culture)); }
+        public void Write(long value)    { this.WriteLiteral(value.ToString(this.Culture)); }
+        public void Write(float value)   { this.WriteLiteral(value.ToString(this.Culture)); }
+        public void Write(double value)  { this.WriteLiteral(value.ToString(this.Culture)); }
+        public void Write(decimal value) { this.WriteLiteral(value.ToString(this.Culture)); }
 
         public string RenderBody()
         {
@@ -77,10 +97,15 @@ namespace RazorGenerator.Templating
 
         public void WriteTo(TextWriter writer, object value)
         {
-            writer.Write(Convert.ToString(value, CultureInfo.InvariantCulture));
+            writer.Write(Convert.ToString(value, this.Culture));
         }
 
         public void WriteTo(TextWriter writer, bool value)     { writer.Write(value.ToString()); }
+        public void WriteTo(TextWriter writer, int value)      { writer.Write(value.ToString(this.Culture)); }
+        public void WriteTo(TextWriter writer, long value)     { writer.Write(value.ToString(this.Culture)); }
+        public void WriteTo(TextWriter writer, float value)    { writer.Write(value.ToString(this.Culture)); }
+        public void WriteTo(TextWriter writer, double value)   { writer.Write(value.ToString(this.Culture)); }
+        public void WriteTo(TextWriter writer, decimal value)  { writer.Write(value.ToString(this.Culture)); }
 
         // WriteAttribute is used by Razor runtime v2 and v3.
 
