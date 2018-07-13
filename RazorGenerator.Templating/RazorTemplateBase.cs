@@ -185,7 +185,10 @@ namespace RazorGenerator.Templating
             writers[name] = action;
         }
 
-        public RazorResult RenderSection(string name) => this.RenderSection(name, required: true);
+        public RazorResult RenderSection(string name)
+        {
+             return this.RenderSection(name, required: true);
+        }
 
         public RazorResult RenderSection(string name, bool required)
         {
