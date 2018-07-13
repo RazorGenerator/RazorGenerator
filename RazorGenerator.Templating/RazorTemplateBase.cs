@@ -7,14 +7,19 @@ namespace RazorGenerator.Templating
 {
     public class RazorTemplateBase
     {
-        private string content;
+        public RazorTemplateBase()
+        {
+            this.generatingEnvironment = new StringBuilder();
+            this.output                = new StringWriter(this.generatingEnvironment); // StringWriter does not own any unmanaged resources, there is no need to call Dispose nor make RazorTemplateBase implement IDisposable.
+        }
+
+        private readonly StringBuilder generatingEnvironment;
+        private readonly TextWriter    output;
+
+        private string renderedContent;
 
         public RazorTemplateBase Layout { get; set; }
 
-        private readonly StringBuilder generatingEnvironment = new StringBuilder();
-        private TextWriter output;
-
-        private TextWriter Output { get { return this.output ?? (this.output = new StringWriter(this.generatingEnvironment)); } }
 
         public virtual void Execute()
         {
@@ -31,19 +36,13 @@ namespace RazorGenerator.Templating
         {
             if (value == null) return;
 
-            this.WriteLiteral(Convert.ToString(value, CultureInfo.InvariantCulture));
         }
 
         public void Write(bool value)    { this.WriteLiteral(value.ToString()); }
-        public void Write(int value)     { this.WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
-        public void Write(long value)    { this.WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
-        public void Write(float value)   { this.WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
-        public void Write(double value)  { this.WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
-        public void Write(decimal value) { this.WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
 
         public string RenderBody()
         {
-            return this.content;
+            return this.renderedContent;
         }
 
         public string TransformText()
@@ -52,7 +51,7 @@ namespace RazorGenerator.Templating
 
             if (this.Layout != null)
             {
-                this.Layout.content = this.generatingEnvironment.ToString();
+                this.Layout.renderedContent = this.generatingEnvironment.ToString();
                 return this.Layout.TransformText();
             }
             else
@@ -67,7 +66,7 @@ namespace RazorGenerator.Templating
 
             if (this.Layout != null)
             {
-                this.Layout.content = "";
+                this.Layout.renderedContent = "";
             }
         }
 
@@ -82,17 +81,12 @@ namespace RazorGenerator.Templating
         }
 
         public void WriteTo(TextWriter writer, bool value)     { writer.Write(value.ToString()); }
-        public void WriteTo(TextWriter writer, int value)      { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
-        public void WriteTo(TextWriter writer, long value)     { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
-        public void WriteTo(TextWriter writer, float value)    { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
-        public void WriteTo(TextWriter writer, double value)   { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
-        public void WriteTo(TextWriter writer, decimal value)  { writer.Write(value.ToString(CultureInfo.InvariantCulture)); }
 
         // WriteAttribute is used by Razor runtime v2 and v3.
 
         public void WriteAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params object[] fragments)
         {
-            WriteAttributeTo(this.Output, name, prefix, suffix, fragments);
+            WriteAttributeTo(this.output, name, prefix, suffix, fragments);
         }
 
         public void WriteAttributeTo(TextWriter writer, string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params object[] fragments)
