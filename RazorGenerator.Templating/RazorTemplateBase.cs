@@ -7,13 +7,14 @@ namespace RazorGenerator.Templating
 {
     public class RazorTemplateBase
     {
-        private string _content;
+        private string content;
+
         public RazorTemplateBase Layout { get; set; }
 
-        private StringBuilder _generatingEnvironment = new System.Text.StringBuilder();
-        private TextWriter _output;
+        private readonly StringBuilder generatingEnvironment = new StringBuilder();
+        private TextWriter output;
 
-        private TextWriter Output { get { return _output ?? (_output = new StringWriter(_generatingEnvironment)); } }
+        private TextWriter Output { get { return this.output ?? (this.output = new StringWriter(this.generatingEnvironment)); } }
 
         public virtual void Execute()
         {
@@ -21,56 +22,52 @@ namespace RazorGenerator.Templating
 
         public void WriteLiteral(string textToAppend)
         {
-            if (String.IsNullOrEmpty(textToAppend))
-            {
-                return;
-            }
-            _generatingEnvironment.Append(textToAppend); ;
+            if (String.IsNullOrEmpty(textToAppend)) return;
+
+            this.generatingEnvironment.Append(textToAppend);
         }
 
         public void Write(object value)
         {
-            if ((value == null))
-            {
-                return;
-            }
+            if (value == null) return;
 
-            WriteLiteral(Convert.ToString(value, CultureInfo.InvariantCulture));
+            this.WriteLiteral(Convert.ToString(value, CultureInfo.InvariantCulture));
         }
 
-        public void Write(bool value)    { WriteLiteral(value.ToString()); }
-        public void Write(int value)     { WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
-        public void Write(long value)    { WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
-        public void Write(float value)   { WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
-        public void Write(double value)  { WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
-        public void Write(decimal value) { WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
+        public void Write(bool value)    { this.WriteLiteral(value.ToString()); }
+        public void Write(int value)     { this.WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
+        public void Write(long value)    { this.WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
+        public void Write(float value)   { this.WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
+        public void Write(double value)  { this.WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
+        public void Write(decimal value) { this.WriteLiteral(value.ToString(CultureInfo.InvariantCulture)); }
 
         public string RenderBody()
         {
-            return _content;
+            return this.content;
         }
 
         public string TransformText()
         {
-            Execute();
-            if (Layout != null)
+            this.Execute();
+
+            if (this.Layout != null)
             {
-                Layout._content = _generatingEnvironment.ToString();
-                return Layout.TransformText();
+                this.Layout.content = this.generatingEnvironment.ToString();
+                return this.Layout.TransformText();
             }
             else
             {
-                return _generatingEnvironment.ToString();
+                return this.generatingEnvironment.ToString();
             }
         }
 
         public void Clear()
         {
-            _generatingEnvironment.Clear();
+            this.generatingEnvironment.Clear();
 
-            if (Layout != null)
+            if (this.Layout != null)
             {
-                Layout._content = "";
+                this.Layout.content = "";
             }
         }
 
@@ -93,18 +90,12 @@ namespace RazorGenerator.Templating
 
         // WriteAttribute is used by Razor runtime v2 and v3.
 
-        public void WriteAttribute(string name,
-                                   Tuple<string, int> prefix,
-                                   Tuple<string, int> suffix,
-                                   params object[] fragments)
+        public void WriteAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params object[] fragments)
         {
-            WriteAttributeTo(Output, name, prefix, suffix, fragments);
+            WriteAttributeTo(this.Output, name, prefix, suffix, fragments);
         }
 
-        public void WriteAttributeTo(TextWriter writer, string name,
-                                     Tuple<string, int> prefix,
-                                     Tuple<string, int> suffix,
-                                     params object[] fragments)
+        public void WriteAttributeTo(TextWriter writer, string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params object[] fragments)
         {
             // For sake of compatibility, this implementation is adapted from
             // System.Web.WebPages.WebPageExecutingBase as found in ASP.NET
@@ -134,19 +125,18 @@ namespace RazorGenerator.Templating
             }
             else
             {
-                var first = true;
-                var wroteSomething = false;
-                foreach (var fragment in fragments)
+                bool first = true;
+                bool wroteSomething = false;
+                foreach (object fragment in fragments)
                 {
-                    var sf = fragment as   Tuple<Tuple<string, int>, Tuple<string, int>, bool>;
+                    var sf = fragment as Tuple<Tuple<string, int>, Tuple<string, int>, bool>;
                     var of = sf == null ? (Tuple<Tuple<string, int>, Tuple<object, int>, bool>) fragment : null;
 
-                    var ws      = sf != null ? sf.Item1.Item1 : of.Item1.Item1;
-                    var literal = sf != null ? sf.Item3       : of.Item3;
-                    var val     = sf != null ? sf.Item2.Item1 : of.Item2.Item1;
+                    string ws      = sf != null ? sf.Item1.Item1 : of.Item1.Item1;
+                    bool   literal = sf != null ? sf.Item3       : of.Item3;
+                    object val     = sf != null ? sf.Item2.Item1 : of.Item2.Item1;
 
-                    if (val == null)
-                        continue; // nothing to write
+                    if (val == null) continue; // nothing to write
 
                     // The special cases here are that the value we're writing might already be a string, or that the
                     // value might be a bool. If the value is the bool 'true' we want to write the attribute name instead
@@ -158,9 +148,14 @@ namespace RazorGenerator.Templating
 
                     switch (flag)
                     {
-                        case true : str = name; break;
-                        case false: continue;
-                        default   : str = val as string; break;
+                        case true:
+                            str = name;
+                            break;
+                        case false:
+                            continue;
+                        default:
+                            str = val as string;
+                            break;
                     }
 
                     if (first)
@@ -176,19 +171,30 @@ namespace RazorGenerator.Templating
                     // The extra branching here is to ensure that we call the Write*To(string) overload when
                     // possible.
                     if (literal && str != null)
+                    {
                         WriteLiteralTo(writer, str);
+                    }
                     else if (literal)
-                        WriteLiteralTo(writer, (string) val);
+                    {
+                        WriteLiteralTo(writer, (string)val);
+                    }
                     else if (str != null)
+                    {
                         WriteTo(writer, str);
+                    }
                     else
+                    {
                         WriteTo(writer, val);
+                    }
 
                     wroteSomething = true;
-                }
+                }//foreach
 
                 if (wroteSomething)
+                {
                     WriteLiteralTo(writer, suffix.Item1);
+                }
+                    
             }
         }
     }
