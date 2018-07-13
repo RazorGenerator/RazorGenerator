@@ -76,7 +76,7 @@ namespace RazorGenerator.Templating
             }
             else
             {
-                String text = value.ToString();
+                String text = Convert.ToString(value, this.Culture);
                 this.WriteEncoded(text);
             }
         }
@@ -244,17 +244,67 @@ namespace RazorGenerator.Templating
             writer.Write(text);
         }
 
-        public void WriteTo(TextWriter writer, object value)
+        public void WriteTo(TextWriter writer, string value)
         {
-            writer.Write(Convert.ToString(value, this.Culture));
+            this.WriteEncoded(value);
         }
 
-        public void WriteTo(TextWriter writer, bool value)     { writer.Write(value.ToString()); }
-        public void WriteTo(TextWriter writer, int value)      { writer.Write(value.ToString(this.Culture)); }
-        public void WriteTo(TextWriter writer, long value)     { writer.Write(value.ToString(this.Culture)); }
-        public void WriteTo(TextWriter writer, float value)    { writer.Write(value.ToString(this.Culture)); }
-        public void WriteTo(TextWriter writer, double value)   { writer.Write(value.ToString(this.Culture)); }
-        public void WriteTo(TextWriter writer, decimal value)  { writer.Write(value.ToString(this.Culture)); }
+        public void WriteTo(TextWriter writer, object value)
+        {
+            if (value == null)
+            {
+                return;
+            }
+            else if (value is IRawString rawValue) // checking for IRawString despite the explicit `Write(IRawString)` overload is to ensure this method handles cases where compiler cannot choose the best overload at compile-time.
+            {
+                this.WriteTo(writer, rawValue);
+            }
+            else if (value is IConvertible convertible)
+            {
+                String text = convertible.ToString(this.Culture);
+                this.WriteEncodedTo(writer, text);
+            }
+            else
+            {
+                String text = Convert.ToString(value, this.Culture);
+                this.WriteEncodedTo(writer, text);
+            }
+        }
+
+        public void WriteTo(TextWriter writer,IRawString value)
+        {
+            if (value == null) return;
+
+            String rawValue = value.ToRawString();
+            this.WriteLiteralTo(writer, rawValue);
+        }
+
+        // Because this is a generic method constrained on IConvertible, there is no need to have separate int/long/float overloads of `Write(value)` anymore (and Write(object) supplants Write(bool)).
+        [CLSCompliant( false )]
+        public void WriteTo<T>(TextWriter writer, T value)
+            where T : struct, IConvertible
+        {
+            String text = value.ToString(this.Culture);
+            this.WriteEncodedTo(writer,text);
+        }
+
+        [CLSCompliant( false )]
+        public void WriteTo<T>(TextWriter writer, T? value)
+            where T : struct, IConvertible
+        {
+            if( value.HasValue )
+            {
+                String text = value.Value.ToString(this.Culture);
+                this.WriteEncodedTo(writer,text);
+            }
+        }
+
+        public virtual void WriteEncodedTo(TextWriter writer, string value)
+        {
+            if (String.IsNullOrEmpty(value)) return;
+
+            this.WriteLiteralTo(writer, value);
+        }
 
         // WriteAttribute is used by Razor runtime v2 and v3.
 
