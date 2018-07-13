@@ -35,6 +35,8 @@ namespace RazorGenerator.Templating
             }
         }
 
+        //////////////////////////////////////////
+
         public virtual void Execute()
         {
         }
@@ -46,19 +48,70 @@ namespace RazorGenerator.Templating
             this.generatingEnvironment.Append(textToAppend);
         }
 
+        public void Write(string value)
+        {
+            this.WriteEncoded(value);
+        }
+
         public void Write(object value)
+        {
+            if (value == null)
+            {
+                return;
+            }
+            else if (value is IRawString rawValue) // checking for IRawString despite the explicit `Write(IRawString)` overload is to ensure this method handles cases where compiler cannot choose the best overload at compile-time.
+            {
+                this.Write( rawValue );
+            }
+            else if (value is IConvertible convertible)
+            {
+                String text = convertible.ToString(this.Culture);
+                this.WriteEncoded(text);
+            }
+            else
+            {
+                String text = value.ToString();
+                this.WriteEncoded(text);
+            }
+        }
+
+        public void Write(IRawString value)
         {
             if (value == null) return;
 
-            this.WriteLiteral(Convert.ToString(value, this.Culture));
+            String rawValue = value.ToRawString();
+            this.WriteLiteral(rawValue);
         }
 
-        public void Write(bool value)    { this.WriteLiteral(value.ToString()); }
-        public void Write(int value)     { this.WriteLiteral(value.ToString(this.Culture)); }
-        public void Write(long value)    { this.WriteLiteral(value.ToString(this.Culture)); }
-        public void Write(float value)   { this.WriteLiteral(value.ToString(this.Culture)); }
-        public void Write(double value)  { this.WriteLiteral(value.ToString(this.Culture)); }
-        public void Write(decimal value) { this.WriteLiteral(value.ToString(this.Culture)); }
+        // Because this is a generic method constrained on IConvertible, there is no need to have separate int/long/float overloads of `Write(value)` anymore (and Write(object) supplants Write(bool)).
+        [CLSCompliant( false )]
+        public void Write<T>(T value)
+            where T : struct, IConvertible
+        {
+            String text = value.ToString(this.Culture);
+            this.WriteEncoded(text);
+        }
+
+        [CLSCompliant( false )]
+        public void Write<T>(T? value)
+            where T : struct, IConvertible
+        {
+            if( value.HasValue )
+            {
+                String text = value.Value.ToString(this.Culture);
+                this.WriteEncoded(text);
+            }
+        }
+
+        /// <summary>By default this method does not actually encode <paramref name="value"/> before being written to the output (it just calls <c>WriteLiteral(String)</c> directly). Subclasses can override this method to encode values when appropriate (e.g. a HTML report subclass implementation might call WebUtility.HtmlEncode)</summary>
+        public virtual void WriteEncoded(string value)
+        {
+            if (String.IsNullOrEmpty(value)) return;
+
+            this.WriteLiteral(value);
+        }
+
+        #region Razor lifecycle methods
 
         public string RenderBody()
         {
@@ -89,6 +142,12 @@ namespace RazorGenerator.Templating
                 this.Layout.renderedContent = "";
             }
         }
+
+        // TODO:
+        // void DefineSection(String name, Action action)
+        // IRawString RenderSection
+
+        #endregion
 
         public void WriteLiteralTo(TextWriter writer, string text)
         {
@@ -217,4 +276,30 @@ namespace RazorGenerator.Templating
             }
         }
     }
-}
+
+    /// <summary>Interface for types that represent text that must not be encoded before being written to the output.</summary>
+    public interface IRawString
+    {
+        string ToRawString();
+    }
+
+    /// <summary>Wraps a string value that must not be encoded before being written to the output. Implements IRawString.</summary>
+    public class RawString : IRawString
+    {
+        public RawString(String value)
+        {
+            this.Value = value;
+        }
+
+        public string Value { get; }
+
+        public string ToRawString()
+        {
+            return this.Value;
+        }
+
+        public override string ToString()
+        {
+            return this.ToRawString();
+        }
+    }
