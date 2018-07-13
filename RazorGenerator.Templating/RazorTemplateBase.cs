@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace RazorGenerator.Templating
 {
-    public class RazorTemplateBase
+	public class RazorTemplateBase
     {
         public RazorTemplateBase()
         {
@@ -143,9 +144,93 @@ namespace RazorGenerator.Templating
             }
         }
 
-        // TODO:
-        // void DefineSection(String name, Action action)
-        // IRawString RenderSection
+        #endregion
+
+        #region Sections
+
+        private readonly Stack<Dictionary<string, Action>> sectionWritersStack = new Stack<Dictionary<string, Action>>();
+
+        private Dictionary<string, Action> GetSectionWriters()
+        {
+            return this.sectionWritersStack.Peek();
+        }
+
+        private Dictionary<string, Action> GetPreviousSectionWriters()
+        {
+            Dictionary<string, Action> current  = this.sectionWritersStack.Pop();
+            Dictionary<string, Action> previous = this.sectionWritersStack.Count > 0 ? this.sectionWritersStack.Peek() : null;
+            this.sectionWritersStack.Push(current);
+            return previous;
+        }
+
+        public bool IsSectionDefined(string name)
+        {
+            Dictionary<string, Action> previous = this.GetPreviousSectionWriters();
+            if (previous == null) throw new InvalidOperationException("Cannot query sections in the current state.");
+
+            return previous.ContainsKey(name);
+        }
+
+        public void DefineSection(string name, Action action)
+        {
+            Dictionary<string, Action> writers = this.GetSectionWriters();
+
+            if (writers.ContainsKey(name)) throw new InvalidOperationException( "Section \"" + name + "\" is already defined." );
+
+            writers[name] = action;
+        }
+
+        public RazorResult RenderSection(string name) => this.RenderSection(name, required: true);
+
+        public RazorResult RenderSection(string name, bool required)
+        {
+            Dictionary<string, Action> previous = this.GetPreviousSectionWriters();
+
+            if (previous == null) throw new InvalidOperationException("Cannot render sections in the current state.");
+
+            if (previous.ContainsKey(name))
+            {
+                Action<TextWriter> action = delegate(TextWriter wtr)
+                {
+                    if (this.renderedSections.Contains(name)) throw new InvalidOperationException("Section \"" + name + "\" is already rendered.");
+
+                    Action writer = previous[name];
+                    Dictionary<string, Action> top = this.sectionWritersStack.Pop();
+
+                    bool pushed = false;
+                    try
+                    {
+                        if (this.output != wtr)
+                        {
+                            this.outputStack.Push(wtr);
+                            pushed = true;
+                        }
+
+                        writer();
+                    }
+                    finally
+                    {
+                        if (pushed) this.outputStack.Pop();
+                    }
+
+                    this.sectionWritersStack.Push(top);
+                    this.renderedSections.Add(name);
+                };
+
+                return new RazorResult( action );
+            }
+            else if (required)
+            {
+                throw new InvalidOperationException("Required section \"" + name + "\" is not defined.");
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private readonly Stack<TextWriter> outputStack = new Stack<TextWriter>();
+        private readonly HashSet<string> renderedSections = new HashSet<string>();
 
         #endregion
 
@@ -303,3 +388,30 @@ namespace RazorGenerator.Templating
             return this.ToRawString();
         }
     }
+
+    public class RazorResult : IRawString
+    {
+        private readonly Action<TextWriter> action;
+
+        public RazorResult(Action<TextWriter> action)
+        {
+            this.action = action ?? throw new ArgumentNullException(nameof(action));
+        }
+
+        public string ToRawString()
+        {
+            using( StringWriter wtr = new StringWriter( CultureInfo.InvariantCulture ) )
+            {
+                this.action( wtr );
+                return wtr.ToString();
+            }
+        }
+
+        public void WriteTo(TextWriter writer)
+        {
+            if( writer == null ) throw new ArgumentNullException(nameof(writer));
+
+            this.action( writer );
+        }
+    }
+}
