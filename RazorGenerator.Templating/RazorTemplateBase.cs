@@ -415,3 +415,17 @@ namespace RazorGenerator.Templating
         }
     }
 }
+
+// Due to a design-bug in Razor, whenever a `@helper` is used, the Razor compiler is hardcoded to use `System.Web.WebPages.HelperResult` instead of allowing users to set their own.
+// As a fix-hack, this assembly will now provide a System.Web.WebPages.HelperResult type:
+namespace System.Web.WebPages
+{
+    public class HelperResult : RazorResult
+    {
+        public HelperResult(Action<TextWriter> action)
+            : base(action)
+        {
+
+        }
+    }
+}
