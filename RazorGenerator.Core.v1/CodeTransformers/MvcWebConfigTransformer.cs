@@ -44,7 +44,7 @@ namespace RazorGenerator.Core
 
             try
             {
-                var config = WebConfigurationManager.OpenMappedWebConfiguration(configFileMap, directoryVirtualPath);
+                var config = WebConfigurationManager.OpenMappedWebConfiguration(configFileMap, directoryVirtualPath, System.Web.Hosting.HostingEnvironment.ApplicationHost.GetSiteName());
                 RazorPagesSection section = config.GetSection(RazorPagesSection.SectionName) as RazorPagesSection;
                 if (section != null)
                 {
