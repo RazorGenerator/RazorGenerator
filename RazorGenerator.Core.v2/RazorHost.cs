@@ -13,6 +13,9 @@ namespace RazorGenerator.Core
 {
     public class RazorHost : RazorEngineHost, IRazorHost, ICodeGenerationEventProvider
     {
+
+        private const string CsHtmlLanguage = ".cshtml";
+
         private static readonly IEnumerable<string> _defaultImports = new[] {
             "System",
             "System.Collections.Generic",
@@ -37,7 +40,7 @@ namespace RazorGenerator.Core
         private CodeLanguageUtil _languageUtil;
 
         public RazorHost(string baseRelativePath, string fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives)
-            : base(RazorCodeLanguage.GetLanguageByExtension(".cshtml"))
+            : base(RazorCodeLanguage.GetLanguageByExtension(CsHtmlLanguage))
         {
             if (codeTransformer == null)
             {
@@ -60,7 +63,7 @@ namespace RazorGenerator.Core
             _fullPath = fullPath;
             _codeDomProvider = codeDomProvider;
             _directives = directives;
-            _languageUtil = Core.CodeLanguageUtil.GetLanguageUtilFromFileName(fullPath);
+            _languageUtil = Core.CodeLanguageUtil.GetLanguageUtilFromFileExtension(CsHtmlLanguage);
             base.DefaultNamespace = "ASP";
             EnableLinePragmas = true;
 
