@@ -37,7 +37,7 @@ namespace RazorGenerator.Core
         private CodeLanguageUtil _languageUtil;
 
         public RazorHost(string baseRelativePath, string fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives)
-            : base(RazorCodeLanguage.GetLanguageByExtension(Path.GetExtension(fullPath)))
+            : base(RazorCodeLanguage.GetLanguageByExtension(".cshtml"))
         {
             if (codeTransformer == null)
             {
