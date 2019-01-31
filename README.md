@@ -112,7 +112,7 @@ As an alternative, you can create a file named `razorgenerator.directives` in th
 
 ## History
 
-#### 12/12/2018 VSIX 1.9.1
+#### 12/12/2018 VSIX 1.12.0
 
 - Add Visual Studio 2019 support.
 
