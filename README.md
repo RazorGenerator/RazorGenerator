@@ -112,6 +112,10 @@ As an alternative, you can create a file named `razorgenerator.directives` in th
 
 ## History
 
+#### 12/12/2018 VSIX 1.9.1
+
+- Add Visual Studio 2019 support.
+
 #### 8/26/2/2015 VSIX 1.9
 
 - Add generic type parameters directive. https://github.com/RazorGenerator/RazorGenerator/issues/34
