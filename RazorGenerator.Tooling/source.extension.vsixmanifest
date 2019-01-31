@@ -9,9 +9,19 @@
     <GettingStartedGuide>https://github.com/RazorGenerator/RazorGenerator/wiki/Quick-Start-Guide</GettingStartedGuide>
   </Metadata>
   <Installation>
+    <!-- [v = Inclusive lower bound -->
+    <!-- v) = Exclusive upper bound -->
+    <!-- 11 = VS2012 -->
+    <!-- 12 = VS2013 -->
+    <!-- 14 = VS2015 -->
+    <!-- 15 = VS2017 -->
+    <!-- 16 = VS2019 -->
+    <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Premium" /> <!-- VS2012, VS2013-only -->
+    <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Ultimate" /> <!-- VS2012, VS2013-only -->
     <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Community" />
     <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Pro" />
     <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Enterprise" />
+    <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.IntegratedShell" />
   </Installation>
   <Dependencies>
   </Dependencies>
