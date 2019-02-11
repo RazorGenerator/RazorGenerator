@@ -70,6 +70,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectiveParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CoreTest.cs" />
     <EmbeddedResource Include="TestFiles\Input\VirtualPathAttributeTest.cshtml" />
@@ -227,7 +228,7 @@
   </Target>
   <Target Name="Test">
     <ItemGroup>
-        <TestAssemblies Include="$(OutputPath)\$(AssemblyName).dll" />
+      <TestAssemblies Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>
     <xunit Assemblies="@(TestAssemblies)" />
   </Target>
