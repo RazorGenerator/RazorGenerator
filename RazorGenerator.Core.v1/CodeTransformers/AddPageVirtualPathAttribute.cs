@@ -9,13 +9,23 @@ namespace RazorGenerator.Core
     public class AddPageVirtualPathAttribute : RazorCodeTransformerBase
     {
         private const string VirtualPathDirectiveKey = "VirtualPath";
+        private const string MvcAreaNameDirectiveKey = "CustomAreaName";
         private string _projectRelativePath;
         private string _overriddenVirtualPath;
+        private string _customAreaName;
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
             _projectRelativePath = razorHost.ProjectRelativePath;
             directives.TryGetValue(VirtualPathDirectiveKey, out _overriddenVirtualPath);
+            if (directives.TryGetValue(MvcAreaNameDirectiveKey, out _customAreaName))
+            {
+                _customAreaName = string.Format("Areas/{0}/", _customAreaName);
+            }
+            else
+            {
+                _customAreaName = string.Empty;
+            }
         }
 
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
@@ -24,7 +34,7 @@ namespace RazorGenerator.Core
             string virtualPath;
             try
             {
-                virtualPath = _overriddenVirtualPath ?? VirtualPathUtility.ToAppRelative("~/" + _projectRelativePath.TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+                virtualPath = _overriddenVirtualPath ?? VirtualPathUtility.ToAppRelative("~/" + _customAreaName + _projectRelativePath.TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
             }
             catch (HttpException)
             {
