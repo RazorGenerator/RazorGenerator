@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr" version="3.4.1.9004" />
+    <PackageReference Include="bootstrap" version="3.0.0" />
+    <PackageReference Include="jQuery" Version="1.10.2" />
+    <PackageReference Include="jQuery.Validation" Version="1.11.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.2.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.Agent.Intercept" Version="2.0.6" />
+    <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.2.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.2.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.Web" Version="2.2.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.WindowsServer" Version="2.2.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.3" />
+    <PackageReference Include="Microsoft.AspNet.Razor" Version="3.2.3" />
+    <PackageReference Include="Microsoft.AspNet.Web.Optimization" version="1.1.3" />
+    <PackageReference Include="Microsoft.AspNet.WebPages" version="3.2.3" />
+    <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" version="1.0.5" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Validation" version="3.2.3" />
+    <PackageReference Include="Microsoft.Net.Compilers" version="2.1.0" developmentDependency="true" />
+    <PackageReference Include="Microsoft.Web.Infrastructure" version="1.0.0.0" />
+    <PackageReference Include="Modernizr" version="2.6.2" />
+    <PackageReference Include="Newtonsoft.Json" version="6.0.4" />
+    <PackageReference Include="Respond" version="1.2.0" />
+    <PackageReference Include="WebGrease" version="1.5.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Web" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.*.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+
+</Project>
