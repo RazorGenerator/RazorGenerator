@@ -20,5 +20,7 @@
 ### The `MvcViewsTests` project won't load.
 
 * The `MvcViewsTests` project has a Project Type GUID of {3AC096D0-A1C2-E12C-1390-A8335801FDAB}.
-  * This is the Project Type GUID of old test projects, this test project will need to be updated. TODO.
-  * 
+  * This is the Project Type GUID of old MSTest projects, this test project will need to be updated. TODO.
+  * This is a bug in Visual Studio 2019: https://developercommunity.visualstudio.com/content/problem/833631/there-is-a-missing-project-subtype-3ac096d0-a1c2-e.html
+	* Advice is to perform a Visual Studio 2019 installation repair.
+    * I performed a Repair install just now (without adding/removing any VS components or features) and that fixed the problem.
