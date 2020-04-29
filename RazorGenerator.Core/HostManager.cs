@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace RazorGenerator.Core
 {
@@ -175,16 +177,15 @@ namespace RazorGenerator.Core
 
         internal static bool TryGuessHost(string projectRoot, string projectRelativePath, out GuessedHost host)
         {
-            RazorRuntime runtime;
-            bool isMvcProject = IsMvcProject(projectRoot, out runtime) ?? false;
-            if (isMvcProject)
+            RazorRuntime? runtime = DetermineRazorRuntimeVersion(projectRoot);
+            if (runtime.HasValue)
             {
                 var mvcHelperRegex = new Regex(@"(^|\\)Views(\\.*)+Helpers?", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
                 if (mvcHelperRegex.IsMatch(projectRelativePath))
                 {
-                    host = new GuessedHost("MvcHelper", runtime);
+                    host = new GuessedHost("MvcHelper", runtime.Value);
                 }
-                host = new GuessedHost("MvcView", runtime);
+                host = new GuessedHost("MvcView", runtime.Value);
                 return true;
             }
 
@@ -192,9 +193,9 @@ namespace RazorGenerator.Core
             return false;
         }
 
-        private static bool? IsMvcProject(string projectRoot, out RazorRuntime razorRuntime)
-        {
-            razorRuntime = RazorRuntime.Version1;
+       
+        private static RazorRuntime? DetermineRazorRuntimeVersion(string projectRoot)
+        {           
             try
             {
                 var projectFile = Directory.EnumerateFiles(projectRoot, "*.csproj").FirstOrDefault();
@@ -202,31 +203,131 @@ namespace RazorGenerator.Core
                 {
                     projectFile = Directory.EnumerateFiles(projectRoot, "*.vbproj").FirstOrDefault();
                 }
-                if (projectFile != null)
-                {
-                    var content = File.ReadAllText(projectFile);
-                    if ((content.IndexOf("System.Web.Mvc, Version=4", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("System.Web.Razor, Version=2", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("Microsoft.AspNet.Mvc.4", StringComparison.OrdinalIgnoreCase) != -1))
-                    {
-                        // The project references Razor v2
-                        razorRuntime = RazorRuntime.Version2;
-                    }
-                    else if ((content.IndexOf("System.Web.Mvc, Version=5", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("System.Web.Razor, Version=3", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("Microsoft.AspNet.Mvc.5", StringComparison.OrdinalIgnoreCase) != -1))
-                    {
-                        // The project references Razor v3
-                        razorRuntime = RazorRuntime.Version3;
-                    }
 
-                    return content.IndexOf("System.Web.Mvc", StringComparison.OrdinalIgnoreCase) != -1;
+                if (projectFile == null)
+                {
+                    return null;
                 }
+
+                var projectContent = File.ReadAllText(projectFile);
+                return GetRazorRuntimeVersion(projectContent);
             }
             catch
             {
             }
             return null;
+        }
+
+        internal static RazorRuntime? GetRazorRuntimeVersion(string projectContent)
+        {
+            try
+            {
+                if (projectContent == null)
+                {
+                    return null;
+                }
+
+                const string packageReferenceTagName = "PackageReference";
+                const string referenceTagName = "Reference";
+
+                XDocument projDefinition = XDocument.Parse(projectContent);
+
+                if (ContainsItemGroupElement(projDefinition, packageReferenceTagName))
+                {
+                    if ((CheckReferenceVersion(projDefinition, packageReferenceTagName, refElem => refElem.Attribute("Include").Value.Contains("Microsoft.AspNet.Razor"))?.Attribute("Version")?.Value.StartsWith("2.") == true)
+                        || (CheckReferenceVersion(projDefinition, packageReferenceTagName, refElem => refElem.Attribute("Include").Value.Contains("Microsoft.AspNet.Mvc"))?.Attribute("Version")?.Value.StartsWith("4.") == true)
+                        || (CheckReferenceVersion(projDefinition, packageReferenceTagName, refElem => refElem.Attribute("Include").Value.Contains("Microsoft.AspNetCore.Mvc"))?.Attribute("Version")?.Value.StartsWith("2.") == true))
+                    {
+                        return RazorRuntime.Version2;
+                    }
+                    else if ((CheckReferenceVersion(projDefinition, packageReferenceTagName, refElem => refElem.Attribute("Include").Value.Contains("Microsoft.AspNet.Razor"))?.Attribute("Version")?.Value.StartsWith("3.") == true)
+                        || (CheckReferenceVersion(projDefinition, packageReferenceTagName, refElem => refElem.Attribute("Include").Value.Contains("Microsoft.AspNet.Mvc"))?.Attribute("Version")?.Value.StartsWith("5.") == true))
+                    {
+                        return RazorRuntime.Version3;
+                    }
+                }
+                else if (ContainsItemGroupElement(projDefinition, referenceTagName))
+                {
+                    if ((CheckReferenceVersion(projDefinition, referenceTagName, refElem => refElem.Attribute("Include").Value.Contains("System.Web.Razor"))?.Value.IndexOf("Microsoft.AspNet.Razor.2.", StringComparison.OrdinalIgnoreCase) != -1)
+                        || (CheckReferenceVersion(projDefinition, referenceTagName, refElem => refElem.Attribute("Include").Value.Contains("System.Web.Mvc"))?.Value.IndexOf("Microsoft.AspNet.Mvc.4.", StringComparison.OrdinalIgnoreCase) != -1))
+                    {
+                        return RazorRuntime.Version2;
+                    }
+                    else if ((CheckReferenceVersion(projDefinition, referenceTagName, refElem => refElem.Attribute("Include").Value.Contains("System.Web.Razor"))?.Value.IndexOf("Microsoft.AspNet.Razor.3.", StringComparison.OrdinalIgnoreCase) != -1)
+                        || (CheckReferenceVersion(projDefinition, referenceTagName, refElem => refElem.Attribute("Include").Value.Contains("System.Web.Mvc"))?.Value.IndexOf("Microsoft.AspNet.Mvc.5.", StringComparison.OrdinalIgnoreCase) != -1))
+                    {
+                        return RazorRuntime.Version3;
+                    }
+                }
+                else
+                {
+                    var content = projectContent;
+                    if ((projectContent.IndexOf("System.Web.Mvc, Version=4", StringComparison.OrdinalIgnoreCase) != -1)
+                        || (projectContent.IndexOf("System.Web.Razor, Version=2", StringComparison.OrdinalIgnoreCase) != -1)
+                        || (projectContent.IndexOf("Microsoft.AspNet.Mvc.4", StringComparison.OrdinalIgnoreCase) != -1))
+                    {
+                        return RazorRuntime.Version2;
+                    }
+                    else if ((projectContent.IndexOf("System.Web.Mvc, Version=5", StringComparison.OrdinalIgnoreCase) != -1)
+                        || (projectContent.IndexOf("System.Web.Razor, Version=3", StringComparison.OrdinalIgnoreCase) != -1)
+                        || (projectContent.IndexOf("Microsoft.AspNet.Mvc.5", StringComparison.OrdinalIgnoreCase) != -1))
+                    {
+                        return RazorRuntime.Version3;
+                    }
+                    if (projectContent.IndexOf("System.Web.Mvc", StringComparison.OrdinalIgnoreCase) != -1
+                        || projectContent.IndexOf("Microsoft.AspNet.Mvc", StringComparison.OrdinalIgnoreCase) != -1
+                        || content.IndexOf("Microsoft.AspNetCore.Mvc", StringComparison.OrdinalIgnoreCase) != -1)
+                    {
+                        return RazorRuntime.Version1;
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return null;
+        }
+
+        private static bool ContainsItemGroupElement(XDocument projDefinition, string itemGroupElementTag)
+        {
+            XElement foundElement;
+            foundElement = XmlParse(projDefinition, itemGroupElementTag);
+            return foundElement != null ? true : false;
+        }
+
+        private static XElement CheckReferenceVersion(XDocument projDefinition, string include, Func<XElement, bool> whereCondition = null)
+        {
+            XElement packageReferenceElement;
+            packageReferenceElement = XmlParse(projDefinition, include, whereCondition);
+            return packageReferenceElement;
+        }
+
+        private static XElement XmlParse(XDocument projDefinition, string referenceType, Func<XElement, bool> whereCondition = null)
+        {
+            XNamespace xmlns = "http://schemas.microsoft.com/developer/msbuild/2003";
+            XElement packageReferenceElement;
+
+            if (projDefinition.Root.Attribute("xmlns") != null)
+            {
+                packageReferenceElement = projDefinition
+               ?.Element(xmlns + "Project")
+               ?.Elements(xmlns + "ItemGroup")
+               ?.Elements(xmlns + referenceType)
+               .Where(x => whereCondition == null ? true : whereCondition(x))
+               .FirstOrDefault();
+            }
+            else
+            {
+                packageReferenceElement = projDefinition
+               ?.Element("Project")
+               ?.Elements("ItemGroup")
+               ?.Elements(referenceType)
+               .Where(x => whereCondition == null ? true : whereCondition(x))
+               .FirstOrDefault();
+            }
+
+            return packageReferenceElement;
         }
 
         private static void AddCatalogIfHostsDirectoryExists(AggregateCatalog catalog, string directory)
