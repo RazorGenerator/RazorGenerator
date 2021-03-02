@@ -62,35 +62,40 @@
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.0.206" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.8.3038" />
     <Reference Include="System" />
+    <!-- RazorGenerator.Tooling.VS2019-specific files: -->
+    <Compile Include="AssemblyInfo.cs" />
     <!-- RazorGenerator.Tooling.csproj files: -->
-    <Compile Include="BaseCodeGenerator.cs"/>
-    <Compile Include="BaseCodeGeneratorWithSite.cs"/>
-    <Compile Include="Extensions.cs"/>
-    <Compile Include="RazorGenerator.cs"/>
+    <Compile Include="BaseCodeGenerator.cs" />
+    <Compile Include="BaseCodeGeneratorWithSite.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="RazorGenerator.cs" />
     <EmbeddedResource Include="Resources\SingleFileResources.resx" ManifestResourceName="RazorGenerator.Resources.SingleFileResources">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>SingleFileResources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>RazorGenerator.Resources</CustomToolNamespace>
     </EmbeddedResource>
-    <Compile Include="RazorGeneratorToolingException.cs"/>
+    <Compile Include="RazorGeneratorToolingException.cs" />
     <Compile Include="Resources\SingleFileResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SingleFileResources.resx</DependentUpon>
     </Compile>
-    <!-- RazorGenerator.Tooling.VS2019-specific files: -->
-    <None Include="source.extension.vsixmanifest">
-      <SubType>Designer</SubType>
-    </None>
+    <Compile Include="source.extension.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
+    </Compile>
+    <Compile Include="VsGeneratorProgressExtensions.cs" />
     <Compile Include="VsGeneratorProgressExtensions.cs">
       <Link>Linked\VsGeneratorProgressExtensions.cs</Link>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ReadMe.txt"/>
+    <Content Include="ReadMe.txt" />
     <Content Include="LICENSE.txt" />
+    <None Include="source.extension.vsixmanifest">
+      <Generator>VsixManifestGenerator</Generator>
+      <LastGenOutput>source.extension.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Condition="Exists($(VsSdkTargets))" Project="$(VsSdkTargets)" />
@@ -116,7 +121,7 @@
   </Target>
   <Target Name="InstallPlugin" DependsOnTargets="Build">
     <MakeDir Directories="$(DevEnvDir)\Extensions\$(AssemblyName)" />
-    <Copy SkipUnchangedFiles="true" ContinueOnError="true" SourceFiles="$(OutputPath)source.extension.vsixmanifest" DestinationFiles="$(DevEnvDir)\Extensions\$(AssemblyName)\extension.vsixmanifest" />
+    <Copy SkipUnchangedFiles="true" ContinueOnError="false" SourceFiles="$(OutputPath)source.extension.Dev14.vsixmanifest" DestinationFiles="$(DevEnvDir)\Extensions\$(AssemblyName)\source.extension.Dev14.vsixmanifest" />
   </Target>
   <Target Name="AfterBuild">
     <ItemGroup>
