@@ -22,12 +22,20 @@ namespace RazorGenerator
 {
     /// <summary>This is the generator class.<br />
     /// When setting the 'Custom Tool' property of a C# or VB project item to &quot;RazorGenerator&quot; the <see cref="GenerateCode(string)"/> method will get called and will return the contents of the generated file to the project system</summary>
+    
+    [PackageRegistration( UseManagedResourcesOnly = true )]//, AllowsBackgroundLoading = true )]
+    [InstalledProductRegistration( productName: "RazorGenerator.Tooling for VS2019", productDetails: "Razor-sharp!", productId: "2.0")] 
+    
     [ComVisible(true)]
     [Guid("52B316AA-1997-4c81-9969-83604C09EEB4")]
-    [CodeGeneratorRegistration(typeof(RazorGenerator), "C# Razor Generator", "{FAE04EC1-301F-11D3-BF4B-00C04F79EFBC}", GeneratesDesignTimeSource = true)]
-    [CodeGeneratorRegistration(typeof(RazorGenerator), "VB.NET Razor Generator", "{164B10B9-B200-11D0-8C61-00A0C91E29D5}", GeneratesDesignTimeSource = true)]
+
+    [CodeGeneratorRegistration(generatorType: typeof(RazorGenerator), generatorName: "C# Razor Generator"    , contextGuid: "{FAE04EC1-301F-11D3-BF4B-00C04F79EFBC}", GeneratesDesignTimeSource = true)]
+    [CodeGeneratorRegistration(generatorType: typeof(RazorGenerator), generatorName: "VB.NET Razor Generator", contextGuid: "{164B10B9-B200-11D0-8C61-00A0C91E29D5}", GeneratesDesignTimeSource = true)]
+    
     [ProvideObject(typeof(RazorGenerator))]
-    public class RazorGenerator : BaseCodeGeneratorWithSite
+
+    
+    public sealed class RazorGenerator : BaseCodeGeneratorWithSite
     {
         //The name of this generator (use for 'Custom Tool' property of project item)
 #pragma warning disable IDE1006 // Naming Styles. Keeping this field without an underscore prefix until I know it's safe to add it.

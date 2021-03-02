@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="2FD58EB3-29A2-40A3-BE17-C024CA9A17A2" Version="1.12.0" Language="en-US" Publisher="RazorGenerator contributors" />
+    <Identity Id="2FD58EB3-29A2-40A3-BE17-C024CA9A17A2" Version="2.00.0" Language="en-US" Publisher="RazorGenerator contributors" />
     <DisplayName>Razor Generator</DisplayName>
     <Description>Generates source code from Razor files (.cshtml/.vbhtml files), allowing them to be compiled into your assemblies. Supports MVC, Web Pages and standalone templates.</Description>
     <MoreInfo>https://github.com/RazorGenerator/RazorGenerator</MoreInfo>

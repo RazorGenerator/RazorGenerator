@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="RazorGenerator.Tooling.VS2019.9dc60f3e-59d2-43f8-9167-6bd3428ee4e1" Version="1.0" Language="en-US" Publisher="Dai Rees" />
-    <DisplayName>RazorGenerator.Tooling.VS2019</DisplayName>
-    <Description>Empty VSIX Project.</Description>
+    <Identity Id="2FD58EB3-29A2-40A3-BE17-C024CA9A17A2" Version="2.00.0" Language="en-US" Publisher="RazorGenerator contributors" />
+    <DisplayName>Razor Generator</DisplayName>
+    <Description>Generates source code from Razor files (.cshtml/.vbhtml files), allowing them to be compiled into your assemblies. Supports MVC, Web Pages and standalone templates.</Description>
+    <MoreInfo>https://github.com/RazorGenerator/RazorGenerator</MoreInfo>
+    <License>LICENSE.txt</License>
+    <GettingStartedGuide>https://github.com/RazorGenerator/RazorGenerator/wiki/Quick-Start-Guide</GettingStartedGuide>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[16.0, 17.0)" />
   </Installation>
   <Dependencies>
-    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.7.2,)" />
+    <Dependency Id="Microsoft.VisualStudio.MPF.16.0" DisplayName="Visual Studio MPF 16.0" d:Source="Installed" Version="[16.0,17.0)" />
   </Dependencies>
   <Prerequisites>
     <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[16.0,17.0)" DisplayName="Visual Studio core editor" />
