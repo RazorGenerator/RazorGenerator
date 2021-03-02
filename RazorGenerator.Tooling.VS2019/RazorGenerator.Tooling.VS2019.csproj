@@ -76,9 +76,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>SingleFileResources.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RazorGenerator.Resources</CustomToolNamespace>
     </EmbeddedResource>
     <Compile Include="..\RazorGenerator.Tooling\Resources\SingleFileResources.Designer.cs">
       <Link>Resources\SingleFileResources.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SingleFileResources.resx</DependentUpon>
     </Compile>
     <!-- RazorGenerator.Tooling.VS2019-specific files: -->
     <Compile Include="RazorGeneratorVS2019Package.cs" />

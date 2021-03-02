@@ -13,17 +13,15 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+
 using Microsoft.VisualStudio.Shell;
+
 using RazorGenerator.Core;
 
 namespace RazorGenerator
 {
-    /// <summary>
-    /// This is the generator class. 
-    /// When setting the 'Custom Tool' property of a C#, VB, or J# project item to "RazorGenerator", 
-    /// the GenerateCode function will get called and will return the contents of the generated file 
-    /// to the project system
-    /// </summary>
+    /// <summary>This is the generator class.<br />
+    /// When setting the 'Custom Tool' property of a C# or VB project item to &quot;RazorGenerator&quot; the <see cref="GenerateCode(string)"/> method will get called and will return the contents of the generated file to the project system</summary>
     [ComVisible(true)]
     [Guid("52B316AA-1997-4c81-9969-83604C09EEB4")]
     [CodeGeneratorRegistration(typeof(RazorGenerator), "C# Razor Generator", "{FAE04EC1-301F-11D3-BF4B-00C04F79EFBC}", GeneratesDesignTimeSource = true)]
@@ -31,10 +29,10 @@ namespace RazorGenerator
     [ProvideObject(typeof(RazorGenerator))]
     public class RazorGenerator : BaseCodeGeneratorWithSite
     {
-#pragma warning disable 0414
         //The name of this generator (use for 'Custom Tool' property of project item)
-        internal static string name = "RazorGenerator";
-#pragma warning restore 0414
+#pragma warning disable IDE1006 // Naming Styles. Keeping this field without an underscore prefix until I know it's safe to add it.
+        internal static readonly string name = "RazorGenerator";
+#pragma warning restore
 
         /// <summary>
         /// Function that builds the contents of the generated file based on the contents of the input file
@@ -43,39 +41,48 @@ namespace RazorGenerator
         /// <returns>Generated file as a byte array</returns>
         protected override byte[] GenerateCode(string inputFileContent)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
-                return GenerateFromHost();
+                return this.GenerateFromHost();
             }
             catch (InvalidOperationException exception)
             {
-                GeneratorError(0, exception.Message, 0, 0);
+                this.GeneratorError(0, exception.Message, 0, 0);
                 return ConvertToBytes(exception.Message);
             }
             catch (Exception exception)
             {
-                GeneratorError(0, exception.Message, 0, 0);
+                this.GeneratorError(0, exception.Message, 0, 0);
             }
+
             return null;
         }
 
         private byte[] GenerateFromHost()
         {
-            var projectDirectory = Path.GetDirectoryName(GetProject().FullName);
-            var projectRelativePath = InputFilePath.Substring(projectDirectory.Length);
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            var projectDirectory = Path.GetDirectoryName(this.GetProject().FullName);
+            var projectRelativePath = this.InputFilePath.Substring(projectDirectory.Length);
 
             using (var hostManager = new HostManager(projectDirectory))
             {
-                var host = hostManager.CreateHost(InputFilePath, projectRelativePath, GetCodeProvider(), FileNameSpace);
+                var host = hostManager.CreateHost(this.InputFilePath, projectRelativePath, this.GetCodeProvider(), this.FileNameSpace);
+               
                 host.Error += (o, eventArgs) =>
                 {
-                    GeneratorError(0, eventArgs.ErrorMessage, eventArgs.LineNumber, eventArgs.ColumnNumber);
+                    this.GeneratorError(0, eventArgs.ErrorMessage, eventArgs.LineNumber, eventArgs.ColumnNumber);
                 };
+
                 host.Progress += (o, eventArgs) =>
                 {
-                    if (CodeGeneratorProgress != null)
+                    ThreadHelper.ThrowIfNotOnUIThread();
+
+                    if (this.CodeGeneratorProgress != null)
                     {
-                        CodeGeneratorProgress.Progress(eventArgs.Completed, eventArgs.Total);
+                        this.CodeGeneratorProgress.Progress(eventArgs.Completed, eventArgs.Total);
                     }
                 };
 

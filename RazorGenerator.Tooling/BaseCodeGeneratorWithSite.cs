@@ -27,6 +27,7 @@ namespace RazorGenerator
     /// <summary>
     /// Base code generator with site implementation
     /// </summary>
+    [ComVisible(visibility: true)]
     public abstract class BaseCodeGeneratorWithSite : BaseCodeGenerator, VSOLE.IObjectWithSite
     {
         private object site = null;
@@ -42,12 +43,14 @@ namespace RazorGenerator
         /// <param name="ppvSite">IntPtr in which to stuff return value</param>
         void VSOLE.IObjectWithSite.GetSite(ref Guid riid, out IntPtr ppvSite)
         {
-            if (site == null)
+            if (this.site == null)
             {
                 throw new COMException("object is not sited", VSConstants.E_FAIL);
             }
 
-            IntPtr pUnknownPointer = Marshal.GetIUnknownForObject(site);
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            IntPtr pUnknownPointer = Marshal.GetIUnknownForObject(this.site);
             IntPtr intPointer = IntPtr.Zero;
             Marshal.QueryInterface(pUnknownPointer, ref riid, out intPointer);
 
@@ -65,9 +68,9 @@ namespace RazorGenerator
         /// <param name="pUnkSite">site for this object to use</param>
         void VSOLE.IObjectWithSite.SetSite(object pUnkSite)
         {
-            site = pUnkSite;
-            codeDomProvider = null;
-            serviceProvider = null;
+            this.site = pUnkSite;
+            this.codeDomProvider = null;
+            this.serviceProvider = null;
         }
 
         #endregion
@@ -79,12 +82,14 @@ namespace RazorGenerator
         {
             get
             {
-                if (serviceProvider == null)
+                ThreadHelper.ThrowIfNotOnUIThread();
+
+                if (this.serviceProvider == null)
                 {
-                    serviceProvider = new ServiceProvider(site as VSOLE.IServiceProvider);
-                    Debug.Assert(serviceProvider != null, "Unable to get ServiceProvider from site object.");
+                    this.serviceProvider = new ServiceProvider(this.site as VSOLE.IServiceProvider);
+                    Debug.Assert(this.serviceProvider != null, "Unable to get ServiceProvider from site object.");
                 }
-                return serviceProvider;
+                return this.serviceProvider;
             }
         }
 
@@ -95,7 +100,9 @@ namespace RazorGenerator
         /// <returns>An object that implements the requested service</returns>
         protected object GetService(Guid serviceGuid)
         {
-            return SiteServiceProvider.GetService(serviceGuid);
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            return this.SiteServiceProvider.GetService(serviceGuid);
         }
 
         /// <summary>
@@ -105,7 +112,9 @@ namespace RazorGenerator
         /// <returns>An object that implements the requested service</returns>
         protected object GetService(Type serviceType)
         {
-            return SiteServiceProvider.GetService(serviceType);
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            return this.SiteServiceProvider.GetService(serviceType);
         }
 
         /// <summary>
@@ -115,30 +124,31 @@ namespace RazorGenerator
         /// <returns>A CodeDomProvider object</returns>
         protected virtual CodeDomProvider GetCodeProvider()
         {
-            if (codeDomProvider == null)
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            if (this.codeDomProvider == null)
             {
-                //Query for IVSMDCodeDomProvider/SVSMDCodeDomProvider for this project type
-                IVSMDCodeDomProvider provider = GetService(typeof(SVSMDCodeDomProvider)) as IVSMDCodeDomProvider;
-                if (provider != null)
+                // Query for `IVSMDCodeDomProvider` / `SVSMDCodeDomProvider` for this project type
+                if (this.GetService(typeof(SVSMDCodeDomProvider)) is IVSMDCodeDomProvider provider)
                 {
-                    codeDomProvider = provider.CodeDomProvider as CodeDomProvider;
+                    this.codeDomProvider = provider.CodeDomProvider as CodeDomProvider;
                 }
                 else
                 {
                     //In the case where no language specific CodeDom is available, fall back to C#
-                    codeDomProvider = CodeDomProvider.CreateProvider("C#");
+                    this.codeDomProvider = CodeDomProvider.CreateProvider("C#");
                 }
             }
-            return codeDomProvider;
+            return this.codeDomProvider;
         }
 
-        /// <summary>
-        /// Gets the default extension of the output file from the CodeDomProvider
-        /// </summary>
+        /// <summary>Gets the default extension of the output file from the CodeDomProvider</summary>
         /// <returns></returns>
         protected override string GetDefaultExtension()
         {
-            CodeDomProvider codeDom = GetCodeProvider();
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            CodeDomProvider codeDom = this.GetCodeProvider();
             Debug.Assert(codeDom != null, "CodeDomProvider is NULL.");
             string extension = codeDom.FileExtension;
             if (extension != null && extension.Length > 0)
@@ -148,28 +158,24 @@ namespace RazorGenerator
             return extension;
         }
 
-        /// <summary>
-        /// Returns the EnvDTE.ProjectItem object that corresponds to the project item the code 
-        /// generator was called on
-        /// </summary>
-        /// <returns>The EnvDTE.ProjectItem of the project item the code generator was called on</returns>
+        /// <summary>Returns the <c>EnvDTE.<see cref="ProjectItem"/></c> object that corresponds to the project item the code generator was called on</summary>
+        /// <returns>The <c>EnvDTE.<see cref="ProjectItem"/></c> of the project item the code generator was called on</returns>
         protected ProjectItem GetProjectItem()
         {
-            object p = GetService(typeof(ProjectItem));
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            object p = this.GetService(typeof(ProjectItem));
             Debug.Assert(p != null, "Unable to get Project Item.");
             return (ProjectItem)p;
         }
 
-        /// <summary>
-        /// Returns the EnvDTE.Project object of the project containing the project item the code 
-        /// generator was called on
-        /// </summary>
-        /// <returns>
-        /// The EnvDTE.Project object of the project containing the project item the code generator was called on
-        /// </returns>
+        /// <summary>Returns the <c>EnvDTE.<see cref="Project"/></c> object of the project containing the project item the code generator was called on</summary>
+        /// <returns>The <c>EnvDTE.<see cref="Project"/></c> object of the project containing the project item the code generator was called on</returns>
         protected Project GetProject()
         {
-            return GetProjectItem().ContainingProject;
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            return this.GetProjectItem().ContainingProject;
         }
     }
 }

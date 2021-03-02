@@ -14,6 +14,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using RazorGenerator.Resources;
 
@@ -32,17 +33,15 @@ namespace RazorGenerator
 
         #region IVsSingleFileGenerator Members
 
-        /// <summary>
-        /// Implements the IVsSingleFileGenerator.DefaultExtension method. 
-        /// Returns the extension of the generated file
-        /// </summary>
+       /// <summary>Implements the <c>IVsSingleFileGenerator.<see cref="IVsSingleFileGenerator.DefaultExtension"/></c> method.<br />
+        /// Returns the extension of the generated file</summary>
         /// <param name="pbstrDefaultExtension">Out parameter, will hold the extension that is to be given to the output file name. The returned extension must include a leading period</param>
         /// <returns>S_OK if successful, E_FAIL if not</returns>
         int IVsSingleFileGenerator.DefaultExtension(out string pbstrDefaultExtension)
         {
             try
             {
-                pbstrDefaultExtension = GetDefaultExtension();
+                pbstrDefaultExtension = this.GetDefaultExtension();
                 return VSConstants.S_OK;
             }
             catch (Exception e)
@@ -54,10 +53,8 @@ namespace RazorGenerator
             }
         }
 
-        /// <summary>
-        /// Implements the IVsSingleFileGenerator.Generate method.
-        /// Executes the transformation and returns the newly generated output file, whenever a custom tool is loaded, or the input file is saved
-        /// </summary>
+        /// <summary>Implements the <c>IVsSingleFileGenerator.<see cref="IVsSingleFileGenerator.Generate"/></c> method.<br />
+        /// Executes the transformation and returns the newly generated output file, whenever a custom tool is loaded, or the input file is saved</summary>
         /// <param name="wszInputFilePath">The full path of the input file. May be a null reference (Nothing in Visual Basic) in future releases of Visual Studio, so generators should not rely on this value</param>
         /// <param name="bstrInputFileContents">The contents of the input file. This is either a UNICODE BSTR (if the input file is text) or a binary BSTR (if the input file is binary). If the input file is a text file, the project system automatically converts the BSTR to UNICODE</param>
         /// <param name="wszDefaultNamespace">This parameter is meaningful only for custom tools that generate code. It represents the namespace into which the generated code will be placed. If the parameter is not a null reference (Nothing in Visual Basic) and not empty, the custom tool can use the following syntax to enclose the generated code</param>
@@ -72,11 +69,13 @@ namespace RazorGenerator
                 throw new ArgumentNullException(bstrInputFileContents);
             }
 
-            codeFilePath = wszInputFilePath;
-            codeFileNameSpace = wszDefaultNamespace;
-            codeGeneratorProgress = pGenerateProgress;
+            ThreadHelper.ThrowIfNotOnUIThread();
 
-            byte[] bytes = GenerateCode(bstrInputFileContents);
+            this.codeFilePath = wszInputFilePath;
+            this.codeFileNameSpace = wszDefaultNamespace;
+            this.codeGeneratorProgress = pGenerateProgress;
+
+            byte[] bytes = this.GenerateCode(bstrInputFileContents);
 
             if (bytes == null)
             {
@@ -104,78 +103,68 @@ namespace RazorGenerator
 
         #endregion
 
-        /// <summary>
-        /// Namespace for the file
-        /// </summary>
+        /// <summary>Namespace for the file</summary>
         protected string FileNameSpace
         {
             get
             {
-                return codeFileNameSpace;
+                return this.codeFileNameSpace;
             }
         }
 
-        /// <summary>
-        /// File-path for the input file
-        /// </summary>
+        /// <summary>File-path for the input file</summary>
         protected string InputFilePath
         {
             get
             {
-                return codeFilePath;
+                return this.codeFilePath;
             }
         }
 
-        /// <summary>
-        /// Interface to the VS shell object we use to tell our progress while we are generating
-        /// </summary>
+        /// <summary>Interface to the VS shell object we use to tell our progress while we are generating</summary>
         internal IVsGeneratorProgress CodeGeneratorProgress
         {
             get
             {
-                return codeGeneratorProgress;
+                return this.codeGeneratorProgress;
             }
         }
 
-        /// <summary>
-        /// Gets the default extension for this generator
-        /// </summary>
+        /// <summary>Gets the default extension for this generator</summary>
         /// <returns>String with the default extension for this generator</returns>
         protected abstract string GetDefaultExtension();
 
-        /// <summary>
-        /// The method that does the actual work of generating code given the input file
-        /// </summary>
+        /// <summary>The method that does the actual work of generating code given the input file</summary>
         /// <param name="inputFileContent">File contents as a string</param>
         /// <returns>The generated code file as a byte-array</returns>
         protected abstract byte[] GenerateCode(string inputFileContent);
 
-        /// <summary>
-        /// Method that will communicate an error via the shell callback mechanism
-        /// </summary>
+        /// <summary>Method that will communicate an error via the shell callback mechanism</summary>
         /// <param name="level">Level or severity</param>
         /// <param name="message">Text displayed to the user</param>
         /// <param name="line">Line number of error</param>
         /// <param name="column">Column number of error</param>
         protected virtual void GeneratorError(uint level, string message, uint line, uint column)
         {
-            IVsGeneratorProgress progress = CodeGeneratorProgress;
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            IVsGeneratorProgress progress = this.CodeGeneratorProgress;
             if (progress != null)
             {
                 progress.GeneratorError(0, level, message, line, column);
             }
         }
 
-        /// <summary>
-        /// Method that will communicate a warning via the shell callback mechanism
-        /// </summary>
+        /// <summary>Method that will communicate a warning via the shell callback mechanism</summary>
         /// <param name="level">Level or severity</param>
         /// <param name="message">Text displayed to the user</param>
         /// <param name="line">Line number of warning</param>
         /// <param name="column">Column number of warning</param>
         protected virtual void GeneratorWarning(uint level, string message, uint line, uint column)
         {
-            IVsGeneratorProgress progress = CodeGeneratorProgress;
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            IVsGeneratorProgress progress = this.CodeGeneratorProgress;
             if (progress != null)
             {
                 progress.GeneratorError(1, level, message, line, column);
