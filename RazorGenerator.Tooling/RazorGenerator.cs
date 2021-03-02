@@ -1,3 +1,5 @@
+#define USE_IVsSingleFileGenerator
+
 /***************************************************************************
 
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -22,6 +24,21 @@ using RazorGenerator.Core;
 
 namespace RazorGenerator
 {
+    internal static class VSGuids
+    {
+        public const String CSharpProjectGuid = @"{FAE04EC1-301F-11D3-BF4B-00C04F79EFBC}";
+        public const String VBProjectGuid     = @"{164B10B9-B200-11D0-8C61-00A0C91E29D5}";
+    }
+
+    public class SomeBaseClass
+        // Interesting: When `class RazorGenerator` has a base-class, VS will load and construct it - but won't call the interface methods, but why?
+    {
+        protected SomeBaseClass()
+        {
+            System.Diagnostics.Debug.WriteLine( "[RazorGenerator] SomeBaseClass.ctor" );
+        }
+    }
+
     /// <summary>This is the generator class.<br />
     /// When setting the 'Custom Tool' property of a C# or VB project item to &quot;RazorGenerator&quot; the <see cref="GenerateCode(string)"/> method will get called and will return the contents of the generated file to the project system</summary>
     
@@ -31,21 +48,33 @@ namespace RazorGenerator
     [ComVisible(true)]
     [Guid("52B316AA-1997-4c81-9969-83604C09EEB4")]
 
-    [CodeGeneratorRegistration(generatorType: typeof(RazorGenerator), generatorName: "C# Razor Generator"    , contextGuid: "{FAE04EC1-301F-11D3-BF4B-00C04F79EFBC}", GeneratesDesignTimeSource = true)]
-    [CodeGeneratorRegistration(generatorType: typeof(RazorGenerator), generatorName: "VB.NET Razor Generator", contextGuid: "{164B10B9-B200-11D0-8C61-00A0C91E29D5}", GeneratesDesignTimeSource = true)]
+    [CodeGeneratorRegistration(generatorType: typeof(RazorGenerator), generatorName: "C# Razor Generator"    , contextGuid: VSGuids.CSharpProjectGuid, GeneratesDesignTimeSource = true)]
+    [CodeGeneratorRegistration(generatorType: typeof(RazorGenerator), generatorName: "VB.NET Razor Generator", contextGuid: VSGuids.VBProjectGuid    , GeneratesDesignTimeSource = true)]
     
     [ProvideObject(typeof(RazorGenerator))]
 
     
-    public sealed class RazorGenerator : BaseCodeGenerator
+    public sealed class RazorGenerator :
+#if USE_IVsSingleFileGenerator
+        SomeBaseClass,
+        IVsSingleFileGenerator
+#elif USE_BaseCodeGenerator
+        BaseCodeGenerator
+#elif USE_BaseCodeGeneratorWithSite
+        BaseCodeGeneratorWithSite
+#endif
     {
         //The name of this generator (use for 'Custom Tool' property of project item)
 #pragma warning disable IDE1006 // Naming Styles. Keeping this field without an underscore prefix until I know it's safe to add it.
         internal static readonly string name = "RazorGenerator";
 #pragma warning restore
+        public RazorGenerator()
+            : base()
+        {
+            System.Diagnostics.Debug.WriteLine( "[RazorGenerator] RazorGenerator.ctor" );
+        }
 
-#region IVsSingleFileGenerator Members
-#if NOT_NOW
+#if USE_IVsSingleFileGenerator
         public int DefaultExtension(out string pbstrDefaultExtension)
         {
             bool isUIThread = ThreadHelper.CheckAccess();
@@ -63,7 +92,7 @@ namespace RazorGenerator
             try
             {
                 int lineCount = bstrInputFileContents.Split('\n').Length;
-                byte[] bytes = Encoding.UTF8.GetBytes("<LineCount>" + lineCount.ToString() + "</LineCount>" );
+                byte[] bytes = Encoding.UTF8.GetBytes("<LineCount1>" + lineCount.ToString() + "</LineCount1>" );
                 int length = bytes.Length;
                 rgbOutputFileContents[0] = Marshal.AllocCoTaskMem(length);
                 Marshal.Copy(bytes, 0, rgbOutputFileContents[0], length);
@@ -75,15 +104,15 @@ namespace RazorGenerator
             }
             return VSConstants.S_OK;
         }
-#endif
-#endregion
+
+#elif USE_BaseCodeGenerator
 
         protected override byte[] GenerateCode(string inputFileContent)
         {
             try
             {
                 int lineCount = inputFileContent.Split('\n').Length;
-                byte[] bytes = Encoding.UTF8.GetBytes("<LineCount>" + lineCount.ToString() + "</LineCount>" );
+                byte[] bytes = Encoding.UTF8.GetBytes("<LineCount2>" + lineCount.ToString() + "</LineCount2>" );
                 return bytes;
             }
             catch (Exception ex)
@@ -97,7 +126,7 @@ namespace RazorGenerator
             return ".xml";
         }
 
-#if NOT_NOW
+#elif USE_BaseCodeGeneratorWithSite
 
         /// <summary>
         /// Function that builds the contents of the generated file based on the contents of the input file
