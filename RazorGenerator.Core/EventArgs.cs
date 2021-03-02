@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace RazorGenerator.Core
 {
@@ -6,27 +6,28 @@ namespace RazorGenerator.Core
     {
         public GeneratorErrorEventArgs(uint errorCode, string errorMessage, uint lineNumber, uint columnNumber)
         {
-            ErorrCode = errorCode;
-            ErrorMessage = errorMessage;
-            LineNumber = lineNumber;
-            ColumnNumber = columnNumber;
+            this.ErorrCode    = errorCode;
+            this.ErrorMessage = errorMessage;
+            this.LineNumber   = lineNumber;
+            this.ColumnNumber = columnNumber;
         }
 
-        public uint ErorrCode { get; private set; }
+        public uint ErorrCode { get; }
 
-        public string ErrorMessage { get; private set; }
+        /// <summary>Can be <see langword="null"/>.</summary>
+        public string ErrorMessage { get; }
 
-        public uint LineNumber { get; private set; }
+        public uint LineNumber { get; }
 
-        public uint ColumnNumber { get; private set; }
+        public uint ColumnNumber { get; }
     }
 
     public class ProgressEventArgs : EventArgs
     {
         public ProgressEventArgs(uint completed, uint total)
         {
-            Completed = completed;
-            Total = total;
+            this.Completed = completed;
+            this.Total     = total;
         }
 
         public uint Completed { get; private set; }

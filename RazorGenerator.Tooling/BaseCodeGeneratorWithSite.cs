@@ -44,18 +44,13 @@ namespace RazorGenerator
         /// <param name="ppvSite">IntPtr in which to stuff return value</param>
         void IObjectWithSite.GetSite(ref Guid riid, out IntPtr ppvSite)
         {
-            if (this.site == null)
-            {
-                throw new COMException("object is not sited", VSConstants.E_FAIL);
-            }
+            if (this.site is null) throw new COMException("object is not sited", VSConstants.E_FAIL);
 
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            IntPtr pUnknownPointer = Marshal.GetIUnknownForObject(this.site);
-            IntPtr intPointer = IntPtr.Zero;
-            Marshal.QueryInterface(pUnknownPointer, ref riid, out intPointer);
-
-            if (intPointer == IntPtr.Zero)
+            IntPtr pUnknown = Marshal.GetIUnknownForObject(this.site);
+            int queryInterfaceResult = Marshal.QueryInterface(pUnknown, ref riid, out IntPtr intPointer);
+            if (queryInterfaceResult != VSConstants.S_OK || intPointer == IntPtr.Zero)
             {
                 throw new COMException("site does not support requested interface", VSConstants.E_NOINTERFACE);
             }
@@ -63,22 +58,18 @@ namespace RazorGenerator
             ppvSite = intPointer;
         }
 
-        /// <summary>
-        /// SetSite method of IOleObjectWithSite
-        /// </summary>
+        /// <summary>SetSite method of <see cref="IObjectWithSite.SetSite(object)"/>. Sets <see cref="site"/> and clears <see cref="codeDomProvider"/> and <see cref="serviceProvider"/>.</summary>
         /// <param name="pUnkSite">site for this object to use</param>
         void IObjectWithSite.SetSite(object pUnkSite)
         {
-            this.site = pUnkSite;
+            this.site            = pUnkSite;
             this.codeDomProvider = null;
             this.serviceProvider = null;
         }
 
         #endregion
 
-        /// <summary>
-        /// Demand-creates a ServiceProvider
-        /// </summary>
+        /// <summary>Demand-creates a <see cref="Microsoft.VisualStudio.Shell.ServiceProvider"/>.</summary>
         private ServiceProvider SiteServiceProvider
         {
             get
@@ -90,6 +81,7 @@ namespace RazorGenerator
                     this.serviceProvider = new ServiceProvider(this.site as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
                     Debug.Assert(this.serviceProvider != null, "Unable to get ServiceProvider from site object.");
                 }
+
                 return this.serviceProvider;
             }
         }

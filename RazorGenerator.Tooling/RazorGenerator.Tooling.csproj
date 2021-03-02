@@ -72,8 +72,11 @@
     </Compile>
     <Compile Include="BaseCodeGenerator.cs" />
     <Compile Include="BaseCodeGeneratorWithSite.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="VsGeneratorProgressExtensions.cs" />
     <None Include="CodeGeneratorRegistrationAttribute.cs" />
     <Compile Include="RazorGenerator.cs" />
+    <Compile Include="RazorGeneratorToolingException.cs" />
     <Compile Include="Resources\SingleFileResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

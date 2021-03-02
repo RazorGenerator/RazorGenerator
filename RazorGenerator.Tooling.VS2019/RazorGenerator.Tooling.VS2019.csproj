@@ -68,6 +68,9 @@
     <Compile Include="..\RazorGenerator.Tooling\BaseCodeGeneratorWithSite.cs">
       <Link>Linked\BaseCodeGeneratorWithSite.cs</Link>
     </Compile>
+    <Compile Include="..\RazorGenerator.Tooling\Extensions.cs">
+      <Link>Linked\Extensions.cs</Link>
+    </Compile>
     <Compile Include="..\RazorGenerator.Tooling\RazorGenerator.cs">
       <Link>Linked\RazorGenerator.cs</Link>
     </Compile>
@@ -78,6 +81,9 @@
       <LastGenOutput>SingleFileResources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>RazorGenerator.Resources</CustomToolNamespace>
     </EmbeddedResource>
+    <Compile Include="..\RazorGenerator.Tooling\RazorGeneratorToolingException.cs">
+      <Link>Linked\RazorGeneratorToolingException.cs</Link>
+    </Compile>
     <Compile Include="..\RazorGenerator.Tooling\Resources\SingleFileResources.Designer.cs">
       <Link>Resources\SingleFileResources.Designer.cs</Link>
       <AutoGen>True</AutoGen>
@@ -89,6 +95,9 @@
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
+    <Compile Include="..\RazorGenerator.Tooling\VsGeneratorProgressExtensions.cs">
+      <Link>Linked\VsGeneratorProgressExtensions.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
