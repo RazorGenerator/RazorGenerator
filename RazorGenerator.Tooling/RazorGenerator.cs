@@ -37,7 +37,7 @@ namespace RazorGenerator
     [ProvideObject(typeof(RazorGenerator))]
 
     
-    public sealed class RazorGenerator : IVsSingleFileGenerator // BaseCodeGeneratorWithSite
+    public sealed class RazorGenerator : BaseCodeGenerator
     {
         //The name of this generator (use for 'Custom Tool' property of project item)
 #pragma warning disable IDE1006 // Naming Styles. Keeping this field without an underscore prefix until I know it's safe to add it.
@@ -45,6 +45,7 @@ namespace RazorGenerator
 #pragma warning restore
 
 #region IVsSingleFileGenerator Members
+#if NOT_NOW
         public int DefaultExtension(out string pbstrDefaultExtension)
         {
             bool isUIThread = ThreadHelper.CheckAccess();
@@ -74,7 +75,27 @@ namespace RazorGenerator
             }
             return VSConstants.S_OK;
         }
+#endif
 #endregion
+
+        protected override byte[] GenerateCode(string inputFileContent)
+        {
+            try
+            {
+                int lineCount = inputFileContent.Split('\n').Length;
+                byte[] bytes = Encoding.UTF8.GetBytes("<LineCount>" + lineCount.ToString() + "</LineCount>" );
+                return bytes;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        protected override string GetDefaultExtension()
+        {
+            return ".xml";
+        }
 
 #if NOT_NOW
 
