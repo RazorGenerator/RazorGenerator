@@ -63,48 +63,33 @@
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.8.3038" />
     <Reference Include="System" />
     <!-- RazorGenerator.Tooling.csproj files: -->
-    <Compile Include="..\RazorGenerator.Tooling\BaseCodeGenerator.cs">
-      <Link>Linked\BaseCodeGenerator.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Tooling\BaseCodeGeneratorWithSite.cs">
-      <Link>Linked\BaseCodeGeneratorWithSite.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Tooling\Extensions.cs">
-      <Link>Linked\Extensions.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Tooling\RazorGenerator.cs">
-      <Link>Linked\RazorGenerator.cs</Link>
-    </Compile>
-    <EmbeddedResource Include="..\RazorGenerator.Tooling\Resources\SingleFileResources.resx" ManifestResourceName="RazorGenerator.Resources.SingleFileResources">
-      <Link>Resources\SingleFileResources.resx</Link>
+    <Compile Include="BaseCodeGenerator.cs"/>
+    <Compile Include="BaseCodeGeneratorWithSite.cs"/>
+    <Compile Include="Extensions.cs"/>
+    <Compile Include="RazorGenerator.cs"/>
+    <EmbeddedResource Include="Resources\SingleFileResources.resx" ManifestResourceName="RazorGenerator.Resources.SingleFileResources">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>SingleFileResources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>RazorGenerator.Resources</CustomToolNamespace>
     </EmbeddedResource>
-    <Compile Include="..\RazorGenerator.Tooling\RazorGeneratorToolingException.cs">
-      <Link>Linked\RazorGeneratorToolingException.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Tooling\Resources\SingleFileResources.Designer.cs">
-      <Link>Resources\SingleFileResources.Designer.cs</Link>
+    <Compile Include="RazorGeneratorToolingException.cs"/>
+    <Compile Include="Resources\SingleFileResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SingleFileResources.resx</DependentUpon>
     </Compile>
     <!-- RazorGenerator.Tooling.VS2019-specific files: -->
-    <None Include="RazorGeneratorVS2019Package.cs" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
-    <Compile Include="..\RazorGenerator.Tooling\VsGeneratorProgressExtensions.cs">
+    <Compile Include="VsGeneratorProgressExtensions.cs">
       <Link>Linked\VsGeneratorProgressExtensions.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\RazorGenerator.Tooling\ReadMe.txt">
-      <Link>ReadMe.txt</Link>
-    </Content>
+    <Content Include="ReadMe.txt"/>
     <Content Include="LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -117,7 +102,7 @@
   <Target Name="_CreateSourceItems">
     <!-- Copy the Core.v1 and v2 binaries inside the v1 and v2 directories of the vsix. This is to resolve bug 72 -->
     <ItemGroup>
-      <VSIXSourceItem Include="..\RazorGenerator.Tooling\LICENSE.txt" />
+      <VSIXSourceItem Include="LICENSE.txt" />
       <VSIXSourceItem Include="..\RazorGenerator.Core.v1\bin\$(Configuration)\*.dll" Exclude="..\RazorGenerator.Core.v1\bin\$(Configuration)\RazorGenerator.Core.dll">
         <VSIXSubPath>v1</VSIXSubPath>
       </VSIXSourceItem>

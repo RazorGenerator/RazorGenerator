@@ -7,12 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Core", "Razo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Core.Test", "RazorGenerator.Core.Test\RazorGenerator.Core.Test.csproj", "{31008D4B-EF1A-43B9-8908-B35818324FFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Tooling", "RazorGenerator.Tooling\RazorGenerator.Tooling.csproj", "{461089E7-008E-4737-BA17-E1FCD1CC3D0E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{8AC6362A-CF3F-441B-B0B4-B9907F4CBB46} = {8AC6362A-CF3F-441B-B0B4-B9907F4CBB46}
-		{1A99F351-138E-440B-A4E9-B8651FEEA593} = {1A99F351-138E-440B-A4E9-B8651FEEA593}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.MsBuild", "RazorGenerator.MsBuild\RazorGenerator.MsBuild.csproj", "{A229A158-CFD5-4D05-945D-A3192F5C895B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8AC6362A-CF3F-441B-B0B4-B9907F4CBB46} = {8AC6362A-CF3F-441B-B0B4-B9907F4CBB46}
@@ -34,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Tooling.VS2019", "RazorGenerator.Tooling.VS2019\RazorGenerator.Tooling.VS2019.csproj", "{029A884E-D234-4D66-9C28-0ABED066725E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorGenerator.Tooling", "RazorGenerator.Tooling\RazorGenerator.Tooling.Dev14.csproj", "{029A884E-D234-4D66-9C28-0ABED066725E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
