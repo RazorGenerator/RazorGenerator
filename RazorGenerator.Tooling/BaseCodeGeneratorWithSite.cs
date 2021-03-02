@@ -14,20 +14,22 @@ using System;
 using System.CodeDom.Compiler;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+
 using EnvDTE;
+
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Designer.Interfaces;
+using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using VSLangProj;
-using VSOLE = Microsoft.VisualStudio.OLE.Interop;
 
 namespace RazorGenerator
 {
     /// <summary>
     /// Base code generator with site implementation
     /// </summary>
-    public abstract class BaseCodeGeneratorWithSite : BaseCodeGenerator, VSOLE.IObjectWithSite
+    [ComVisible(true)]
+    public abstract class BaseCodeGeneratorWithSite : BaseCodeGenerator, IObjectWithSite
     {
         private object site = null;
         private CodeDomProvider codeDomProvider = null;
@@ -40,7 +42,7 @@ namespace RazorGenerator
         /// </summary>
         /// <param name="riid">interface to get</param>
         /// <param name="ppvSite">IntPtr in which to stuff return value</param>
-        void VSOLE.IObjectWithSite.GetSite(ref Guid riid, out IntPtr ppvSite)
+        void IObjectWithSite.GetSite(ref Guid riid, out IntPtr ppvSite)
         {
             if (this.site == null)
             {
@@ -65,7 +67,7 @@ namespace RazorGenerator
         /// SetSite method of IOleObjectWithSite
         /// </summary>
         /// <param name="pUnkSite">site for this object to use</param>
-        void VSOLE.IObjectWithSite.SetSite(object pUnkSite)
+        void IObjectWithSite.SetSite(object pUnkSite)
         {
             this.site = pUnkSite;
             this.codeDomProvider = null;
@@ -85,7 +87,7 @@ namespace RazorGenerator
 
                 if (this.serviceProvider == null)
                 {
-                    this.serviceProvider = new ServiceProvider(this.site as VSOLE.IServiceProvider);
+                    this.serviceProvider = new ServiceProvider(this.site as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
                     Debug.Assert(this.serviceProvider != null, "Unable to get ServiceProvider from site object.");
                 }
                 return this.serviceProvider;

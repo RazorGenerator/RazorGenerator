@@ -1,4 +1,4 @@
-#define USE_IVsSingleFileGenerator
+#define USE_BaseCodeGeneratorWithSite
 
 /***************************************************************************
 
@@ -17,6 +17,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -30,6 +31,8 @@ namespace RazorGenerator
         public const String VBProjectGuid     = @"{164B10B9-B200-11D0-8C61-00A0C91E29D5}";
     }
 
+#if USE_IVsSingleFileGenerator
+    [ComVisible(true)]
     public class SomeBaseClass
         // Interesting: When `class RazorGenerator` has a base-class, VS will load and construct it - but won't call the interface methods, but why?
     {
@@ -38,6 +41,7 @@ namespace RazorGenerator
             System.Diagnostics.Debug.WriteLine( "[RazorGenerator] SomeBaseClass.ctor" );
         }
     }
+#endif
 
     /// <summary>This is the generator class.<br />
     /// When setting the 'Custom Tool' property of a C# or VB project item to &quot;RazorGenerator&quot; the <see cref="GenerateCode(string)"/> method will get called and will return the contents of the generated file to the project system</summary>
@@ -57,7 +61,9 @@ namespace RazorGenerator
     public sealed class RazorGenerator :
 #if USE_IVsSingleFileGenerator
         SomeBaseClass,
-        IVsSingleFileGenerator
+        //SomeBaseClass,
+        IVsSingleFileGenerator,
+        IObjectWithSite
 #elif USE_BaseCodeGenerator
         BaseCodeGenerator
 #elif USE_BaseCodeGeneratorWithSite
@@ -103,6 +109,16 @@ namespace RazorGenerator
                 pcbOutput = 0;
             }
             return VSConstants.S_OK;
+        }
+        void IObjectWithSite.SetSite(object pUnkSite)
+        {
+            System.Diagnostics.Debug.WriteLine( "[RazorGenerator] RazorGenerator.SetSite" );
+        }
+
+        void IObjectWithSite.GetSite(ref Guid riid, out IntPtr ppvSite)
+        {
+            System.Diagnostics.Debug.WriteLine( "[RazorGenerator] RazorGenerator.GetSite" );
+            ppvSite = IntPtr.Zero;
         }
 
 #elif USE_BaseCodeGenerator

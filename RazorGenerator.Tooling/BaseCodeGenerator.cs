@@ -25,6 +25,7 @@ namespace RazorGenerator
     /// a custom tool invoked at design time which can take any file as an input
     /// and provide any file as output.
     /// </summary>
+    [ComVisible(true)]
     public abstract class BaseCodeGenerator : IVsSingleFileGenerator
     {
         private IVsGeneratorProgress codeGeneratorProgress;
