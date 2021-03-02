@@ -3,20 +3,20 @@
   <Metadata>
     <Identity Id="2FD58EB3-29A2-40A3-BE17-C024CA9A17A2" Version="2.00.0" Language="en-US" Publisher="RazorGenerator contributors" />
     <DisplayName>Razor Generator</DisplayName>
-    <Description>Generates source code from Razor files (.cshtml/.vbhtml files), allowing them to be compiled into your assemblies. Supports MVC, Web Pages and standalone templates.</Description>
+    <Description xml:space="preserve">Generates *.cs and *.vb source code from Razor files (*.cshtml and *.vbhtml respectively) directly from within Visual Studio at design-time without requiring a build. This extension supports Razor files used natively by ASP.NET MVC, ASP.NET Web Pages and standalone templates. This extension is not necessary to compile  *.cshtml and .*vbhtml files at build-time using MSBuild.</Description>
     <MoreInfo>https://github.com/RazorGenerator/RazorGenerator</MoreInfo>
     <License>LICENSE.txt</License>
     <GettingStartedGuide>https://github.com/RazorGenerator/RazorGenerator/wiki/Quick-Start-Guide</GettingStartedGuide>
+    <Tags>razor cshtml vbhtml precompile precompiler</Tags>
   </Metadata>
   <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[16.0, 17.0)" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0, 17.0)" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.7.2,)" />
-    <Dependency Id="Microsoft.VisualStudio.MPF.16.0" DisplayName="Visual Studio MPF 16.0" d:Source="Installed" Version="[16.0,17.0)" />
   </Dependencies>
   <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[16.0,17.0)" DisplayName="Visual Studio core editor" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[14.0,17.0)" DisplayName="Visual Studio core editor" />
   </Prerequisites>
   <Assets>
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />

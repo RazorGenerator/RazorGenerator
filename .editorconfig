@@ -1,7 +1,7 @@
 # Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
-[*.csproj]
+[*.{csproj,vsixmanifest}]
 indent_size = 2
 indent_style = space
 insert_final_newline = true

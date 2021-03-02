@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
@@ -14,9 +14,10 @@
     <ProjectGuid>{029A884E-D234-4D66-9C28-0ABED066725E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RazorGenerator.Tooling.VS2019</RootNamespace>
-    <AssemblyName>RazorGenerator.Tooling.VS2019</AssemblyName>
+    <RootNamespace>RazorGenerator</RootNamespace>
+    <AssemblyName>RazorGenerator</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <VsixType>v3</VsixType>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <UseCodebase>true</UseCodebase>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
