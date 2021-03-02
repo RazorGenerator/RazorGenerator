@@ -71,7 +71,7 @@
     <Compile Include="..\RazorGenerator.Tooling\RazorGenerator.cs">
       <Link>Linked\RazorGenerator.cs</Link>
     </Compile>
-    <EmbeddedResource Include="..\RazorGenerator.Tooling\Resources\SingleFileResources.resx">
+    <EmbeddedResource Include="..\RazorGenerator.Tooling\Resources\SingleFileResources.resx" ManifestResourceName="RazorGenerator.Resources.SingleFileResources">
       <Link>Resources\SingleFileResources.resx</Link>
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
