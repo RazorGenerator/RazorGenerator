@@ -1,6 +1,13 @@
 # Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
+[*.csproj]
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+charset = utf-8
+end_of_line = crlf
+
 # C# files
 [*.cs]
 
