@@ -14,7 +14,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 
 using RazorGenerator.Core;
 
@@ -35,12 +37,46 @@ namespace RazorGenerator
     [ProvideObject(typeof(RazorGenerator))]
 
     
-    public sealed class RazorGenerator : BaseCodeGeneratorWithSite
+    public sealed class RazorGenerator : IVsSingleFileGenerator // BaseCodeGeneratorWithSite
     {
         //The name of this generator (use for 'Custom Tool' property of project item)
 #pragma warning disable IDE1006 // Naming Styles. Keeping this field without an underscore prefix until I know it's safe to add it.
         internal static readonly string name = "RazorGenerator";
 #pragma warning restore
+
+#region IVsSingleFileGenerator Members
+        public int DefaultExtension(out string pbstrDefaultExtension)
+        {
+            bool isUIThread = ThreadHelper.CheckAccess();
+
+            pbstrDefaultExtension = ".xml";
+            return pbstrDefaultExtension.Length;
+        }
+
+        public int Generate(string wszInputFilePath, string bstrInputFileContents,
+          string wszDefaultNamespace, IntPtr[] rgbOutputFileContents,
+          out uint pcbOutput, IVsGeneratorProgress pGenerateProgress)
+        {
+            bool isUIThread = ThreadHelper.CheckAccess();
+
+            try
+            {
+                int lineCount = bstrInputFileContents.Split('\n').Length;
+                byte[] bytes = Encoding.UTF8.GetBytes("<LineCount>" + lineCount.ToString() + "</LineCount>" );
+                int length = bytes.Length;
+                rgbOutputFileContents[0] = Marshal.AllocCoTaskMem(length);
+                Marshal.Copy(bytes, 0, rgbOutputFileContents[0], length);
+                pcbOutput = (uint)length;
+            }
+            catch (Exception ex)
+            {
+                pcbOutput = 0;
+            }
+            return VSConstants.S_OK;
+        }
+#endregion
+
+#if NOT_NOW
 
         /// <summary>
         /// Function that builds the contents of the generated file based on the contents of the input file
@@ -49,6 +85,10 @@ namespace RazorGenerator
         /// <returns>Generated file as a byte array</returns>
         protected override byte[] GenerateCode(string inputFileContent)
         {
+
+
+            return new byte[] { 0xDE, 0xAD, 0xBE, 0xEF };
+
             ThreadHelper.ThrowIfNotOnUIThread();
 
             try
@@ -114,5 +154,7 @@ namespace RazorGenerator
             //Return the combined byte array
             return preamble;
         }
+
+#endif
     }
 }
