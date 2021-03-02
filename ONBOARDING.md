@@ -17,6 +17,16 @@
   * Tools > Options > Projects and Solutions > General > Allow parallel project initialization (uncheck, and restart VS)
   * Also consider nuking the `.vs` directory in the solution root. (And there should be no other `*.suo` or `*.csproj.user` files anywhere else in the solution directory structure).
 
+### RazorGenerator.Tooling.csproj build issues:
+
+#### Issue: `ShouldCleanDeployedVsixExtensionFiles`
+
+When building `RazorGenerator.Tooling` from within VS2019, this build error is encountered:
+
+> Invoke build failed due to exception 'Specified condition "$(ShouldCleanDeployedVsixExtensionFiles)" evaluates to "" instead of a boolean
+
+This error disappeared after restarting Visual Studio 2019.
+
 ### The `MvcViewsTests` project won't load.
 
 * The `MvcViewsTests` project has a Project Type GUID of {3AC096D0-A1C2-E12C-1390-A8335801FDAB}.
