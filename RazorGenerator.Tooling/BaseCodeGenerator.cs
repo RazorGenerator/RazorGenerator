@@ -113,37 +113,63 @@ namespace RazorGenerator
 
         private byte[] TryGenerateOrNull(string inputFileContent)
         {
+            string fileContents;
             try
             {
-                string fileContents = this.GenerateFileContent(inputFileContent);
-                return ConvertToUtf8Bytes(fileContents);
+                fileContents = this.GenerateFileContent(inputFileContent);
             }
-            catch (InvalidOperationException exception)
+            catch (InvalidOperationException exception) // hold on, what's so special about `InvalidOperationException`? We should have a custom exception type if we're doing anything ourselves.
             {
-                string exReport = exception.ToString();
-
-                {
-                    const string messageFmt = "Failed to generate file: {0}\r\n\r\n{1}";
-                    string message = String.Format(provider: CultureInfo.CurrentCulture, format: messageFmt, exception.Message, exReport);
-                    this.codeGeneratorProgress.GeneratorErrorOrThrow(isWarning: false, level: 1, message: message, line: 0, column: 0);
-                }
+                _ = this.ReportGenerationError(exception, out string exceptionReport);
                 
+                // Write the error to the output file, as error details can be too complex for comfortable display in VS' Error List window:
+                try
                 {
                     const string contentsFmt = "/* Failed to generate file:\r\n\r\n{0}\r\n*/";
-                    string exReportSafe = exReport.Replace( "*/", "* /" ); // so it doesn't break the comment.
+                    string exReportSafe = exceptionReport.Replace( "*/", "* /" ); // so it doesn't break the comment.
                     string errorContents = String.Format(provider: CultureInfo.CurrentCulture, format: contentsFmt, exReportSafe);
                     
-                    return ConvertToUtf8Bytes(errorContents);
+                    return ConvertToUtf8BytesWithBom(errorContents, this.codeGeneratorProgress);
                 }
-                
+                catch( Exception fallbackException )
+                {
+                    return this.ReportEncodingError( fallbackException );
+                }
             }
             catch (Exception exception)
             {
-                const string messageFmt = @"Failed to generate file: {0}\r\n\r\n{1}";
-                string message = String.Format(provider: CultureInfo.CurrentCulture, format: messageFmt, exception.Message, exception.ToString());
-                this.codeGeneratorProgress.GeneratorErrorOrThrow(isWarning: false, level: 1, message: message, line: 0, column: 0);
-                return null;
+                return this.ReportGenerationError( exception, exceptionReport:  out _ );
             }
+
+            //
+
+            try
+            {
+                byte[] encodedBytes = ConvertToUtf8BytesWithBom(fileContents, this.codeGeneratorProgress);
+                return encodedBytes;
+            }
+            catch( Exception encodingException )
+            {
+                return this.ReportEncodingError( encodingException );
+            }
+        }
+
+        private byte[] ReportGenerationError(Exception exception, out string exceptionReport)
+        {
+            exceptionReport = exception.ToString();
+
+            const string messageFmt = @"Failed to generate file: {0}\r\n\r\n{1}";
+            string message = String.Format(provider: CultureInfo.CurrentCulture, format: messageFmt, exception.Message, exceptionReport);
+            this.codeGeneratorProgress.GeneratorErrorOrThrow(isWarning: false, level: 1, message: message, line: 0, column: 0);
+            return null;
+        }
+
+        private byte[] ReportEncodingError( Exception encodingException )
+        {
+            const string messageFmt = @"File generated succesfully, but failed to encode file contents string to bytes: {0}\r\n\r\n{1}";
+            string message = String.Format(provider: CultureInfo.CurrentCulture, format: messageFmt, encodingException.Message, encodingException.ToString());
+            this.codeGeneratorProgress.GeneratorErrorOrThrow(isWarning: false, level: 1, message: message, line: 0, column: 0);
+            return null;
         }
 
         #endregion
@@ -158,7 +184,7 @@ namespace RazorGenerator
         }
 
         /// <summary>File-path for the input file</summary>
-        protected string InputFilePath
+        protected FileInfo InputFilePath
         {
             get
             {
@@ -179,20 +205,53 @@ namespace RazorGenerator
         /// <returns>String with the default extension for this generator</returns>
         protected abstract string GetDefaultExtension();
 
-        protected static byte[] ConvertToUtf8Bytes(string content)
+        private static readonly UTF8Encoding _utf8NoBom = new UTF8Encoding( encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true );
+
+        protected static byte[] ConvertToUtf8BytesWithoutBom(string content, IVsGeneratorProgress codeGeneratorProgress)
         {
+            return _utf8NoBom.GetBytes( s: content );
+        }
+
+        protected static byte[] ConvertToUtf8BytesWithBom(string content, IVsGeneratorProgress codeGeneratorProgress)
+        {
+            // https://docs.microsoft.com/en-us/dotnet/api/system.text.utf8encoding.getbytecount
+            // > the number of bytes in the preamble is not reflected in the value returned by the GetByteCount method.
+
             int contentBytesCount = Encoding.UTF8.GetByteCount(content);
 
-            //Get the preamble (byte-order mark) for our encoding
-            byte[] preambleBytes = Encoding.UTF8.GetPreamble();
+            byte[] outputBytes;
+            Int32  outputBytesIndex = 0;
+            {
+                // Get the preamble (byte-order mark) for our encoding
+                byte[] preambleBytes = Encoding.UTF8.GetPreamble();
 
-            byte[] contentBytes = new byte[contentBytesCount + preambleBytes.Length];
+                outputBytes = new byte[preambleBytes.Length + contentBytesCount];
+                Array.Copy( sourceArray: preambleBytes, sourceIndex: 0, destinationArray: outputBytes, destinationIndex: 0, length: preambleBytes.Length );
 
-            int contentBytesWritten = Encoding.UTF8.GetBytes(s: content, charIndex: 0, charCount: content.Length, bytes: contentBytes, byteIndex: preambleBytes.Length);
-            if (contentBytesWritten != contentBytes.Length) throw new InvalidOperationException(message: "Expected to write {0:N0} bytes but wrote {1:N0} bytes.".Fmt(contentBytes.Length, contentBytesWritten));
+                outputBytesIndex = preambleBytes.Length;
+            }
 
-            //Return the combined byte array
-            return contentBytes;
+            int contentBytesWritten = Encoding.UTF8.GetBytes( s: content, charIndex: 0, charCount: content.Length, bytes: outputBytes, byteIndex: outputBytesIndex );
+            if (contentBytesWritten != contentBytesCount)
+            {
+                string message = "Expected to write {0:N0} bytes but wrote {1:N0} bytes.".Fmt(contentBytesCount, contentBytesWritten);
+#if DEBUG
+                throw new InvalidOperationException(message: message);
+#else
+                // Be more tolerant in Release builds:
+                if( codeGeneratorProgress != null )
+                {
+                    codeGeneratorProgress.GeneratorErrorOrThrow(isWarning: true, level: 2, message: message, line: 0, column: 0);
+                }
+                else
+                {
+                    throw new InvalidOperationException(message: message);
+                }
+#endif
+            }
+
+            // Return the concatenated output:
+            return outputBytes;
         }
 
         /// <summary>The method that does the actual work of generating code given the input file</summary>
