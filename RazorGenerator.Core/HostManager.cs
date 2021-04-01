@@ -96,7 +96,7 @@ namespace RazorGenerator.Core
             using (CompositionContainer container = new CompositionContainer(this._catalog))
             {
                 IRazorCodeTransformer codeTransformer = this.GetRazorCodeTransformer(container, projectRelativePath, hostName);
-                IHostProvider host = container.GetExport<IHostProvider>().Value;
+                IRazorHostProvider host = container.GetExport<IRazorHostProvider>().Value;
                 return host.GetRazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
             }
         }
