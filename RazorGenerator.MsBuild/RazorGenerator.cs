@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
 using RazorGenerator.Core;
 
 namespace RazorGenerator.MsBuild
@@ -39,52 +40,70 @@ namespace RazorGenerator.MsBuild
         {
             try
             {
-                return ExecuteCore();
+                return this.ExecuteCore();
             }
             catch (Exception ex)
             {
-                Log.LogError(ex.Message);
+                this.Log.LogError(ex.Message);
             }
             return false;
         }
 
         private bool ExecuteCore()
         {
-            if (FilesToPrecompile == null || !FilesToPrecompile.Any())
+            if (this.FilesToPrecompile == null || !this.FilesToPrecompile.Any())
             {
                 return true;
             }
 
-            string projectRoot = String.IsNullOrEmpty(ProjectRoot) ? Directory.GetCurrentDirectory() : ProjectRoot;
-            using (var hostManager = new HostManager(projectRoot))
+            DirectoryInfo projectRootDir;
             {
-                foreach (var file in FilesToPrecompile)
+                if(String.IsNullOrEmpty(this.ProjectRoot))
                 {
-                    string filePath = file.GetMetadata("FullPath");
-                    string fileName = Path.GetFileName(filePath);
-                    var projectRelativePath = GetProjectRelativePath(filePath, projectRoot);
-                    string itemNamespace = GetNamespace(file, projectRelativePath);
+                    projectRootDir = new DirectoryInfo(Directory.GetCurrentDirectory());
+                }
+                else
+                {
+                    projectRootDir = new DirectoryInfo(this.ProjectRoot);
+                }
+            }
 
-                    CodeLanguageUtil langutil = CodeLanguageUtil.GetLanguageUtilFromFileName(fileName);
+            using (HostManager hostManager = new HostManager(baseDirectory: projectRootDir))//, loadExtensions: true, defaultRuntime: RazorRuntime.Version3, assemblyDirectory: ))
+            {
+                foreach (ITaskItem file in this.FilesToPrecompile)
+                {
+                    FileInfo filePath            = new FileInfo(file.GetMetadata("FullPath"));
+                    string   fileName            = filePath.Name;
+                    string   projectRelativePath = GetProjectRelativePath(filePath, projectRootDir);
+                    string   itemNamespace       = this.GetNamespace(file, projectRelativePath);
+
+                    CodeLanguageUtil langutil = CodeLanguageUtil.GetLanguageUtilFromFileName(filePath);
 
                     string outputPath = Path.Combine(CodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + langutil.GetCodeFileExtension();
                     if (!RequiresRecompilation(filePath, outputPath))
                     {
-                        Log.LogMessage(MessageImportance.Low, "Skipping file {0} since {1} is already up to date", filePath, outputPath);
+                        this.Log.LogMessage(MessageImportance.Low, "Skipping file {0} since {1} is already up to date", filePath, outputPath);
                         continue;
                     }
                     EnsureDirectory(outputPath);
 
-                    Log.LogMessage(MessageImportance.Low, "Precompiling {0} at path {1}", filePath, outputPath);
-                    var host = hostManager.CreateHost(filePath, projectRelativePath, itemNamespace);
+                    this.Log.LogMessage(MessageImportance.Low, "Precompiling {0} at path {1}", filePath, outputPath);
+                    IRazorHost host = hostManager.CreateHost(filePath, projectRelativePath, itemNamespace);
 
                     bool hasErrors = false;
                     host.Error += (o, eventArgs) =>
                     {
-                        Log.LogError("RazorGenerator", eventArgs.ErorrCode.ToString(), helpKeyword: "", file: file.ItemSpec,
-                                     lineNumber: (int)eventArgs.LineNumber, columnNumber: (int)eventArgs.ColumnNumber,
-                                     endLineNumber: (int)eventArgs.LineNumber, endColumnNumber: (int)eventArgs.ColumnNumber,
-                                     message: eventArgs.ErrorMessage);
+                        this.Log.LogError(
+                            subcategory    : "RazorGenerator",
+                            errorCode      : eventArgs.ErorrCode.ToString(),
+                            helpKeyword    : "",
+                            file           : file.ItemSpec,
+                            lineNumber     : (int)eventArgs.LineNumber,
+                            columnNumber   : (int)eventArgs.ColumnNumber,
+                            endLineNumber  : (int)eventArgs.LineNumber,
+                            endColumnNumber: (int)eventArgs.ColumnNumber,
+                            message        : eventArgs.ErrorMessage
+                        );
 
                         hasErrors = true;
                     };
@@ -100,7 +119,7 @@ namespace RazorGenerator.MsBuild
                     }
                     catch (Exception exception)
                     {
-                        Log.LogErrorFromException(exception, showStackTrace: true, showDetail: true, file: null);
+                        this.Log.LogErrorFromException(exception, showStackTrace: true, showDetail: true, file: null);
                         return false;
                     }
                     if (hasErrors)
@@ -108,14 +127,22 @@ namespace RazorGenerator.MsBuild
                         return false;
                     }
 
-                    var taskItem = new TaskItem(outputPath);
+                    TaskItem taskItem = new TaskItem(outputPath);
                     taskItem.SetMetadata("AutoGen", "true");
                     taskItem.SetMetadata("DependentUpon", "fileName");
 
-                    _generatedFiles.Add(taskItem);
+                    this._generatedFiles.Add(taskItem);
                 }
             }
             return true;
+        }
+
+        private static bool RequiresRecompilation(FileInfo fileInfo, string outputPath)
+        {
+            fileInfo.Refresh();
+
+            bool isUpToDate = fileInfo.Exists && fileInfo.LastWriteTimeUtc <= File.GetLastWriteTimeUtc(outputPath);
+            return !isUpToDate;
         }
 
         /// <summary>
@@ -143,10 +170,10 @@ namespace RazorGenerator.MsBuild
             itemNamespace = projectRelativePath.Trim(Path.DirectorySeparatorChar);
             if (String.IsNullOrEmpty(itemNamespace))
             {
-                return RootNamespace;
+                return this.RootNamespace;
             }
 
-            var stringBuilder = new StringBuilder(itemNamespace.Length);
+            StringBuilder stringBuilder = new StringBuilder(itemNamespace.Length);
             foreach (char c in itemNamespace)
             {
                 if (c == Path.DirectorySeparatorChar)
@@ -164,26 +191,32 @@ namespace RazorGenerator.MsBuild
             }
             itemNamespace = stringBuilder.ToString();
             itemNamespace = _namespaceRegex.Replace(itemNamespace, "$1_$2");
-            
-            if (!String.IsNullOrEmpty(RootNamespace))
+
+            if (!String.IsNullOrEmpty(this.RootNamespace))
             {
-                itemNamespace = RootNamespace + '.' + itemNamespace;
+                itemNamespace = this.RootNamespace + '.' + itemNamespace;
             }
             return itemNamespace;
         }
 
-        private static string GetProjectRelativePath(string filePath, string projectRoot)
+        private static string GetProjectRelativePath(FileInfo filePath, DirectoryInfo projectRoot)
         {
-            if (filePath.StartsWith(projectRoot, StringComparison.OrdinalIgnoreCase))
+            // HACK: Is there a better, more reliable (and *correct*?) way of comparing paths in Windows, as you can with inodes in *nix?
+
+            String filePathStr        = filePath.FullName;
+            String projectRootPathStr = projectRoot.FullName;
+
+            if( filePathStr.StartsWith( projectRootPathStr, StringComparison.OrdinalIgnoreCase ) )
             {
-                return filePath.Substring(projectRoot.Length);
+                return filePathStr.Substring( projectRootPathStr.Length );
             }
-            return filePath;
+
+            return filePathStr;
         }
 
         private static void EnsureDirectory(string filePath)
         {
-            var directory = Path.GetDirectoryName(filePath);
+            String directory = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);

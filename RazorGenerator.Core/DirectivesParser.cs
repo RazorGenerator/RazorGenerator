@@ -1,19 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace RazorGenerator.Core
 {
     internal static class DirectivesParser
     {
-        private const string GlobalDirectivesFileName = "razorgenerator.directives";
+        private const string _globalDirectivesFileName = "razorgenerator.directives";
 
-        public static Dictionary<string, string> ParseDirectives(string baseDirectory, string fullPath)
+        public static Dictionary<string, string> ParseDirectives(DirectoryInfo baseDirectory, FileInfo fullPath)
         {
-            var directives = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            string directivesPath;
-            if (TryFindGlobalDirectivesFile(baseDirectory, fullPath, out directivesPath))
+            Dictionary<string, string> directives = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            if (TryFindGlobalDirectivesFile(baseDirectory, fullPath, out FileInfo directivesPath))
             {
                 ParseGlobalDirectives(directives, directivesPath);
             }
@@ -25,8 +25,11 @@ namespace RazorGenerator.Core
         /// <summary>
         /// Attempts to locate the nearest global directive file by 
         /// </summary>
-        private static bool TryFindGlobalDirectivesFile(string baseDirectory, string fullPath, out string path)
+        private static bool TryFindGlobalDirectivesFile(DirectoryInfo baseDirectory, FileInfo nonGlobalDirectivesFile, out FileInfo globalDirectiveFile)
         {
+            DirectoryInfo nonGlobalDirectivesFileDirectory = nonGlobalDirectivesFile.Directory;
+
+            /*
             baseDirectory = baseDirectory.TrimEnd(Path.DirectorySeparatorChar);
             var directivesDirectory = Path.GetDirectoryName(fullPath).TrimEnd(Path.DirectorySeparatorChar);
             while (directivesDirectory != null && directivesDirectory.Length >= baseDirectory.Length)
@@ -40,17 +43,25 @@ namespace RazorGenerator.Core
             }
             path = null;
             return false;
+            */
+
+            globalDirectiveFile = baseDirectory
+                .EnumerateFiles(searchPattern: _globalDirectivesFileName, searchOption: SearchOption.AllDirectories)
+                .Where(fi => fi.FullName.StartsWith(nonGlobalDirectivesFileDirectory.FullName, StringComparison.OrdinalIgnoreCase)) // hmm, what about `/` vs `\` in paths? this needs to be normalized in order to do any meaningful comparison.
+                .FirstOrDefault();
+
+            return globalDirectiveFile != null;
         }
 
-        private static void ParseGlobalDirectives(Dictionary<string, string> directives, string directivesPath)
+        private static void ParseGlobalDirectives(Dictionary<string, string> directives, FileInfo directivesPath)
         {
-            var fileContent = File.ReadAllText(directivesPath);
+            var fileContent = File.ReadAllText(path: directivesPath.FullName);
             ParseKeyValueDirectives(directives, fileContent);
         }
 
-        private static void ParseFileDirectives(Dictionary<string, string> directives, string filePath)
+        private static void ParseFileDirectives(Dictionary<string, string> directives, FileInfo filePath)
         {
-            var inputFileContent = File.ReadAllText(filePath);
+            var inputFileContent = File.ReadAllText(filePath.FullName);
             int index = inputFileContent.IndexOf("*@", StringComparison.OrdinalIgnoreCase);
             if (inputFileContent.TrimStart().StartsWith("@*") && index != -1)
             {

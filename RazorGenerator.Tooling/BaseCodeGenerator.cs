@@ -13,6 +13,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -34,7 +35,7 @@ namespace RazorGenerator
     {
         private IVsGeneratorProgress codeGeneratorProgress;
         private string               codeFileNameSpace = String.Empty;
-        private string               codeFilePath      = String.Empty;
+        private FileInfo             codeFilePath      = null;
 
         #region IVsSingleFileGenerator Members
 
@@ -80,7 +81,7 @@ namespace RazorGenerator
 
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            this.codeFilePath          = wszInputFilePath;
+            this.codeFilePath          = new FileInfo(wszInputFilePath);
             this.codeFileNameSpace     = wszDefaultNamespace;
             this.codeGeneratorProgress = pGenerateProgress;
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -29,57 +29,46 @@ namespace RazorGenerator.Core
             "System.Web.Helpers",
         };
 
-        private readonly IRazorCodeTransformer _codeTransformer;
-        private readonly string _baseRelativePath;
-        private readonly string _fullPath;
-        private readonly CodeDomProvider _codeDomProvider;
-        private readonly IDictionary<string, string> _directives;
-        private string _defaultClassName;
+        private readonly IRazorCodeTransformer      _codeTransformer;
+        private readonly string                     _baseRelativePath;
+        private readonly FileInfo                   _fullPath;
+        private readonly CodeDomProvider            _codeDomProvider;
+        private readonly IDictionary<string,string> _directives;
+
+        private string           _defaultClassName;
         private CodeLanguageUtil _languageUtil;
 
-        public RazorHost(string baseRelativePath, string fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives)
-            : base(RazorCodeLanguage.GetLanguageByExtension(Path.GetExtension(fullPath)))
+        public RazorHost(string baseRelativePath, FileInfo fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives)
+            : base(RazorCodeLanguage.GetLanguageByExtension(fullPath.Extension))
         {
+            if (codeTransformer  == null) throw new ArgumentNullException("codeTransformer");
+            if (baseRelativePath == null) throw new ArgumentNullException("baseRelativePath");
+            if (fullPath         == null) throw new ArgumentNullException("fullPath");
+            if (codeDomProvider  == null) throw new ArgumentNullException("codeDomProvider");
 
-            if (codeTransformer == null)
-            {
-                throw new ArgumentNullException("codeTransformer");
-            }
-            if (baseRelativePath == null)
-            {
-                throw new ArgumentNullException("baseRelativePath");
-            }
-            if (fullPath == null)
-            {
-                throw new ArgumentNullException("fullPath");
-            }
-            if (codeDomProvider == null)
-            {
-                throw new ArgumentNullException("codeDomProvider");
-            }
-            _codeTransformer = codeTransformer;
-            _baseRelativePath = baseRelativePath;
-            _fullPath = fullPath;
-            _codeDomProvider = codeDomProvider;
-            _directives = directives;
-            _languageUtil = Core.CodeLanguageUtil.GetLanguageUtilFromFileName(fullPath);
-            base.DefaultNamespace = "ASP";
-            EnableLinePragmas = true;
+            this._codeTransformer  = codeTransformer;
+            this._baseRelativePath = baseRelativePath;
+            this._fullPath         = fullPath;
+            this._codeDomProvider  = codeDomProvider;
+            this._directives       = directives;
+            this._languageUtil     = Core.CodeLanguageUtil.GetLanguageUtilFromFileName(fullPath);
+            base.DefaultNamespace  = "ASP";
+            this.EnableLinePragmas = true;
 
             base.GeneratedClassContext = new GeneratedClassContext(
-                    executeMethodName: GeneratedClassContext.DefaultExecuteMethodName,
-                    writeMethodName: GeneratedClassContext.DefaultWriteMethodName,
-                    writeLiteralMethodName: GeneratedClassContext.DefaultWriteLiteralMethodName,
-                    writeToMethodName: "WriteTo",
-                    writeLiteralToMethodName: "WriteLiteralTo",
-                    templateTypeName: typeof(HelperResult).FullName,
-                    defineSectionMethodName: "DefineSection"
+                executeMethodName       : GeneratedClassContext.DefaultExecuteMethodName,
+                writeMethodName         : GeneratedClassContext.DefaultWriteMethodName,
+                writeLiteralMethodName  : GeneratedClassContext.DefaultWriteLiteralMethodName,
+                writeToMethodName       : "WriteTo",
+                writeLiteralToMethodName: "WriteLiteralTo",
+                templateTypeName        : typeof(HelperResult).FullName,
+                defineSectionMethodName : "DefineSection"
             );
 
             base.DefaultBaseClass = typeof(WebPage).FullName;
             foreach (var import in _defaultImports)
             {
-                base.NamespaceImports.Add(import);
+                _ = base.NamespaceImports.Add(import);
             }
         }
 
@@ -90,7 +79,7 @@ namespace RazorGenerator.Core
 
         public string FullPath
         {
-            get { return _fullPath; }
+            get { return _fullPath.FullName; }
         }
 
         public event EventHandler<GeneratorErrorEventArgs> Error;
@@ -137,10 +126,10 @@ namespace RazorGenerator.Core
             GeneratorResults results = null;
             try
             {
-                Stream stream = File.OpenRead(_fullPath);
-                using (var reader = new StreamReader(stream, Encoding.Default, detectEncodingFromByteOrderMarks: true))
+                using (FileStream stream = File.OpenRead(this._fullPath.FullName))
+                using (StreamReader reader = new StreamReader(stream, Encoding.Default, detectEncodingFromByteOrderMarks: true))
                 {
-                    results = engine.GenerateCode(reader, className: DefaultClassName, rootNamespace: DefaultNamespace, sourceFileName: _fullPath);
+                    results = engine.GenerateCode(reader, className: this.DefaultClassName, rootNamespace: this.DefaultNamespace, sourceFileName: this._fullPath.FullName);
                 }
             }
             catch (Exception e)

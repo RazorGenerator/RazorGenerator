@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,12 +31,13 @@ namespace RazorGenerator.Core.Test
         [MemberData("V3Tests")]
         public void TestTransformerType(string testName, RazorRuntime runtime)
         {
-            string workingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            DirectoryInfo workingDirectory = new DirectoryInfo(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
+            DirectoryInfo currentDirectory = new DirectoryInfo(Environment.CurrentDirectory);
             try
             {
-                using (var razorGenerator = new HostManager(workingDirectory, loadExtensions: false, defaultRuntime: runtime, assemblyDirectory: Environment.CurrentDirectory))
+                using (var razorGenerator = new HostManager(workingDirectory, loadExtensions: false, defaultRuntime: runtime, assemblyDirectory: currentDirectory))
                 {
-                    string inputFile = SaveInputFile(workingDirectory, testName);
+                    FileInfo inputFile = SaveInputFile(workingDirectory.FullName, testName);
                     var host = razorGenerator.CreateHost(inputFile, testName + ".cshtml", string.Empty);
                     host.DefaultNamespace = GetType().Namespace;
                     host.EnableLinePragmas = false;
@@ -49,7 +50,7 @@ namespace RazorGenerator.Core.Test
             {
                 try
                 {
-                    Directory.Delete(workingDirectory);
+                    workingDirectory.Delete();
                 }
                 catch
                 {
@@ -82,7 +83,7 @@ namespace RazorGenerator.Core.Test
             }
         }
 
-        private static string SaveInputFile(string outputDirectory, string testName)
+        private static FileInfo SaveInputFile(string outputDirectory, string testName)
         {
             if (!Directory.Exists(outputDirectory))
             {
@@ -90,7 +91,7 @@ namespace RazorGenerator.Core.Test
             }
             string outputFile = Path.Combine(outputDirectory, testName + ".cshtml");
             File.WriteAllText(outputFile, GetManifestFileContent(testName, "Input"));
-            return outputFile;
+            return new FileInfo(outputFile);
         }
 
         private static void AssertOutput(string testName, string output, RazorRuntime runtime)

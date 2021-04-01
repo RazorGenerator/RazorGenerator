@@ -11,36 +11,37 @@ using System.Text.RegularExpressions;
 
 namespace RazorGenerator.Core
 {
-    public class HostManager : IDisposable
+    public sealed class HostManager : IDisposable
     {
-        private readonly string _baseDirectory;
-        private readonly bool _loadExtensions;
-        private readonly RazorRuntime _defaultRuntime;
-        private readonly string _assemblyDirectory;
+        private readonly DirectoryInfo baseDirectory;
+        private readonly bool          loadExtensions;
+        private readonly RazorRuntime  defaultRuntime;
+        private readonly DirectoryInfo assemblyDirectory;
+
         private ComposablePartCatalog _catalog;
 
-        public HostManager(string baseDirectory)
+        public HostManager(DirectoryInfo baseDirectory)
             : this(baseDirectory, loadExtensions: true, defaultRuntime: RazorRuntime.Version1, assemblyDirectory: GetAssesmblyDirectory())
         {
+
         }
 
-        public HostManager(string baseDirectory, bool loadExtensions, RazorRuntime defaultRuntime, string assemblyDirectory)
+        public HostManager(DirectoryInfo baseDirectory, bool loadExtensions, RazorRuntime defaultRuntime, DirectoryInfo assemblyDirectory)
         {
-            _loadExtensions = loadExtensions;
-            _baseDirectory = baseDirectory;
-            _defaultRuntime = defaultRuntime;
-            _assemblyDirectory = assemblyDirectory;
+            this.loadExtensions = loadExtensions;
+            this.baseDirectory = baseDirectory;
+            this.defaultRuntime = defaultRuntime;
+            this.assemblyDirectory = assemblyDirectory;
 
             // Repurposing loadExtensions to mean unit-test scenarios. Don't bind to the AssemblyResolve in unit tests
-            if (_loadExtensions)
+            if (this.loadExtensions)
             {
-                AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+                AppDomain.CurrentDomain.AssemblyResolve += this.OnAssemblyResolve;
             }
         }
 
-        public IRazorHost CreateHost(string fullPath, string projectRelativePath, string vsNamespace)
+        public IRazorHost CreateHost(FileInfo fullPath, string projectRelativePath, string vsNamespace)
         {
-
             CodeLanguageUtil langutil = CodeLanguageUtil.GetLanguageUtilFromFileName(fullPath);
 
             using (var codeDomProvider = langutil.GetCodeDomProvider())
@@ -49,52 +50,50 @@ namespace RazorGenerator.Core
             }
         }
 
-        public IRazorHost CreateHost(string fullPath, string projectRelativePath, CodeDomProvider codeDomProvider, string vsNamespace)
+        public IRazorHost CreateHost(FileInfo fullPath, string projectRelativePath, CodeDomProvider codeDomProvider, string vsNamespace)
         {
-            var directives = DirectivesParser.ParseDirectives(_baseDirectory, fullPath);
+            Dictionary<string, string> directives = DirectivesParser.ParseDirectives(this.baseDirectory, fullPath);
             directives["VsNamespace"] = vsNamespace;
 
             string guessedHost = null;
-            RazorRuntime runtime = _defaultRuntime;
-            GuessedHost value;
-            if (TryGuessHost(_baseDirectory, projectRelativePath, out value))
+            RazorRuntime runtime = this.defaultRuntime;
+            if (TryGuessHost(this.baseDirectory, projectRelativePath, out GuessedHost value))
             {
                 runtime = value.Runtime;
                 guessedHost = value.Host;
             }
 
-            string hostName;
-            if (!directives.TryGetValue("Generator", out hostName))
+            if (!directives.TryGetValue("Generator", out string hostName))
             {
                 // Determine the host and runtime from the file \ project
                 hostName = guessedHost;
             }
-            string razorVersion;
-            if (directives.TryGetValue("RazorVersion", out razorVersion))
+
+            if (directives.TryGetValue("RazorVersion", out string razorVersion))
             {
                 // If the directive explicitly specifies a host, use that.
                 switch (razorVersion)
                 {
-                    case "1":
-                        runtime = RazorRuntime.Version1;
-                        break;
-                    case "2":
-                        runtime = RazorRuntime.Version2;
-                        break;
-                    default:
-                        runtime = RazorRuntime.Version3;
-                        break;
+                case "1":
+                    runtime = RazorRuntime.Version1;
+                    break;
+                case "2":
+                    runtime = RazorRuntime.Version2;
+                    break;
+                default:
+                    runtime = RazorRuntime.Version3;
+                    break;
                 }
             }
 
             if (_catalog == null)
             {
-                _catalog = InitCompositionCatalog(_baseDirectory, _loadExtensions, runtime);
+                _catalog = this.InitCompositionCatalog(baseDirectory, loadExtensions, runtime);
             }
 
             using (var container = new CompositionContainer(_catalog))
             {
-                var codeTransformer = GetRazorCodeTransformer(container, projectRelativePath, hostName);
+                var codeTransformer = this.GetRazorCodeTransformer(container, projectRelativePath, hostName);
                 var host = container.GetExport<IHostProvider>().Value;
                 return host.GetRazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
             }
@@ -102,11 +101,14 @@ namespace RazorGenerator.Core
 
         private IRazorCodeTransformer GetRazorCodeTransformer(CompositionContainer container, string projectRelativePath, string hostName)
         {
-
             IRazorCodeTransformer codeTransformer = null;
             try
             {
                 codeTransformer = container.GetExportedValue<IRazorCodeTransformer>(hostName);
+            }
+            catch (ReflectionTypeLoadException)
+            {
+                throw;
             }
             catch (Exception exception)
             {
@@ -118,13 +120,14 @@ namespace RazorGenerator.Core
             {
                 throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, RazorGeneratorResources.GeneratorError_UnknownGenerator, hostName));
             }
+
             return codeTransformer;
         }
 
-        private ComposablePartCatalog InitCompositionCatalog(string baseDirectory, bool loadExtensions, RazorRuntime runtime)
+        private ComposablePartCatalog InitCompositionCatalog(DirectoryInfo baseDirectory, bool loadExtensions, RazorRuntime runtime)
         {
             // Retrieve available hosts
-            var hostsAssembly = GetAssembly(runtime);
+            var hostsAssembly = this.GetAssembly(runtime);
             var catalog = new AggregateCatalog(new AssemblyCatalog(hostsAssembly));
 
             if (loadExtensions)
@@ -133,11 +136,11 @@ namespace RazorGenerator.Core
                 AddCatalogIfHostsDirectoryExists(catalog, baseDirectory);
 
                 // Look for the Razor Hosts directory up to two directories above the baseDirectory. Hopefully this should cover the solution root.
-                var solutionDirectory = Path.Combine(baseDirectory, @"..\");
-                AddCatalogIfHostsDirectoryExists(catalog, solutionDirectory);
+                var solutionDirectory = Path.Combine(baseDirectory.FullName, @"..\");
+                AddCatalogIfHostsDirectoryExists(catalog, new DirectoryInfo(solutionDirectory));
 
-                solutionDirectory = Path.Combine(baseDirectory, @"..\..\");
-                AddCatalogIfHostsDirectoryExists(catalog, solutionDirectory);
+                solutionDirectory = Path.Combine(baseDirectory.FullName, @"..\..\");
+                AddCatalogIfHostsDirectoryExists(catalog, new DirectoryInfo(solutionDirectory));
             }
 
             return catalog;
@@ -146,10 +149,10 @@ namespace RazorGenerator.Core
         private static IEnumerable<string> GetAvailableHosts(CompositionContainer container)
         {
             // We need for a way to figure out what the exporting type is. This could return arbitrary exports that are not ISingleFileGenerators
-            return from part in container.Catalog.Parts
-                   from export in part.ExportDefinitions
-                   where !String.IsNullOrEmpty(export.ContractName)
-                   select export.ContractName;
+            return container.Catalog.Parts
+                .SelectMany(part => part.ExportDefinitions)
+                .Where(exportDef => !String.IsNullOrEmpty(exportDef.ContractName))
+                .Select(exportDef => exportDef.ContractName);
         }
 
         private Assembly GetAssembly(RazorRuntime runtime)
@@ -158,22 +161,21 @@ namespace RazorGenerator.Core
             // TODO: Check if we can switch to using CodeBase instead of Location
 
             // Look for the assembly at vX\RazorGenerator.vX.dll. If not, assume it is at RazorGenerator.vX.dll
-            string runtimeDirectory = Path.Combine(_assemblyDirectory, "v" + runtimeValue);
+            string runtimeDirectory = Path.Combine(this.assemblyDirectory.FullName, "v" + runtimeValue);
             string assemblyName = "RazorGenerator.Core.v" + runtimeValue + ".dll";
             string runtimeDirPath = Path.Combine(runtimeDirectory, assemblyName);
             if (File.Exists(runtimeDirPath))
             {
                 Assembly assembly = Assembly.LoadFrom(runtimeDirPath);
-
                 return assembly;
             }
             else
             {
-                return Assembly.LoadFrom(Path.Combine(_assemblyDirectory, assemblyName));
+                return Assembly.LoadFrom(Path.Combine(this.assemblyDirectory.FullName, assemblyName));
             }
         }
 
-        internal static bool TryGuessHost(string projectRoot, string projectRelativePath, out GuessedHost host)
+        internal static bool TryGuessHost(DirectoryInfo projectRoot, string projectRelativePath, out GuessedHost host)
         {
             RazorRuntime runtime;
             bool isMvcProject = IsMvcProject(projectRoot, out runtime) ?? false;
@@ -192,29 +194,29 @@ namespace RazorGenerator.Core
             return false;
         }
 
-        private static bool? IsMvcProject(string projectRoot, out RazorRuntime razorRuntime)
+        private static bool? IsMvcProject(DirectoryInfo projectRoot, out RazorRuntime razorRuntime)
         {
             razorRuntime = RazorRuntime.Version1;
             try
             {
-                var projectFile = Directory.EnumerateFiles(projectRoot, "*.csproj").FirstOrDefault();
+                var projectFile = Directory.EnumerateFiles(projectRoot.FullName, "*.csproj").FirstOrDefault();
                 if (projectFile == null)
                 {
-                    projectFile = Directory.EnumerateFiles(projectRoot, "*.vbproj").FirstOrDefault();
+                    projectFile = Directory.EnumerateFiles(projectRoot.FullName, "*.vbproj").FirstOrDefault();
                 }
                 if (projectFile != null)
                 {
                     var content = File.ReadAllText(projectFile);
-                    if ((content.IndexOf("System.Web.Mvc, Version=4", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("System.Web.Razor, Version=2", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("Microsoft.AspNet.Mvc.4", StringComparison.OrdinalIgnoreCase) != -1))
+                    if (( content.IndexOf("System.Web.Mvc, Version=4", StringComparison.OrdinalIgnoreCase) != -1 ) ||
+                        ( content.IndexOf("System.Web.Razor, Version=2", StringComparison.OrdinalIgnoreCase) != -1 ) ||
+                        ( content.IndexOf("Microsoft.AspNet.Mvc.4", StringComparison.OrdinalIgnoreCase) != -1 ))
                     {
                         // The project references Razor v2
                         razorRuntime = RazorRuntime.Version2;
                     }
-                    else if ((content.IndexOf("System.Web.Mvc, Version=5", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("System.Web.Razor, Version=3", StringComparison.OrdinalIgnoreCase) != -1) ||
-                        (content.IndexOf("Microsoft.AspNet.Mvc.5", StringComparison.OrdinalIgnoreCase) != -1))
+                    else if (( content.IndexOf("System.Web.Mvc, Version=5", StringComparison.OrdinalIgnoreCase) != -1 ) ||
+                        ( content.IndexOf("System.Web.Razor, Version=3", StringComparison.OrdinalIgnoreCase) != -1 ) ||
+                        ( content.IndexOf("Microsoft.AspNet.Mvc.5", StringComparison.OrdinalIgnoreCase) != -1 ))
                     {
                         // The project references Razor v3
                         razorRuntime = RazorRuntime.Version3;
@@ -229,9 +231,9 @@ namespace RazorGenerator.Core
             return null;
         }
 
-        private static void AddCatalogIfHostsDirectoryExists(AggregateCatalog catalog, string directory)
+        private static void AddCatalogIfHostsDirectoryExists(AggregateCatalog catalog, DirectoryInfo directory)
         {
-            var extensionsDirectory = Path.GetFullPath(Path.Combine(directory, "RazorHosts"));
+            var extensionsDirectory = Path.GetFullPath(Path.Combine(directory.FullName, "RazorHosts"));
             if (Directory.Exists(extensionsDirectory))
             {
                 catalog.Catalogs.Add(new DirectoryCatalog(extensionsDirectory));
@@ -240,8 +242,8 @@ namespace RazorGenerator.Core
 
         private Assembly OnAssemblyResolve(object sender, ResolveEventArgs eventArgs)
         {
-            var nameToResolve = new AssemblyName(eventArgs.Name);
-            string path = Path.Combine(_assemblyDirectory, "v" + nameToResolve.Version.Major, nameToResolve.Name) + ".dll";
+            AssemblyName nameToResolve = new AssemblyName(eventArgs.Name);
+            string path = Path.Combine(this.assemblyDirectory.FullName, "v" + nameToResolve.Version.Major, nameToResolve.Name) + ".dll"; // hold on, there's the "RazorGenerator.v{n].dll"?
             if (File.Exists(path))
             {
                 return Assembly.LoadFrom(path);
@@ -249,30 +251,14 @@ namespace RazorGenerator.Core
             return null;
         }
 
-        /// <remarks>
-        /// Attempts to locate where the RazorGenerator.Core assembly is being loaded from. This allows us to locate the v1 and v2 assemblies and the corresponding 
-        /// System.Web.* binaries
-        /// Assembly.CodeBase points to the original location when the file is shadow copied, so we'll attempt to use that first.
-        /// </remarks>
-        private static string GetAssesmblyDirectory()
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            Uri uri;
-            if (Uri.TryCreate(assembly.CodeBase, UriKind.Absolute, out uri) && uri.IsFile)
-            {
-                return Path.GetDirectoryName(uri.LocalPath);
-            }
-            return Path.GetDirectoryName(assembly.Location);
-        }
-
         public void Dispose()
         {
             if (_catalog != null)
             {
-                _catalog.Dispose();
+                this._catalog.Dispose();
             }
 
-            if (_loadExtensions)
+            if (loadExtensions)
             {
                 AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
             }
@@ -282,13 +268,29 @@ namespace RazorGenerator.Core
         {
             public GuessedHost(string host, RazorRuntime runtime)
             {
-                Host = host;
-                Runtime = runtime;
+                this.Host = host;
+                this.Runtime = runtime;
             }
 
             public string Host { get; private set; }
 
             public RazorRuntime Runtime { get; private set; }
+        }
+
+        /// <remarks>
+        /// Attempts to locate where the RazorGenerator.Core assembly is being loaded from. This allows us to locate the v1 and v2 assemblies and the corresponding 
+        /// System.Web.* binaries
+        /// Assembly.CodeBase points to the original location when the file is shadow copied, so we'll attempt to use that first.
+        /// </remarks>
+        private static DirectoryInfo GetAssesmblyDirectory()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Uri uri;
+            if (Uri.TryCreate(assembly.CodeBase, UriKind.Absolute, out uri) && uri.IsFile)
+            {
+                return new DirectoryInfo(Path.GetDirectoryName(uri.LocalPath));
+            }
+            return new DirectoryInfo(Path.GetDirectoryName(assembly.Location));
         }
     }
 }

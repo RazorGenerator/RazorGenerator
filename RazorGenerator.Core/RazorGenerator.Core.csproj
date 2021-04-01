@@ -36,6 +36,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assembly2.cs" />
     <Compile Include="DirectivesParser.cs" />
     <Compile Include="EventArgs.cs" />
     <Compile Include="ICodeGenerationEventProvider.cs" />

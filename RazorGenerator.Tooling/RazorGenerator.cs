@@ -63,12 +63,10 @@ namespace RazorGenerator
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            ThreadHelper.ThrowIfNotOnUIThread();
+            DirectoryInfo projectDirectory    = new DirectoryInfo(Path.GetDirectoryName(this.GetProject().FullName));
+            string        projectRelativePath = this.InputFilePath.FullName.Substring(projectDirectory.FullName.Length);
 
-            string projectDirectory    = Path.GetDirectoryName(this.GetProject().FullName);
-            string projectRelativePath = this.InputFilePath.Substring(projectDirectory.Length);
-
-            using (var hostManager = new HostManager(projectDirectory))
+            using (HostManager hostManager = new HostManager(projectDirectory))
             {
                 IRazorHost host = hostManager.CreateHost(this.InputFilePath, projectRelativePath, this.GetCodeProvider(), this.FileNameSpace);
                 

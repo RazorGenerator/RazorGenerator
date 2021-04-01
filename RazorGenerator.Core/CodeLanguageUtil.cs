@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,35 +6,30 @@ using System.IO;
 
 namespace RazorGenerator.Core
 {
-    abstract public class CodeLanguageUtil
+    public abstract class CodeLanguageUtil
     {
-
-        #region "Language Util Factory"
         public static CodeLanguageUtil GetLanguageUtilFromFileExtension(string extension)
         {
-            if (extension.StartsWith("."))
-            {
-                extension = extension.Substring(1);
-            }
-            extension = extension.ToLower();
+            if (extension is null) throw new ArgumentNullException(nameof(extension));
 
-            switch (extension)
+            if ("cshtml".Equals(extension, StringComparison.OrdinalIgnoreCase) || ".cshtml".Equals(extension, StringComparison.OrdinalIgnoreCase))
             {
-                case "cshtml":
-                    return new CodeLanguageUtils.CSharpCodeLanguageUtil();
-                case "vbhtml":
-                    return new CodeLanguageUtils.VBCodeLanguageUtil();
-                default:
-                    throw new ArgumentException("Extension " + extension + " is not supported");
+                return new CodeLanguageUtils.CSharpCodeLanguageUtil();
+            }
+            else if ("vbhtml".Equals(extension, StringComparison.OrdinalIgnoreCase) || ".vbhtml".Equals(extension, StringComparison.OrdinalIgnoreCase))
+            {
+                return new CodeLanguageUtils.VBCodeLanguageUtil();
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(paramName: nameof(extension), actualValue: extension, message: "Unsupported Razor file name extension \"" + extension + "\". Only .cshtml and .vbhtml extensions are supported.");
             }
         }
 
-        public static CodeLanguageUtil GetLanguageUtilFromFileName(string filename)
+        public static CodeLanguageUtil GetLanguageUtilFromFileName(FileInfo filename)
         {
-            return GetLanguageUtilFromFileExtension(Path.GetExtension(filename));
+            return GetLanguageUtilFromFileExtension(filename.Extension);
         }
-        #endregion
-
 
         public abstract string BuildGenericTypeReference(string GenericType, IEnumerable<string> GenericArguments);
         public abstract bool IsGenericTypeReference(string TypeName);
