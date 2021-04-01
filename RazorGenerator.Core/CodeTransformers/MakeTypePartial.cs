@@ -1,6 +1,6 @@
 ﻿using System.CodeDom;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     public class MakeTypePartial : RazorCodeTransformerBase
     {

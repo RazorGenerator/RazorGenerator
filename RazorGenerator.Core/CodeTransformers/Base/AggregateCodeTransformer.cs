@@ -1,17 +1,17 @@
-﻿using System.CodeDom;
+using System.CodeDom;
 using System.Collections.Generic;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
+    /// <summary>Applies multiple <see cref="RazorCodeTransformerBase"/> transformers as a single transformation.</summary>
     public abstract class AggregateCodeTransformer : RazorCodeTransformerBase
     {
-
         protected abstract IEnumerable<RazorCodeTransformerBase> CodeTransformers
         {
             get;
         }
 
-        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
+        public override void Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
         {
             base.Initialize(razorHost, directives);
 
@@ -35,6 +35,7 @@ namespace RazorGenerator.Core
             {
                 codeContent = transformer.ProcessOutput(codeContent);
             }
+
             return codeContent;
         }
     }

@@ -1,21 +1,20 @@
-﻿using System.CodeDom;
+using System.CodeDom;
 using System.Collections.Generic;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     public class RazorCodeTransformerBase : IRazorCodeTransformer
     {
-
-        protected RazorHost _razorHost;
+        protected IRazorHost razorHost;
 
         void IRazorCodeTransformer.Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
         {
-            this.Initialize((RazorHost)razorHost, directives);
+            this.Initialize(razorHost, directives);
         }
 
-        public virtual void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
+        public virtual void Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
         {
-            this._razorHost = razorHost;
+            this.razorHost = razorHost;
             // do nothing
         }
 

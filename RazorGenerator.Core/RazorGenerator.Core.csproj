@@ -37,6 +37,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assembly2.cs" />
+    <Compile Include="CodeTransformers\AddPageVirtualPathAttribute.cs" />
+    <Compile Include="CodeTransformers\Base\AggregateCodeTransformer.cs" />
+    <Compile Include="CodeTransformers\Base\RazorCodeTransformerBase.cs" />
+    <Compile Include="CodeTransformers\ExcludeFromCodeCoverageTransformer.cs" />
+    <Compile Include="CodeTransformers\GeneratePrettyNamesTransformer.cs" />
+    <Compile Include="CodeTransformers\GenericParametersTransformer.cs" />
+    <Compile Include="CodeTransformers\MakeTypePartial.cs" />
+    <Compile Include="CodeTransformers\RemoveLineHiddenPragmas.cs" />
+    <Compile Include="CodeTransformers\RewriteLinePragmas.cs" />
+    <Compile Include="CodeTransformers\SetTypeNamespace.cs" />
+    <Compile Include="CodeTransformers\SetTypeVisibility.cs" />
+    <Compile Include="CodeTransformers\Stock\AddGeneratedClassAttribute.cs" />
+    <Compile Include="CodeTransformers\Stock\MakeTypeHelper.cs" />
+    <Compile Include="CodeTransformers\Stock\MakeTypeStatic.cs" />
+    <Compile Include="CodeTransformers\Stock\SetBaseType.cs" />
+    <Compile Include="CodeTransformers\Stock\SetImports.cs" />
+    <Compile Include="CodeTransformers\SuffixFileNameTransformer.cs" />
     <Compile Include="DirectivesParser.cs" />
     <Compile Include="EventArgs.cs" />
     <Compile Include="ICodeGenerationEventProvider.cs" />
@@ -65,6 +82,9 @@
       <CustomToolNamespace>RazorGenerator.Core</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CodeTransformers\Aggregate\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

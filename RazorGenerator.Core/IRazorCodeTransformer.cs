@@ -1,7 +1,7 @@
-﻿using System.CodeDom;
+using System.CodeDom;
 using System.Collections.Generic;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     public interface IRazorCodeTransformer
     {

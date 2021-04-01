@@ -2,7 +2,7 @@
 using System.CodeDom;
 using System.Reflection;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     public class SetTypeVisibility : RazorCodeTransformerBase
     {

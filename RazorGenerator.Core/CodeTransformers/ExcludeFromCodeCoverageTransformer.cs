@@ -1,7 +1,7 @@
 ﻿using System.CodeDom;
 using System.Diagnostics.CodeAnalysis;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     public class ExcludeFromCodeCoverageTransformer : RazorCodeTransformerBase
     {

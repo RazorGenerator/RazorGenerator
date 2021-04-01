@@ -9,6 +9,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
+using RazorGenerator.Core.CodeTransformers;
+
 namespace RazorGenerator.Core
 {
     public sealed class HostManager : IDisposable
@@ -101,7 +103,7 @@ namespace RazorGenerator.Core
 
         private IRazorCodeTransformer GetRazorCodeTransformer(CompositionContainer container, string projectRelativePath, string hostName)
         {
-            IRazorCodeTransformer codeTransformer = null;
+            IRazorCodeTransformer codeTransformer;
             try
             {
                 codeTransformer = container.GetExportedValue<IRazorCodeTransformer>(hostName);
@@ -285,8 +287,7 @@ namespace RazorGenerator.Core
         private static DirectoryInfo GetAssesmblyDirectory()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            Uri uri;
-            if (Uri.TryCreate(assembly.CodeBase, UriKind.Absolute, out uri) && uri.IsFile)
+            if (Uri.TryCreate(assembly.CodeBase, UriKind.Absolute, out Uri uri) && uri.IsFile)
             {
                 return new DirectoryInfo(Path.GetDirectoryName(uri.LocalPath));
             }

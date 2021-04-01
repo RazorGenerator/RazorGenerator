@@ -1,21 +1,24 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using RazorGenerator.Core.CodeTransformers;
 
 namespace RazorGenerator.Core
 {
     public class DirectivesBasedTransformers : AggregateCodeTransformer
     {
-        public static readonly string TypeVisibilityKey = "TypeVisibility";
-        public static readonly string DisableLinePragmasKey = "DisableLinePragmas";
-        public static readonly string TrimLeadingUnderscoresKey = "TrimLeadingUnderscores";
+        public static readonly string TypeVisibilityKey               = "TypeVisibility";
+        public static readonly string DisableLinePragmasKey           = "DisableLinePragmas";
+        public static readonly string TrimLeadingUnderscoresKey       = "TrimLeadingUnderscores";
         public static readonly string GenerateAbsolutePathLinePragmas = "GenerateAbsolutePathLinePragmas";
-        public static readonly string NamespaceKey = "Namespace";
-        public static readonly string ExcludeFromCodeCoverage = "ExcludeFromCodeCoverage";
-        public static readonly string SuffixFileName = "ClassSuffix";
-        public static readonly string GenericParametersKey = "GenericParameters";
-        public static readonly string ImportsKey = "Imports";
-        public static readonly string BaseType = "BaseType";
+        public static readonly string NamespaceKey                    = "Namespace";
+        public static readonly string ExcludeFromCodeCoverage         = "ExcludeFromCodeCoverage";
+        public static readonly string SuffixFileName                  = "ClassSuffix";
+        public static readonly string GenericParametersKey            = "GenericParameters";
+        public static readonly string ImportsKey                      = "Imports";
+        public static readonly string BaseType                        = "BaseType";
+
         private readonly List<RazorCodeTransformerBase> _transformers = new List<RazorCodeTransformerBase>();
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
@@ -23,7 +26,7 @@ namespace RazorGenerator.Core
             get { return this._transformers; }
         }
 
-        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
+        public override void Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
         {
             if (ReadSwitchValue(directives, GeneratePrettyNamesTransformer.DirectiveName) == true)
             {

@@ -3,7 +3,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     public class RemoveLineHiddenPragmas : RazorCodeTransformerBase
     {

@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
-using System.Web.Razor.Parser;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     public class GeneratePrettyNamesTransformer : RazorCodeTransformerBase
     {
@@ -15,10 +14,10 @@ namespace RazorGenerator.Core
             this._trimLeadingUnderscores = trimLeadingUnderscores;
         }
 
-        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
+        public override void Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
         {
             string fileName = Path.GetFileNameWithoutExtension(razorHost.ProjectRelativePath);
-            string className = ParserHelpers.SanitizeClassName(fileName);
+            string className = razorHost.ParserHelpers_SanitizeClassName(fileName);
             if (this._trimLeadingUnderscores)
             {
                 className = className.TrimStart('_');
@@ -26,9 +25,7 @@ namespace RazorGenerator.Core
             razorHost.DefaultClassName = className;
 
             // When generating pretty type names, if we also have ItemNamespace from VS, use it.
-            string vsNamespace;
-            if (directives.TryGetValue(VsNamespaceKey, out vsNamespace) && 
-               !string.IsNullOrEmpty(vsNamespace))
+            if (directives.TryGetValue(VsNamespaceKey, out string vsNamespace) && !string.IsNullOrEmpty(vsNamespace))
             {
                 razorHost.DefaultNamespace = vsNamespace;
             }

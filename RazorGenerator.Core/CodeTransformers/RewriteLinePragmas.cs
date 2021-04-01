@@ -1,11 +1,11 @@
-﻿namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
-    internal sealed class RewriteLinePragmas : RazorCodeTransformerBase
+    public sealed class RewriteLinePragmas : RazorCodeTransformerBase
     {
         private string _binRelativePath;
         private string _fullPath;
 
-        public override void Initialize(RazorHost razorHost, System.Collections.Generic.IDictionary<string, string> directives)
+        public override void Initialize(IRazorHost razorHost, System.Collections.Generic.IDictionary<string, string> directives)
         {
             this._binRelativePath = @"..\.." + razorHost.ProjectRelativePath;
             this._fullPath = razorHost.FullPath;

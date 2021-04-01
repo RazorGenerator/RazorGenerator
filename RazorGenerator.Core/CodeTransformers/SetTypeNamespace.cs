@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     public class SetTypeNamespace : RazorCodeTransformerBase
     {
@@ -11,7 +11,7 @@ namespace RazorGenerator.Core
             this._namespace = @namespace;
         }
 
-        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
+        public override void Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
         {
             razorHost.DefaultNamespace = this._namespace;
         }

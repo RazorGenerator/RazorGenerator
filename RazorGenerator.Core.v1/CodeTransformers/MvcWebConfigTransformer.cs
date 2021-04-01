@@ -1,15 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Configuration;
 using System.Web.WebPages.Razor.Configuration;
 using System.Linq;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     public class MvcWebConfigTransformer : AggregateCodeTransformer
     {
         private const string DefaultBaseType = "System.Web.Mvc.WebViewPage";
+
         private readonly List<RazorCodeTransformerBase> _transformers = new List<RazorCodeTransformerBase>();
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
@@ -17,7 +18,7 @@ namespace RazorGenerator.Core
             get { return this._transformers; ; }
         }
 
-        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
+        public override void Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
         {
             string projectPath = GetProjectRoot(razorHost.ProjectRelativePath, razorHost.FullPath).TrimEnd(Path.DirectorySeparatorChar);
             string currentPath = razorHost.FullPath;
@@ -58,7 +59,7 @@ namespace RazorGenerator.Core
                     {
                         foreach (NamespaceInfo n in section.Namespaces)
                         {
-                            razorHost.NamespaceImports.Add(n.Namespace);
+                            _ = razorHost.NamespaceImports.Add(n.Namespace);
                         }
                     }
                 }
