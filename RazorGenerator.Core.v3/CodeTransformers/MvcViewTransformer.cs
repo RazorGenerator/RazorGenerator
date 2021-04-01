@@ -10,7 +10,7 @@ using System.Web.Razor.Generator;
 
 namespace RazorGenerator.Core.CodeTransformers
 {
-    [Export("MvcView", typeof(IRazorCodeTransformer))]
+    [Export("MvcView", typeof(IOutputRazorCodeTransformer))]
     public class Version3MvcViewTransformer : AggregateCodeTransformer, IOutputRazorCodeTransformer
     {
         private const string ViewStartFileName = "_ViewStart";

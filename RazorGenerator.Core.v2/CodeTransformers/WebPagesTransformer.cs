@@ -7,7 +7,7 @@ using System.IO;
 
 namespace RazorGenerator.Core.CodeTransformers
 {
-    [Export("WebPage", typeof(IRazorCodeTransformer))]
+    [Export("WebPage", typeof(IOutputRazorCodeTransformer))]
     public class Version2WebPageTransformer : AggregateCodeTransformer, IOutputRazorCodeTransformer
     {
         private readonly List<RazorCodeTransformerBase> _transformers = new List<RazorCodeTransformerBase> { 

@@ -9,7 +9,7 @@ using System.Web.Razor;
 
 namespace RazorGenerator.Core.CodeTransformers
 {
-    [Export("MvcView", typeof(IRazorCodeTransformer))]
+    [Export("MvcView", typeof(IOutputRazorCodeTransformer))]
     public class Version1MvcViewTransformer : AggregateCodeTransformer, IOutputRazorCodeTransformer
     {
         private static readonly IEnumerable<string> _namespaces = new[] { 

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace RazorGenerator.Core.CodeTransformers
 {
-    [Export("WebPagesHelper", typeof(IRazorCodeTransformer))]
+    [Export("WebPagesHelper", typeof(IOutputRazorCodeTransformer))]
     public class Version3WebPagesHelperTransformer : AggregateCodeTransformer, IOutputRazorCodeTransformer
     {
         private readonly RazorCodeTransformerBase[] _codeTransformers = new RazorCodeTransformerBase[] {

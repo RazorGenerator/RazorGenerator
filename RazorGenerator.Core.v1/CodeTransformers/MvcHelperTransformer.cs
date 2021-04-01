@@ -7,7 +7,7 @@ using System.Web.Razor.Generator;
 
 namespace RazorGenerator.Core.CodeTransformers
 {
-    [Export("MvcHelper", typeof(IRazorCodeTransformer))]
+    [Export("MvcHelper", typeof(IOutputRazorCodeTransformer))]
     public class Version1MvcHelperTransformer : AggregateCodeTransformer, IOutputRazorCodeTransformer
     {
         private const string WriteToMethodName        = "WebViewPage.WriteTo";
