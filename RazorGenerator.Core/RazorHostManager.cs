@@ -159,82 +159,6 @@ namespace RazorGenerator.Core
                 .Select(exportDef => exportDef.ContractName);
         }
 
-        private Assembly GetAssembly(RazorRuntime runtime)
-        {
-            int runtimeValue = (int)runtime;
-            // TODO: Check if we can switch to using CodeBase instead of Location
-
-            // Look for the assembly at vX\RazorGenerator.vX.dll. If not, assume it is at RazorGenerator.vX.dll
-            string runtimeDirectory = Path.Combine(this.assemblyDirectory.FullName, "v" + runtimeValue);
-            string assemblyName = "RazorGenerator.Core.v" + runtimeValue + ".dll";
-            string runtimeDirPath = Path.Combine(runtimeDirectory, assemblyName);
-            if (File.Exists(runtimeDirPath))
-            {
-                Assembly assembly = Assembly.LoadFrom(runtimeDirPath);
-                return assembly;
-            }
-            else
-            {
-                return Assembly.LoadFrom(Path.Combine(this.assemblyDirectory.FullName, assemblyName));
-            }
-        }
-
-        internal static bool TryGuessHost(DirectoryInfo projectRoot, string projectRelativePath, out GuessedHost host)
-        {
-            RazorRuntime runtime;
-            bool isMvcProject = IsMvcProject(projectRoot, out runtime) ?? false;
-            if (isMvcProject)
-            {
-                Regex mvcHelperRegex = new Regex(@"(^|\\)Views(\\.*)+Helpers?", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
-                if (mvcHelperRegex.IsMatch(projectRelativePath))
-                {
-                    host = new GuessedHost("MvcHelper", runtime);
-                }
-                host = new GuessedHost("MvcView", runtime);
-                return true;
-            }
-
-            host = default(GuessedHost);
-            return false;
-        }
-
-        private static bool? IsMvcProject(DirectoryInfo projectRoot, out RazorRuntime razorRuntime)
-        {
-            razorRuntime = RazorRuntime.Version1;
-            try
-            {
-                string projectFile = Directory.EnumerateFiles(projectRoot.FullName, "*.csproj").FirstOrDefault();
-                if (projectFile == null)
-                {
-                    projectFile = Directory.EnumerateFiles(projectRoot.FullName, "*.vbproj").FirstOrDefault();
-                }
-                if (projectFile != null)
-                {
-                    string content = File.ReadAllText(projectFile);
-                    if (( content.IndexOf("System.Web.Mvc, Version=4", StringComparison.OrdinalIgnoreCase) != -1 ) ||
-                        ( content.IndexOf("System.Web.Razor, Version=2", StringComparison.OrdinalIgnoreCase) != -1 ) ||
-                        ( content.IndexOf("Microsoft.AspNet.Mvc.4", StringComparison.OrdinalIgnoreCase) != -1 ))
-                    {
-                        // The project references Razor v2
-                        razorRuntime = RazorRuntime.Version2;
-                    }
-                    else if (( content.IndexOf("System.Web.Mvc, Version=5", StringComparison.OrdinalIgnoreCase) != -1 ) ||
-                        ( content.IndexOf("System.Web.Razor, Version=3", StringComparison.OrdinalIgnoreCase) != -1 ) ||
-                        ( content.IndexOf("Microsoft.AspNet.Mvc.5", StringComparison.OrdinalIgnoreCase) != -1 ))
-                    {
-                        // The project references Razor v3
-                        razorRuntime = RazorRuntime.Version3;
-                    }
-
-                    return content.IndexOf("System.Web.Mvc", StringComparison.OrdinalIgnoreCase) != -1;
-                }
-            }
-            catch
-            {
-            }
-            return null;
-        }
-
         private static void AddCatalogIfHostsDirectoryExists(AggregateCatalog catalog, DirectoryInfo directory)
         {
             string extensionsDirectory = Path.GetFullPath(Path.Combine(directory.FullName, "RazorHosts"));
@@ -242,17 +166,6 @@ namespace RazorGenerator.Core
             {
                 catalog.Catalogs.Add(new DirectoryCatalog(extensionsDirectory));
             }
-        }
-
-        private Assembly OnAssemblyResolve(object sender, ResolveEventArgs eventArgs)
-        {
-            AssemblyName nameToResolve = new AssemblyName(eventArgs.Name);
-            string path = Path.Combine(this.assemblyDirectory.FullName, "v" + nameToResolve.Version.Major, nameToResolve.Name) + ".dll"; // hold on, there's the "RazorGenerator.v{n].dll"?
-            if (File.Exists(path))
-            {
-                return Assembly.LoadFrom(path);
-            }
-            return null;
         }
 
         public void Dispose()
@@ -264,22 +177,11 @@ namespace RazorGenerator.Core
 
             if (this.loadExtensions)
             {
-                AppDomain.CurrentDomain.AssemblyResolve -= this.OnAssemblyResolve;
+                //AppDomain.CurrentDomain.AssemblyResolve -= this.OnAssemblyResolve;
             }
         }
 
-        internal class GuessedHost
-        {
-            public GuessedHost(string host, RazorRuntime runtime)
-            {
-                this.Host = host;
-                this.Runtime = runtime;
-            }
-
-            public string Host { get; private set; }
-
-            public RazorRuntime Runtime { get; private set; }
-        }
+        
 
         /// <remarks>
         /// Attempts to locate where the RazorGenerator.Core assembly is being loaded from. This allows us to locate the v1 and v2 assemblies and the corresponding 
