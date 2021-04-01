@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Configuration;
@@ -45,7 +46,7 @@ namespace RazorGenerator.Core.CodeTransformers
 
             try
             {
-                System.Configuration.Configuration config = WebConfigurationManager.OpenMappedWebConfiguration(configFileMap, directoryVirtualPath);
+                Configuration config = WebConfigurationManager.OpenMappedWebConfiguration(configFileMap, directoryVirtualPath);
                 RazorPagesSection section = config.GetSection(RazorPagesSection.SectionName) as RazorPagesSection;
                 if (section != null)
                 {
@@ -69,6 +70,7 @@ namespace RazorGenerator.Core.CodeTransformers
                 // Bug in Mono framework.
                 // Configure namespaces using the RazorGenerator directives file instead.
             }
+
             base.Initialize(razorHost, directives);
         }
 

@@ -5,7 +5,6 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Mvc.Razor;
-using System.Web.Razor;
 
 namespace RazorGenerator.Core.CodeTransformers
 {
