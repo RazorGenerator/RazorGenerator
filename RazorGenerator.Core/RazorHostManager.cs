@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 
 using RazorGenerator.Core.CodeTransformers;
+using RazorGenerator.Core.Hosting;
 
 namespace RazorGenerator.Core
 {
@@ -17,53 +18,66 @@ namespace RazorGenerator.Core
     {
         private readonly DirectoryInfo baseDirectory;
         private readonly bool          loadExtensions;
-        private readonly RazorRuntime  defaultRuntime;
-        private readonly DirectoryInfo assemblyDirectory;
+        private readonly FileInfo      razorGeneratorAssemblyFile;
+        private readonly bool          useLatestVersion;
 
         private ComposablePartCatalog _catalog;
 
-        public RazorHostManager(DirectoryInfo baseDirectory)
-            : this(baseDirectory, loadExtensions: true, defaultRuntime: RazorRuntime.Version1, assemblyDirectory: GetAssesmblyDirectory())
-        {
+        // Commented out because whatever program code is responsible for hosting RazorHostManager should know how to fully configure it. And defaulting to Version1 is just silly.
+//      public RazorHostManager(DirectoryInfo baseDirectory)
+//          : this(baseDirectory, loadExtensions: true, defaultRuntime: RazorRuntime.Version1, assemblyDirectory: GetAssesmblyDirectory())
+//      {
+//
+//      }
+        
+//      public RazorHostManager(DirectoryInfo baseDirectory, bool loadExtensions, RazorRuntime defaultRuntime)
+//      {
+//
+//      }
 
-        }
-
-        public RazorHostManager(DirectoryInfo baseDirectory, bool loadExtensions, RazorRuntime defaultRuntime, DirectoryInfo assemblyDirectory)
+        /// <summary>Loads RazorGenerator from a specific assembly. The first found class that implements <see cref="IRazorHostProvider"/> and is exported by <see cref="System.ComponentModel.Composition.ExportAttribute"/> will be used.</summary>
+        /// <param name="baseDirectory"></param>
+        /// <param name="loadExtensions"></param>
+        /// <param name="razorGeneratorAssemblyFile"></param>
+        public RazorHostManager(DirectoryInfo baseDirectory, bool loadExtensions, FileInfo razorGeneratorAssemblyFile)
         {
-            this.loadExtensions = loadExtensions;
-            this.baseDirectory = baseDirectory;
-            this.defaultRuntime = defaultRuntime;
-            this.assemblyDirectory = assemblyDirectory;
+            this.baseDirectory              = baseDirectory ?? throw new ArgumentNullException(nameof(baseDirectory));
+            this.loadExtensions             = loadExtensions;
+            this.razorGeneratorAssemblyFile = razorGeneratorAssemblyFile ?? throw new ArgumentNullException(nameof(razorGeneratorAssemblyFile));
+            this.useLatestVersion           = false;
 
             // Repurposing loadExtensions to mean unit-test scenarios. Don't bind to the AssemblyResolve in unit tests
             if (this.loadExtensions)
             {
-                AppDomain.CurrentDomain.AssemblyResolve += this.OnAssemblyResolve;
+                //AppDomain.CurrentDomain.AssemblyResolve += this.OnAssemblyResolve;
             }
         }
 
-        public IRazorHost CreateHost(FileInfo fullPath, string projectRelativePath, string vsNamespace)
+        public IRazorHost CreateHost(FileInfo razorFile, string projectRelativePath, string vsNamespace)
         {
-            CodeLanguageUtil langutil = CodeLanguageUtil.GetLanguageUtilFromFileName(fullPath);
+            CodeLanguageUtil langutil = CodeLanguageUtil.GetLanguageUtilFromFileName(razorFile);
 
             using (CodeDomProvider codeDomProvider = langutil.GetCodeDomProvider())
             {
-                return this.CreateHost(fullPath, projectRelativePath, codeDomProvider, vsNamespace);
+                return this.CreateHost( razorFile, projectRelativePath, codeDomProvider, vsNamespace );
             }
         }
 
-        public IRazorHost CreateHost(FileInfo fullPath, string projectRelativePath, CodeDomProvider codeDomProvider, string vsNamespace)
+        public IRazorHost CreateHost(FileInfo razorFile, string projectRelativePath, CodeDomProvider codeDomProvider, string vsNamespace)
         {
-            Dictionary<string, string> directives = DirectivesParser.ParseDirectives(this.baseDirectory, fullPath);
+            #warning TODO: Cache this!
+            Dictionary<string,string> inheritedDirectives = DirectivesParser.ReadInheritableDirectives( this.baseDirectory, razorFile );
+
+            Dictionary<string, string> directives = DirectivesParser.ParseDirectives(razorFile, inheritedDirectives);
             directives["VsNamespace"] = vsNamespace;
 
             string guessedHost = null;
-            RazorRuntime runtime = this.defaultRuntime;
-            if (TryGuessHost(this.baseDirectory, projectRelativePath, out GuessedHost value))
-            {
-                runtime = value.Runtime;
-                guessedHost = value.Host;
-            }
+            RazorRuntime? runtime = null;
+//          if (TryGuessHost(this.baseDirectory, projectRelativePath, out GuessedHost value))
+//          {
+//              runtime = value.Runtime;
+//              guessedHost = value.Host;
+//          }
 
             if (!directives.TryGetValue("Generator", out string hostName))
             {
@@ -92,14 +106,25 @@ namespace RazorGenerator.Core
 
             if (this._catalog == null)
             {
-                this._catalog = this.InitCompositionCatalog(this.baseDirectory, this.loadExtensions, runtime);
+                this._catalog = this.InitCompositionCatalog( baseDirectory: this.baseDirectory, loadExtensions: this.loadExtensions );//, runtime: runtime );
             }
 
             using (CompositionContainer container = new CompositionContainer(this._catalog))
             {
-                IOutputRazorCodeTransformer codeTransformer = this.GetRazorCodeTransformer(container, projectRelativePath, hostName);
-                IRazorHostProvider host = container.GetExport<IRazorHostProvider>().Value;
-                return host.GetRazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
+                IOutputRazorCodeTransformer codeTransformer = this.GetRazorCodeTransformer(container, projectRelativePath, hostName); // TODO: `hostName` should be `TemplateClass` or similar.
+
+                IRazorHostProvider razorHostProvider = container.GetExport<IRazorHostProvider>().Value;
+
+                if( razorHostProvider.CanGetRazorHost( out String errorDetails ) )
+                {
+                    return razorHostProvider.GetRazorHost(projectRelativePath, razorFile, codeTransformer, codeDomProvider, directives);
+                }
+                else
+                {
+                    const string fmt = "The current " + nameof(IRazorHostProvider) + " ({0}) cannot be used in the current environment:\r\n{1}";
+                    string message = fmt.Fmt( razorHostProvider.GetType().FullName, errorDetails );
+                    throw new InvalidOperationException( message );
+                }
             }
         }
 
@@ -128,10 +153,10 @@ namespace RazorGenerator.Core
             return codeTransformer;
         }
 
-        private ComposablePartCatalog InitCompositionCatalog(DirectoryInfo baseDirectory, bool loadExtensions, RazorRuntime runtime)
+        private ComposablePartCatalog InitCompositionCatalog(DirectoryInfo baseDirectory, bool loadExtensions)//, RazorRuntime runtime)
         {
             // Retrieve available hosts
-            Assembly hostsAssembly = this.GetAssembly(runtime);
+            Assembly hostsAssembly = Assembly.LoadFrom( this.razorGeneratorAssemblyFile.FullName );// this.GetAssembly(runtime);
             AggregateCatalog catalog = new AggregateCatalog(new AssemblyCatalog(hostsAssembly));
 
             if (loadExtensions)

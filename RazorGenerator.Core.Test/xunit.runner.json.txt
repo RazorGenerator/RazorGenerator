@@ -1,0 +1,10 @@
+﻿argh, xUnit silently ignores this file if there are comments in it: https://github.com/xunit/xunit/issues/1654
+
+See https://xunit.net/docs/configuration-files
+
+"appDomain": "denied", 
+	Disable xUnit 2.0-managed AppDomains because we manage it ourselves.
+
+
+"shadowCopy": false,
+	If we do run in an xUnit AppDomain, don't use shadow-copy, so we can use `Assembly.GetExecutingAssembly().Location` (see https://github.com/dotnet/sdk/issues/8683 ).

@@ -10,58 +10,70 @@ namespace RazorGenerator.Core
     {
         private const string _globalDirectivesFileName = "razorgenerator.directives";
 
-        public static Dictionary<string, string> ParseDirectives(DirectoryInfo baseDirectory, FileInfo fullPath)
+        /// <summary>Searches upwards from the directory containing <paramref name="razorFile"/> until it reaches <paramref name="baseDirectory"/> for any and all files named <c>razorgenerator.directives</c>.</summary>
+        public static Dictionary<string,string> ReadInheritableDirectives(DirectoryInfo baseDirectory, FileInfo razorFile)
         {
-            Dictionary<string, string> directives = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            if (TryFindGlobalDirectivesFile(baseDirectory, fullPath, out FileInfo directivesPath))
+            List<FileInfo> list = FindInheritableDirectivesFiles( baseDirectory, razorFile );
+
+            list.Reverse();
+
+            Dictionary<string,string> dict = new Dictionary<string,string>();
+
+            foreach( FileInfo file in list )
             {
-                ParseGlobalDirectives(directives, directivesPath);
+                ParseGlobalDirectives( dict, file );
             }
-            ParseFileDirectives(directives, fullPath);
+
+            return dict;
+        }
+
+        /// <summary>Searches upwards from the directory containing <paramref name="razorFile"/> until it reaches <paramref name="baseDirectory"/> for any and all files named <c>razorgenerator.directives</c>.</summary>
+        private static List<FileInfo> FindInheritableDirectivesFiles(DirectoryInfo baseDirectory, FileInfo razorFile)
+        {
+            List<FileInfo> list = new List<FileInfo>();
+
+            DirectoryInfo descendant = razorFile.Directory;
+
+            while( descendant.FullName.StartsWith( baseDirectory.FullName, StringComparison.OrdinalIgnoreCase ) && descendant.FullName.Length > baseDirectory.FullName.Length && descendant.Parent != descendant )
+            {
+                FileInfo[] directivesFiles = descendant.GetFiles( _globalDirectivesFileName );
+                if( directivesFiles.Length == 1 )
+                {
+                    list.Add( directivesFiles[0] );
+                }
+
+                descendant = descendant.Parent;
+            }
+
+            return list;
+        }
+
+        public static Dictionary<string, string> ParseDirectives(FileInfo razorFile, Dictionary<string,string> inheritedDirectives)
+        {
+            Dictionary<string,string> directives = new Dictionary<string,string>(StringComparer.OrdinalIgnoreCase);
+
+            if (inheritedDirectives != null)
+            {
+                foreach( KeyValuePair<string,string> kvp in inheritedDirectives )
+                {
+                    directives.Add( kvp.Key, kvp.Value );
+                }
+            }
+
+            ParseFileDirectives(directives, razorFile);
 
             return directives;
         }
 
-        /// <summary>
-        /// Attempts to locate the nearest global directive file by 
-        /// </summary>
-        private static bool TryFindGlobalDirectivesFile(DirectoryInfo baseDirectory, FileInfo nonGlobalDirectivesFile, out FileInfo globalDirectiveFile)
-        {
-            DirectoryInfo nonGlobalDirectivesFileDirectory = nonGlobalDirectivesFile.Directory;
-
-            /*
-            baseDirectory = baseDirectory.TrimEnd(Path.DirectorySeparatorChar);
-            var directivesDirectory = Path.GetDirectoryName(fullPath).TrimEnd(Path.DirectorySeparatorChar);
-            while (directivesDirectory != null && directivesDirectory.Length >= baseDirectory.Length)
-            {
-                path = Path.Combine(directivesDirectory, GlobalDirectivesFileName);
-                if (File.Exists(path))
-                {
-                    return true;
-                }
-                directivesDirectory = Path.GetDirectoryName(directivesDirectory).TrimEnd(Path.DirectorySeparatorChar);
-            }
-            path = null;
-            return false;
-            */
-
-            globalDirectiveFile = baseDirectory
-                .EnumerateFiles(searchPattern: _globalDirectivesFileName, searchOption: SearchOption.AllDirectories)
-                .Where(fi => fi.FullName.StartsWith(nonGlobalDirectivesFileDirectory.FullName, StringComparison.OrdinalIgnoreCase)) // hmm, what about `/` vs `\` in paths? this needs to be normalized in order to do any meaningful comparison.
-                .FirstOrDefault();
-
-            return globalDirectiveFile != null;
-        }
-
-        private static void ParseGlobalDirectives(Dictionary<string, string> directives, FileInfo directivesPath)
+        private static void ParseGlobalDirectives(Dictionary<string,string> directives, FileInfo directivesPath)
         {
             string fileContent = File.ReadAllText(path: directivesPath.FullName);
             ParseKeyValueDirectives(directives, fileContent);
         }
 
-        private static void ParseFileDirectives(Dictionary<string, string> directives, FileInfo filePath)
+        private static void ParseFileDirectives(Dictionary<string,string> directives, FileInfo razorFile)
         {
-            string inputFileContent = File.ReadAllText(filePath.FullName);
+            string inputFileContent = File.ReadAllText(razorFile.FullName); // <-- Yuk. Why are we reading the file multiple times?!
             int index = inputFileContent.IndexOf("*@", StringComparison.OrdinalIgnoreCase);
             if (inputFileContent.TrimStart().StartsWith("@*") && index != -1)
             {
@@ -69,6 +81,9 @@ namespace RazorGenerator.Core
                 ParseKeyValueDirectives(directives, directivesLine);
             }
         }
+
+        const string _valueRegexPattern = @"[~\\\/\w\.]+";
+        private static readonly Regex _directiveRegex = new Regex( @"\b(?<Key>\w+)\s*:\s*(?<Value>" + _valueRegexPattern + @"(\s*,\s*" + _valueRegexPattern + @")*)\b", RegexOptions.ExplicitCapture | RegexOptions.Compiled);
 
         private static void ParseKeyValueDirectives(Dictionary<string, string> directives, string directivesLine)
         {
@@ -79,12 +94,11 @@ namespace RazorGenerator.Core
 
             // TODO: Make this better.
 
-            const string valueRegexPattern = @"[~\\\/\w\.]+";
-            Regex regex = new Regex(@"\b(?<Key>\w+)\s*:\s*(?<Value>" + valueRegexPattern + @"(\s*,\s*" + valueRegexPattern + @")*)\b", RegexOptions.ExplicitCapture);
+            
 
-            foreach (Match item in regex.Matches(directivesLine))
+            foreach (Match item in _directiveRegex.Matches(directivesLine))
             {
-                string key = item.Groups["Key"].Value;
+                string key   = item.Groups["Key"].Value;
                 string value = item.Groups["Value"].Value;
 
                 directives[key] = value;

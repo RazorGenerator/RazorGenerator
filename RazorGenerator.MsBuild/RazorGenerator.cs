@@ -9,12 +9,71 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 using RazorGenerator.Core;
+using RazorGenerator.Core.Hosting;
 
 namespace RazorGenerator.MsBuild
 {
+    public static class MSBuildRazorGeneratorAssemblyLocator
+    {
+        private static Boolean _version1Attempted;
+        private static Boolean _version2Attempted;
+        private static Boolean _version3Attempted;
+
+        private static FileInfo _version1;
+        private static FileInfo _version2;
+        private static FileInfo _version3;
+
+        public static FileInfo LocateRazorGeneratorAssembly( RazorRuntime version )
+        {
+            switch (version)
+            {
+            case RazorRuntime.Version1:
+                if( !_version1Attempted )
+                {
+                    _version1 = LocateRazorGeneratorAssemblyImpl( version );
+                    _version1Attempted = true;
+                }
+                return _version1;
+
+            case RazorRuntime.Version2:
+                if( !_version2Attempted )
+                {
+                    _version2 = LocateRazorGeneratorAssemblyImpl( version );
+                    _version2Attempted = true;
+                }
+                return _version2;
+
+            case RazorRuntime.Version3:
+                if( !_version3Attempted )
+                {
+                    _version3 = LocateRazorGeneratorAssemblyImpl( version );
+                    _version3Attempted = true;
+                }
+                return _version3;
+
+            default:
+                throw new ArgumentOutOfRangeException(paramName: nameof(version), actualValue: version, message: "Unrecognized value.");
+            }
+        }
+
+        private static FileInfo LocateRazorGeneratorAssemblyImpl( RazorRuntime version )
+        {
+            FileInfo thisAssembly = new FileInfo( typeof(MSBuildRazorGeneratorAssemblyLocator).Assembly.Location );
+
+            DirectoryInfo directory = thisAssembly.Directory;
+
+            IAssemblyLocator locator = new DescendantDirectoryAssemblyLocator( directory, maxDepth: 5 );
+
+            string assemblyFileName = AssemblyLocatorExtensions.GetRazorGeneratorAssemblyFileName( version );
+
+            return locator.LocateAssemblyOrNull( assemblyFileName );
+        }
+    }
+
     public class RazorCodeGen : Task
     {
         private static readonly Regex _namespaceRegex = new Regex(@"($|\.)(\d)");
+
         private readonly List<ITaskItem> _generatedFiles = new List<ITaskItem>();
 
         public ITaskItem[] FilesToPrecompile { get; set; }
@@ -68,7 +127,11 @@ namespace RazorGenerator.MsBuild
                 }
             }
 
-            using (RazorHostManager hostManager = new RazorHostManager(baseDirectory: projectRootDir))//, loadExtensions: true, defaultRuntime: RazorRuntime.Version3, assemblyDirectory: ))
+            // Assume the RazorGenerator.Core.vN.dll assembly file is in the same directory, or a descendant, as the current assembly.
+            // TODO: Allow the user to specify the RazorRuntime version in an MSBuild <property>.
+            FileInfo razorGeneratorVersionAssemblyFile = MSBuildRazorGeneratorAssemblyLocator.LocateRazorGeneratorAssembly( RazorRuntime.Version3 );
+
+            using (RazorHostManager hostManager = new RazorHostManager( baseDirectory: projectRootDir, loadExtensions: true, razorGeneratorVersionAssemblyFile ) )
             {
                 foreach (ITaskItem file in this.FilesToPrecompile)
                 {
