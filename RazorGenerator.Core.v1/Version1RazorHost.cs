@@ -26,7 +26,7 @@ namespace RazorGenerator.Core
 {
     public class Version1RazorHost : RazorEngineHost, IRazorHost, ICodeGenerationEventProvider
     {
-        private static readonly IReadOnlyList<string> _defaultImports = new[] {
+        private static readonly string[] _defaultImports = new[] {
             "System",
             "System.Collections.Generic",
             "System.IO",
