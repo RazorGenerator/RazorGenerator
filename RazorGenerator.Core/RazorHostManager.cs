@@ -205,22 +205,5 @@ namespace RazorGenerator.Core
                 //AppDomain.CurrentDomain.AssemblyResolve -= this.OnAssemblyResolve;
             }
         }
-
-        
-
-        /// <remarks>
-        /// Attempts to locate where the RazorGenerator.Core assembly is being loaded from. This allows us to locate the v1 and v2 assemblies and the corresponding 
-        /// System.Web.* binaries
-        /// Assembly.CodeBase points to the original location when the file is shadow copied, so we'll attempt to use that first.
-        /// </remarks>
-        private static DirectoryInfo GetAssesmblyDirectory()
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            if (Uri.TryCreate(assembly.CodeBase, UriKind.Absolute, out Uri uri) && uri.IsFile)
-            {
-                return new DirectoryInfo(Path.GetDirectoryName(uri.LocalPath));
-            }
-            return new DirectoryInfo(Path.GetDirectoryName(assembly.Location));
-        }
     }
 }

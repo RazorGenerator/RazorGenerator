@@ -1,4 +1,6 @@
 using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,15 +33,16 @@ namespace RazorGenerator.Core
             return GetLanguageUtilFromFileExtension(filename.Extension);
         }
 
-        public abstract string BuildGenericTypeReference(string GenericType, IEnumerable<string> GenericArguments);
-        public abstract bool IsGenericTypeReference(string TypeName);
-        public abstract string GetCodeFileExtension();
-        public abstract string GetPreGeneratedCodeBlock();
-        public abstract string GetPostGeneratedCodeBlock();
-        public abstract System.CodeDom.Compiler.CodeDomProvider GetCodeDomProvider();
-        public abstract string DefaultModelTypeName { get; }
-        public abstract string MakeTypeStatic(string codeContent);
-        public abstract string MakeHelperMethodsInternal(string methodText);
-        public abstract string HrefMethod { get; }
+        public abstract string          BuildGenericTypeReference(string genericType, IEnumerable<string> genericArguments);
+        public abstract bool            IsGenericTypeReference(string typeName);
+        public abstract string          GetCodeFileExtension();
+        public abstract string          GetPreGeneratedCodeBlock();
+        public abstract string          GetPostGeneratedCodeBlock();
+        public abstract CodeDomProvider GetCodeDomProvider();
+        public abstract string          MakeTypeStatic(string codeContent);
+        public abstract string          MakeHelperMethodsInternal(string methodText);
+
+        public abstract string          DefaultModelTypeName             { get; }
+        public abstract string          HrefMethod                       { get; }
     }
 }

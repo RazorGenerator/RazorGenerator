@@ -66,6 +66,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Sdk.BuildTasks.14.0" Version="14.9.23" />
     <Reference Include="System" />
     <!-- RazorGenerator.Tooling.VS2019-specific files: -->
     <Compile Include="AssemblyInfo.cs" />

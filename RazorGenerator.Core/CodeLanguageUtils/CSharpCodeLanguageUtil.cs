@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -17,27 +16,15 @@ namespace RazorGenerator.Core.CodeLanguageUtils
             }
         }
 
-        public override string HrefMethod
-        {
-            get
-            {
-                return @"
-                // Resolve package relative syntax
-                // Also, if it comes from a static embedded resource, change the path accordingly
-                public override string Href(string virtualPath, params object[] pathParts) {
-                    virtualPath = ApplicationPart.ProcessVirtualPath(GetType().Assembly, VirtualPath, virtualPath);
-                    return base.Href(virtualPath, pathParts);
-                }";
-            }
-        }
-
-        public override string BuildGenericTypeReference(string GenericType, IEnumerable<string> GenericArguments)
+        public override string BuildGenericTypeReference(string genericType, IEnumerable<string> genericArguments)
         {
             StringBuilder ret = new StringBuilder();
-            ret.Append(GenericType);
+#pragma warning disable IDE0058 // Expression value is never used
+
+            ret.Append(genericType);
             ret.Append("<");
             bool first = true;
-            foreach (string ga in GenericArguments)
+            foreach (string ga in genericArguments)
             {
                 if (!first)
                 {
@@ -47,6 +34,8 @@ namespace RazorGenerator.Core.CodeLanguageUtils
             }
             ret.Append(">");
             return ret.ToString();
+
+#pragma warning restore
         }
 
         public override CodeDomProvider GetCodeDomProvider()
@@ -69,15 +58,29 @@ namespace RazorGenerator.Core.CodeLanguageUtils
             return "#pragma warning disable 1591";
         }
 
-        public override bool IsGenericTypeReference(string TypeName)
+        public override string HrefMethod
         {
-            return TypeName.Contains("<");
+            get
+            {
+                return @"
+                // Resolve package relative syntax
+                // Also, if it comes from a static embedded resource, change the path accordingly
+                public override string Href(string virtualPath, params object[] pathParts) {
+                    virtualPath = ApplicationPart.ProcessVirtualPath(GetType().Assembly, this.VirtualPath, virtualPath);
+                    return base.Href(virtualPath, pathParts);
+                }";
+            }
+        }
+
+        public override bool IsGenericTypeReference(string typeName)
+        {
+            return typeName.Contains("<");
         }
 
         public override string MakeHelperMethodsInternal(string methodText)
         {
-            return Regex.Replace(methodText, "public static System\\.Web\\.WebPages\\.HelperResult _",
-                     "internal static System.Web.WebPages.HelperResult _");
+            const string replacement = "internal static System.Web.WebPages.HelperResult _";
+            return Regex.Replace(methodText, @"public static System\.Web\.WebPages\.HelperResult _", replacement);
         }
 
         public override string MakeTypeStatic(string codeContent)

@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -17,13 +16,15 @@ namespace RazorGenerator.Core.CodeLanguageUtils
             }
         }
 
-        public override string BuildGenericTypeReference(string GenericType, IEnumerable<string> GenericArguments)
+        public override string BuildGenericTypeReference(string genericType, IEnumerable<string> genericArguments)
         {
             StringBuilder ret = new StringBuilder();
-            ret.Append(GenericType);
+#pragma warning disable IDE0058 // Expression value is never used
+
+            ret.Append(genericType);
             ret.Append("(Of ");
             bool first = true;
-            foreach(string ga in GenericArguments)
+            foreach(string ga in genericArguments)
             {
                 if (!first)
                 {
@@ -33,6 +34,8 @@ namespace RazorGenerator.Core.CodeLanguageUtils
             }
             ret.Append(")");
             return ret.ToString();
+
+#pragma warning restore
         }
 
         public override CodeDomProvider GetCodeDomProvider()
@@ -68,15 +71,15 @@ namespace RazorGenerator.Core.CodeLanguageUtils
             }
         }
 
-        public override bool IsGenericTypeReference(string TypeName)
+        public override bool IsGenericTypeReference(string typeName)
         {
-            return TypeName.Contains("(Of ");
+            return typeName.Contains("(Of ");
         }
 
         public override string MakeHelperMethodsInternal(string methodText)
         {
-            return Regex.Replace(methodText, "Public Shared Function (?<a>.*?\\(.*?\\)) As System\\.Web\\.WebPages\\.HelperResult$",
-                     "Friend Shared Function ${a} As System.Web.WebPages.HelperResult");
+            const string replacement = "Friend Shared Function ${a} As System.Web.WebPages.HelperResult";
+            return Regex.Replace(methodText, "Public Shared Function (?<a>.*?\\(.*?\\)) As System\\.Web\\.WebPages\\.HelperResult$", replacement);
         }
 
         public override string MakeTypeStatic(string codeContent)
