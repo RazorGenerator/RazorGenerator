@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RazorGenerator.Core.V3</RootNamespace>
     <AssemblyName>RazorGenerator.Core.v3</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -67,62 +67,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\GenericParametersTransformer.cs">
-      <Link>CodeTransformers\GenericParametersTransformer.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v2\MvcHelperTransformer.cs" />
-    <Compile Include="..\RazorGenerator.Core.v2\MvcViewTransformer.cs" />
+    <Compile Include="CodeTransformers\MvcHelperTransformer.cs" />
+    <Compile Include="CodeTransformers\MvcViewTransformer.cs" />
+    <Compile Include="CodeTransformers\MvcWebConfigTransformer.cs" />
+    <Compile Include="CodeTransformers\TemplateTransformer.cs" />
+    <Compile Include="CodeTransformers\WebPagesHelperTransformer.cs" />
+    <Compile Include="CodeTransformers\WebPagesTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\AddPageVirtualPathAttribute.cs">
-      <Link>CodeTransformers\AddPageVirtualPathAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\AggregateCodeTransformer.cs">
-      <Link>CodeTransformers\AggregateCodeTransformer.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\DefaultCodeTransformers.cs">
-      <Link>CodeTransformers\DefaultCodeTransformers.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\DirectivesBasedTransformers.cs">
-      <Link>CodeTransformers\AddPageVirtualPathAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\MvcWebConfigTransformer.cs">
-      <Link>CodeTransformers\MvcWebConfigTransformer.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\RazorCodeTransformerBase.cs">
-      <Link>CodeTransformers\RazorCodeTransformerBase.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\RemoveLineHiddenPragmas.cs">
-      <Link>CodeTransformers\RemoveLineHiddenPragmas.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\RewriteLinePragmas.cs">
-      <Link>CodeTransformers\RewriteLinePragmas.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\SetTypeNamespace.cs">
-      <Link>CodeTransformers\SetTypeNamespace.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\SuffixFileNameTransformer.cs">
-      <Link>CodeTransformers\SuffixFileNameTransformer.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\GeneratePrettyNamesTransformer.cs">
-      <Link>CodeTransformers\GeneratePrettyNamesTransformer.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\SetTypeVisibility.cs">
-      <Link>CodeTransformers\SetTypeVisibility.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\MakeTypePartial.cs">
-      <Link>CodeTransformers\MakeTypePartial.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\CodeTransformers\ExcludeFromCodeCoverageTransformer.cs">
-      <Link>CodeTransformers\ExcludeFromCodeCoverageTransformer.cs</Link>
-    </Compile>
-    <Compile Include="..\RazorGenerator.Core.v1\ExportedTransformers\TemplateTransformer.cs" />
-    <Compile Include="..\RazorGenerator.Core.v1\ExportedTransformers\WebPagesHelperTransformer.cs" />
-    <Compile Include="..\RazorGenerator.Core.v1\ExportedTransformers\WebPagesTransformer.cs" />
-    <Compile Include="..\RazorGenerator.Core.v1\RazorHostProvider.cs" />
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\RazorGenerator.Core.v2\RazorHost.cs" />
+    <Compile Include="Version3RazorHost.cs" />
+    <Compile Include="Version3RazorHostProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RazorGenerator.Core\RazorGenerator.Core.csproj">

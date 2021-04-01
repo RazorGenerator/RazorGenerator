@@ -13,7 +13,7 @@ using RazorGenerator.Core.CodeTransformers;
 
 namespace RazorGenerator.Core
 {
-    public sealed class HostManager : IDisposable
+    public sealed class RazorHostManager : IDisposable
     {
         private readonly DirectoryInfo baseDirectory;
         private readonly bool          loadExtensions;
@@ -22,13 +22,13 @@ namespace RazorGenerator.Core
 
         private ComposablePartCatalog _catalog;
 
-        public HostManager(DirectoryInfo baseDirectory)
+        public RazorHostManager(DirectoryInfo baseDirectory)
             : this(baseDirectory, loadExtensions: true, defaultRuntime: RazorRuntime.Version1, assemblyDirectory: GetAssesmblyDirectory())
         {
 
         }
 
-        public HostManager(DirectoryInfo baseDirectory, bool loadExtensions, RazorRuntime defaultRuntime, DirectoryInfo assemblyDirectory)
+        public RazorHostManager(DirectoryInfo baseDirectory, bool loadExtensions, RazorRuntime defaultRuntime, DirectoryInfo assemblyDirectory)
         {
             this.loadExtensions = loadExtensions;
             this.baseDirectory = baseDirectory;
@@ -82,8 +82,10 @@ namespace RazorGenerator.Core
                 case "2":
                     runtime = RazorRuntime.Version2;
                     break;
+                case "3":
                 default:
                     runtime = RazorRuntime.Version3;
+//                  throw new InvalidOperationException(); // TODO: How should users specify the default version?
                     break;
                 }
             }
@@ -95,18 +97,18 @@ namespace RazorGenerator.Core
 
             using (CompositionContainer container = new CompositionContainer(this._catalog))
             {
-                IRazorCodeTransformer codeTransformer = this.GetRazorCodeTransformer(container, projectRelativePath, hostName);
+                IOutputRazorCodeTransformer codeTransformer = this.GetRazorCodeTransformer(container, projectRelativePath, hostName);
                 IRazorHostProvider host = container.GetExport<IRazorHostProvider>().Value;
                 return host.GetRazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
             }
         }
 
-        private IRazorCodeTransformer GetRazorCodeTransformer(CompositionContainer container, string projectRelativePath, string hostName)
+        private IOutputRazorCodeTransformer GetRazorCodeTransformer(CompositionContainer container, string projectRelativePath, string hostName)
         {
-            IRazorCodeTransformer codeTransformer;
+            IOutputRazorCodeTransformer codeTransformer;
             try
             {
-                codeTransformer = container.GetExportedValue<IRazorCodeTransformer>(hostName);
+                codeTransformer = container.GetExportedValue<IOutputRazorCodeTransformer>(hostName);
             }
             catch (ReflectionTypeLoadException)
             {
@@ -118,7 +120,7 @@ namespace RazorGenerator.Core
                 throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, RazorGeneratorResources.GeneratorFailureMessage, projectRelativePath, availableHosts), exception);
             }
 
-            if (codeTransformer == null)
+            if (codeTransformer is null)
             {
                 throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, RazorGeneratorResources.GeneratorError_UnknownGenerator, hostName));
             }

@@ -9,11 +9,11 @@ namespace RazorGenerator.Core
     public interface IRazorHostProvider
     {
         IRazorHost GetRazorHost(
-            string                     projectRelativePath, 
-            FileInfo                   fullPath, 
-            IRazorCodeTransformer      codeTransformer, // Question: Why is this a *singular* `IRazorCodeTransformer`? I thought there are multiple...
-            CodeDomProvider            codeDomProvider, 
-            IDictionary<string,string> directives
+            string                      projectRelativePath, 
+            FileInfo                    fullPath, 
+            IOutputRazorCodeTransformer codeTransformer,
+            CodeDomProvider             codeDomProvider, 
+            IDictionary<string,string>  directives
         );
     }
 }

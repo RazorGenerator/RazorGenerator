@@ -68,7 +68,7 @@ namespace RazorGenerator.MsBuild
                 }
             }
 
-            using (HostManager hostManager = new HostManager(baseDirectory: projectRootDir))//, loadExtensions: true, defaultRuntime: RazorRuntime.Version3, assemblyDirectory: ))
+            using (RazorHostManager hostManager = new RazorHostManager(baseDirectory: projectRootDir))//, loadExtensions: true, defaultRuntime: RazorRuntime.Version3, assemblyDirectory: ))
             {
                 foreach (ITaskItem file in this.FilesToPrecompile)
                 {

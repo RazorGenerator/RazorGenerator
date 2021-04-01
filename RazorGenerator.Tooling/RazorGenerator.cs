@@ -66,7 +66,7 @@ namespace RazorGenerator
             DirectoryInfo projectDirectory    = new DirectoryInfo(Path.GetDirectoryName(this.GetProject().FullName));
             string        projectRelativePath = this.InputFilePath.FullName.Substring(projectDirectory.FullName.Length);
 
-            using (HostManager hostManager = new HostManager(projectDirectory))
+            using (RazorHostManager hostManager = new RazorHostManager(projectDirectory))
             {
                 IRazorHost host = hostManager.CreateHost(this.InputFilePath, projectRelativePath, this.GetCodeProvider(), this.FileNameSpace);
                 

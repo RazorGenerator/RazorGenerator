@@ -35,7 +35,7 @@ namespace RazorGenerator.Core.Test
             DirectoryInfo currentDirectory = new DirectoryInfo(Environment.CurrentDirectory);
             try
             {
-                using (HostManager razorGenerator = new HostManager(workingDirectory, loadExtensions: false, defaultRuntime: runtime, assemblyDirectory: currentDirectory))
+                using (RazorHostManager razorGenerator = new RazorHostManager(workingDirectory, loadExtensions: false, defaultRuntime: runtime, assemblyDirectory: currentDirectory))
                 {
                     FileInfo inputFile = SaveInputFile(workingDirectory.FullName, testName);
                     IRazorHost host = razorGenerator.CreateHost(inputFile, testName + ".cshtml", string.Empty);
@@ -98,7 +98,7 @@ namespace RazorGenerator.Core.Test
         {
             string expectedContent = GetManifestFileContent(testName, "Output_v" + (int)runtime);
             output = Regex.Replace(output, @"Runtime Version:[\d.]*", "Runtime Version:N.N.NNNNN.N")
-                          .Replace(typeof(HostManager).Assembly.GetName().Version.ToString(), "v.v.v.v");
+                          .Replace(typeof(RazorHostManager).Assembly.GetName().Version.ToString(), "v.v.v.v");
 
             Assert.Equal(expectedContent, output);
         }

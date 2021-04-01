@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     [Export("WebPage", typeof(IRazorCodeTransformer))]
-    public class WebPageTransformer : AggregateCodeTransformer
+    public class Version1WebPageTransformer : AggregateCodeTransformer, IOutputRazorCodeTransformer
     {
         private readonly List<RazorCodeTransformerBase> _transformers = new List<RazorCodeTransformerBase> { 
             new DirectivesBasedTransformers(),
@@ -26,7 +26,7 @@ namespace RazorGenerator.Core
             }
         }
 
-        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
+        public override void Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
         {
             base.Initialize(razorHost, directives);
 
@@ -41,18 +41,20 @@ namespace RazorGenerator.Core
         }
 
 
-        public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit,
-                                                  CodeNamespace generatedNamespace,
-                                                  CodeTypeDeclaration generatedClass,
-                                                  CodeMemberMethod executeMethod)
+        public override void ProcessGeneratedCode(
+            CodeCompileUnit     codeCompileUnit,
+            CodeNamespace       generatedNamespace,
+            CodeTypeDeclaration generatedClass,
+            CodeMemberMethod    executeMethod
+        )
         {
             base.ProcessGeneratedCode(codeCompileUnit, generatedNamespace, generatedClass, executeMethod);
 
 
             // Create the Href wrapper
-            CodeTypeMember hrefMethod = new CodeSnippetTypeMember(this._razorHost.CodeLanguageUtil.HrefMethod);
+            CodeTypeMember hrefMethod = new CodeSnippetTypeMember(this.razorHost.CodeLanguageUtil.HrefMethod);
 
-            generatedClass.Members.Add(hrefMethod);
+            _ = generatedClass.Members.Add(hrefMethod);
 
             Debug.Assert(generatedClass.Name.Length > 0);
             if (!(Char.IsLetter(generatedClass.Name[0]) || generatedClass.Name[0] == '_'))
@@ -63,8 +65,12 @@ namespace RazorGenerator.Core
             // If the generatedClass starts with an underscore, add a ClsCompliant(false) attribute.
             if (generatedClass.Name[0] == '_')
             {
-                generatedClass.CustomAttributes.Add(new CodeAttributeDeclaration(typeof(CLSCompliantAttribute).FullName,
-                                                        new CodeAttributeArgument(new CodePrimitiveExpression(false))));
+                _ = generatedClass.CustomAttributes.Add(
+                    new CodeAttributeDeclaration(
+                        typeof(CLSCompliantAttribute).FullName,
+                        new CodeAttributeArgument(new CodePrimitiveExpression(false))
+                    )
+                );
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -7,10 +7,10 @@ using System.Web.Mvc;
 using System.Web.Mvc.Razor;
 using System.Web.Razor;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     [Export("MvcView", typeof(IRazorCodeTransformer))]
-    public class MvcViewTransformer : AggregateCodeTransformer
+    public class Version1MvcViewTransformer : AggregateCodeTransformer, IOutputRazorCodeTransformer
     {
         private static readonly IEnumerable<string> _namespaces = new[] { 
             "System.Web.Mvc", 
@@ -18,6 +18,7 @@ namespace RazorGenerator.Core
             "System.Web.Mvc.Ajax",
             "System.Web.Routing",
         };
+
         private readonly RazorCodeTransformerBase[] _codeTransformers = new RazorCodeTransformerBase[] { 
             new DirectivesBasedTransformers(),
             new AddGeneratedClassAttribute(),
@@ -39,10 +40,18 @@ namespace RazorGenerator.Core
             get { return this._codeTransformers; }
         }
 
-        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
+        public override void Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
         {
             base.Initialize(razorHost, directives);
 
+            if( razorHost is Version1RazorHost v1Host )
+            {
+                this.Initialize( v1Host, directives );
+            }
+        }
+
+        public void Initialize(Version1RazorHost razorHost, IDictionary<string, string> directives)
+        {
             switch (razorHost.CodeLanguage.LanguageName)
             {
                 case "csharp":
@@ -71,7 +80,7 @@ namespace RazorGenerator.Core
         {
             private const string ViewStartFileName = "_ViewStart";
 
-            public MvcCSharpCodeGenerator(string className, string baseClass, string rootNamespaceName, string sourceFileName, RazorHost host)
+            public MvcCSharpCodeGenerator(string className, string baseClass, string rootNamespaceName, string sourceFileName, Version1RazorHost host)
                 : base(className, rootNamespaceName, sourceFileName, host)
             {
                 string baseType;
@@ -106,7 +115,7 @@ namespace RazorGenerator.Core
         {
             private const string ViewStartFileName = "_ViewStart";
 
-            public MvcVBDotNetCodeGenerator(string className, string baseClass, string rootNamespaceName, string sourceFileName, RazorHost host)
+            public MvcVBDotNetCodeGenerator(string className, string baseClass, string rootNamespaceName, string sourceFileName, Version1RazorHost host)
                 : base(className, rootNamespaceName, sourceFileName, host)
             {
                 string baseType;

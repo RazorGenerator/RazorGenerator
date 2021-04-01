@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using RazorGenerator.Core.CodeTransformers;
-
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     public class DirectivesBasedTransformers : AggregateCodeTransformer
     {
@@ -26,7 +24,7 @@ namespace RazorGenerator.Core
             get { return this._transformers; }
         }
 
-        public override void Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
+        public override void Initialize(IRazorHost razorHost, IDictionary<string,string> directives)
         {
             if (ReadSwitchValue(directives, GeneratePrettyNamesTransformer.DirectiveName) == true)
             {
@@ -34,14 +32,12 @@ namespace RazorGenerator.Core
                 this._transformers.Add(new GeneratePrettyNamesTransformer(trimLeadingUnderscores));
             }
 
-            string typeVisibility;
-            if (directives.TryGetValue(TypeVisibilityKey, out typeVisibility))
+            if (directives.TryGetValue(TypeVisibilityKey, out string typeVisibility))
             {
                 this._transformers.Add(new SetTypeVisibility(typeVisibility));
             }
 
-            string typeNamespace;
-            if (directives.TryGetValue(NamespaceKey, out typeNamespace))
+            if (directives.TryGetValue(NamespaceKey, out string typeNamespace))
             {
                 this._transformers.Add(new SetTypeNamespace(typeNamespace));
             }
@@ -61,28 +57,24 @@ namespace RazorGenerator.Core
                 this._transformers.Add(new ExcludeFromCodeCoverageTransformer());
             }
 
-            string suffix;
-            if (directives.TryGetValue(SuffixFileName, out suffix))
+            if (directives.TryGetValue(SuffixFileName, out string suffix))
             {
                 this._transformers.Add(new SuffixFileNameTransformer(suffix));
             }
 
-            string genericParameters;
-            if (directives.TryGetValue(GenericParametersKey, out genericParameters))
+            if (directives.TryGetValue(GenericParametersKey, out string genericParameters))
             {
                 IEnumerable<string> parameters = from p in genericParameters.Split(',') select p.Trim();
                 this._transformers.Add(new GenericParametersTransformer(parameters));
             }
 
-            string imports;
-            if (directives.TryGetValue(ImportsKey, out imports))
+            if (directives.TryGetValue(ImportsKey, out string imports))
             {
                 IEnumerable<string> values = from p in imports.Split(',') select p.Trim();
                 this._transformers.Add(new SetImports(values, false));
             }
 
-            string baseType;
-            if (directives.TryGetValue(BaseType, out baseType))
+            if (directives.TryGetValue(BaseType, out string baseType))
             {
                 this._transformers.Add(new SetBaseType(baseType, @override: true));
             }
@@ -92,13 +84,11 @@ namespace RazorGenerator.Core
 
         private static bool? ReadSwitchValue(IDictionary<string, string> directives, string key)
         {
-            string value;
-            bool switchValue;
-
-            if (directives.TryGetValue(key, out value) && Boolean.TryParse(value, out switchValue))
+            if (directives.TryGetValue(key, out string value) && Boolean.TryParse(value, out bool switchValue))
             {
                 return switchValue;
             }
+
             return null;
         }
     }

@@ -12,11 +12,11 @@ namespace RazorGenerator.Core
     public class Version2RazorHostProvider : IRazorHostProvider
     {
         public IRazorHost GetRazorHost(
-            string                     projectRelativePath,
-            FileInfo                   fullPath,
-            IRazorCodeTransformer      codeTransformer,
-            CodeDomProvider            codeDomProvider,
-            IDictionary<string,string> directives
+            string                      projectRelativePath,
+            FileInfo                    fullPath,
+            IOutputRazorCodeTransformer codeTransformer,
+            CodeDomProvider             codeDomProvider,
+            IDictionary<string,string>  directives
         )
         {
             return new Version2RazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);

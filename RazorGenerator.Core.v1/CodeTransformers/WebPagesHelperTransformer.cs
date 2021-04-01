@@ -1,13 +1,13 @@
-﻿using System.CodeDom;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     [Export("WebPagesHelper", typeof(IRazorCodeTransformer))]
-    public class WebPagesHelperTransformer : AggregateCodeTransformer
+    public class Version1WebPagesHelperTransformer : AggregateCodeTransformer, IOutputRazorCodeTransformer
     {
         private readonly RazorCodeTransformerBase[] _codeTransformers = new RazorCodeTransformerBase[] {
             new DirectivesBasedTransformers(),
@@ -23,17 +23,19 @@ namespace RazorGenerator.Core
             get { return this._codeTransformers; }
         }
 
-        public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit,
-                                                  CodeNamespace generatedNamespace,
-                                                  CodeTypeDeclaration generatedClass,
-                                                  CodeMemberMethod executeMethod)
+        public override void ProcessGeneratedCode(
+            CodeCompileUnit     codeCompileUnit,
+            CodeNamespace       generatedNamespace,
+            CodeTypeDeclaration generatedClass,
+            CodeMemberMethod    executeMethod
+        )
         {
             base.ProcessGeneratedCode(codeCompileUnit, generatedNamespace, generatedClass, executeMethod);
 
             // Make all helper methods prefixed by '_' internal
             foreach (CodeSnippetTypeMember method in generatedClass.Members.OfType<CodeSnippetTypeMember>())
             {
-                method.Text = this._razorHost.CodeLanguageUtil.MakeHelperMethodsInternal(method.Text);
+                method.Text = this.razorHost.CodeLanguageUtil.MakeHelperMethodsInternal(method.Text);
             }
         }
     }

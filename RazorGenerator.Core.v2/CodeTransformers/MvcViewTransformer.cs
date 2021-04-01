@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -8,10 +8,10 @@ using System.Web.Mvc;
 using System.Web.Mvc.Razor;
 using System.Web.Razor.Generator;
 
-namespace RazorGenerator.Core
+namespace RazorGenerator.Core.CodeTransformers
 {
     [Export("MvcView", typeof(IRazorCodeTransformer))]
-    public class MvcViewTransformer : AggregateCodeTransformer
+    public class Version2MvcViewTransformer : AggregateCodeTransformer, IOutputRazorCodeTransformer
     {
         private const string ViewStartFileName = "_ViewStart";
         private static readonly IEnumerable<string> _namespaces = new[] { 
@@ -44,9 +44,25 @@ namespace RazorGenerator.Core
             get { return this._codeTransformers; }
         }
 
-        public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
+        public override void Initialize(IRazorHost razorHost, IDictionary<string,string> directives)
         {
+            if (razorHost  is null) throw new ArgumentNullException(nameof(razorHost));
+            if (directives is null) throw new ArgumentNullException(nameof(directives));
+
             base.Initialize(razorHost, directives);
+            
+            if( razorHost is Version2RazorHost v2Host )
+            {
+                this.Initialize( v2Host, directives );
+            }
+            else
+            {
+                throw new InvalidOperationException( "Expected razorHost to be an instance of " + nameof(Version2RazorHost) + " but encountered " + razorHost.GetType().FullName + "." );
+            }
+        }
+
+        public void Initialize(Version2RazorHost razorHost, IDictionary<string,string> directives)
+        {
             this._languageUtil = razorHost.CodeLanguageUtil;
 
             this._isSpecialPage = this.IsSpecialPage(razorHost.FullPath);
@@ -74,10 +90,9 @@ namespace RazorGenerator.Core
                 default:
                     throw new ArgumentOutOfRangeException("Unknown language - " + razorHost.CodeLanguage.LanguageName);
             }
-
         }
 
-        private void FixupDefaultClassNameIfTemplate(RazorHost razorHost)
+        private void FixupDefaultClassNameIfTemplate(IRazorHost razorHost)
         {
             string filePath = Path.GetDirectoryName(razorHost.FullPath).TrimEnd(Path.DirectorySeparatorChar);
             if (filePath.EndsWith("EditorTemplates", StringComparison.OrdinalIgnoreCase) || 
