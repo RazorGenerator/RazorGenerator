@@ -22,6 +22,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
 using RazorGenerator.Resources;
+using RazorGenerator.Core;
 
 namespace RazorGenerator
 {

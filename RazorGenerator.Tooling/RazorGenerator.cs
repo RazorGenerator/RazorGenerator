@@ -19,6 +19,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
 using RazorGenerator.Core;
+using RazorGenerator.Core.Hosting;
 
 namespace RazorGenerator
 {
@@ -66,7 +67,10 @@ namespace RazorGenerator
             DirectoryInfo projectDirectory    = new DirectoryInfo(Path.GetDirectoryName(this.GetProject().FullName));
             string        projectRelativePath = this.InputFilePath.FullName.Substring(projectDirectory.FullName.Length);
 
-            using (RazorHostManager hostManager = new RazorHostManager(projectDirectory))
+            IAssemblyLocator locator = new DescendantDirectoryAssemblyLocator( projectDirectory, maxDepth: 10 );
+            FileInfo razorGeneratorAssemblyFile = locator.GetRazorGeneratorAssemblyFile( RazorRuntime.Version3 );
+
+            using( RazorHostManager hostManager = new RazorHostManager( projectDirectory, loadExtensions: false, razorGeneratorAssemblyFile: razorGeneratorAssemblyFile ) )
             {
                 IRazorHost host = hostManager.CreateHost(this.InputFilePath, projectRelativePath, this.GetCodeProvider(), this.FileNameSpace);
                 
