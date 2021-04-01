@@ -58,6 +58,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeTransformers\TemplateCodeTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CodeTransformers\MvcWebConfigTransformer.cs" />
     <Compile Include="CodeTransformers\MvcHelperTransformer.cs" />

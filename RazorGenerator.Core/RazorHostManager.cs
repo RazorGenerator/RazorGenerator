@@ -142,12 +142,12 @@ namespace RazorGenerator.Core
             catch (Exception exception)
             {
                 string availableHosts = String.Join(", ", GetAvailableHosts(container));
-                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, RazorGeneratorResources.GeneratorFailureMessage, projectRelativePath, availableHosts), exception);
+                throw new InvalidOperationException(message: RazorGeneratorResources.GeneratorFailureMessage.Fmt(projectRelativePath, availableHosts), innerException: exception);
             }
 
             if (codeTransformer is null)
             {
-                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, RazorGeneratorResources.GeneratorError_UnknownGenerator, hostName));
+                throw new InvalidOperationException(message: RazorGeneratorResources.GeneratorError_UnknownGenerator.Fmt(hostName));
             }
 
             return codeTransformer;

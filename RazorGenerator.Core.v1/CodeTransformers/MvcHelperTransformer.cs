@@ -30,12 +30,23 @@ namespace RazorGenerator.Core.CodeTransformers
 
         public override void Initialize(IRazorHost razorHost, IDictionary<string,string> directives)
         {
-            base.Initialize(razorHost, directives);
-            
-            razorHost.DefaultBaseClass = String.Empty;
+            if (razorHost  is null) throw new ArgumentNullException(nameof(razorHost));
+            if (directives is null) throw new ArgumentNullException(nameof(directives));
+
+            if( razorHost is Version1RazorHost v1RazorHost )
+            {
+                base.Initialize( razorHost, directives );
+
+                this.Initialize( v1RazorHost );
+            }
+            else
+            {
+                string message = "Expected " + nameof(razorHost) + " to be an instance of " + nameof(Version1RazorHost) + " but encountered an instance of " + razorHost.GetType().FullName + ".";
+                throw new InvalidOperationException( message );
+            }
         }
 
-        public void Initialize(Version1RazorHost razorHost, IDictionary<string,string> directives)
+        private void Initialize(Version1RazorHost razorHost)
         {
             razorHost.GeneratedClassContext = new GeneratedClassContext(
                 executeMethodName       : GeneratedClassContext.DefaultExecuteMethodName,
@@ -46,6 +57,8 @@ namespace RazorGenerator.Core.CodeTransformers
                 templateTypeName        : typeof(System.Web.WebPages.HelperResult).FullName,
                 defineSectionMethodName : "DefineSection"
             );
+
+            razorHost.DefaultBaseClass = String.Empty;
         }
 
         public override void ProcessGeneratedCode(

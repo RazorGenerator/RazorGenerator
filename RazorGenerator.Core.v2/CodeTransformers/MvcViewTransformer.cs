@@ -53,7 +53,7 @@ namespace RazorGenerator.Core.CodeTransformers
             
             if( razorHost is Version2RazorHost v2Host )
             {
-                this.Initialize( v2Host, directives );
+                this.Initialize( v2Host );
             }
             else
             {
@@ -61,7 +61,7 @@ namespace RazorGenerator.Core.CodeTransformers
             }
         }
 
-        public void Initialize(Version2RazorHost razorHost, IDictionary<string,string> directives)
+        private void Initialize(Version2RazorHost razorHost)
         {
             this._languageUtil = razorHost.CodeLanguageUtil;
 

@@ -7,8 +7,8 @@ using RazorGenerator.Core.CodeTransformers;
 
 namespace RazorGenerator.Core
 {
-    [Export("Template", typeof(IOutputRazorCodeTransformer))]
-    public class TemplateCodeTransformer : AggregateCodeTransformer, IOutputRazorCodeTransformer
+//  [Export("Template", typeof(IOutputRazorCodeTransformer))]
+    public abstract class TemplateCodeTransformer : AggregateCodeTransformer
     {
         private const string GenerationEnvironmentPropertyName = "GenerationEnvironment";
 

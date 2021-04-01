@@ -32,10 +32,10 @@ namespace RazorGenerator.Core.CodeTransformers
             if (razorHost  is null) throw new ArgumentNullException(nameof(razorHost));
             if (directives is null) throw new ArgumentNullException(nameof(directives));
 
-            base.Initialize(razorHost, directives);
-            
             if( razorHost is Version2RazorHost v2RazorHost )
             {
+                base.Initialize( razorHost, directives );
+
                 this.Initialize( v2RazorHost, directives );
             }
             else
@@ -45,7 +45,7 @@ namespace RazorGenerator.Core.CodeTransformers
             }
         }
 
-        public void Initialize(Version2RazorHost razorHost, IDictionary<string,string> directives)
+        private void Initialize(Version2RazorHost razorHost, IDictionary<string,string> directives)
         {
             razorHost.DefaultBaseClass = typeof(System.Web.WebPages.HelperPage).FullName;
 

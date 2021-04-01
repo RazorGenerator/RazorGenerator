@@ -34,9 +34,9 @@ namespace RazorGenerator.Core.CodeTransformers
 
             base.Initialize(razorHost, directives);
             
-            if( razorHost is Version3RazorHost v2RazorHost )
+            if( razorHost is Version3RazorHost v3RazorHost )
             {
-                this.Initialize( v2RazorHost, directives );
+                this.Initialize( v3RazorHost );
             }
             else
             {
@@ -45,7 +45,7 @@ namespace RazorGenerator.Core.CodeTransformers
             }
         }
 
-        public void Initialize(Version3RazorHost razorHost, IDictionary<string,string> directives)
+        private void Initialize(Version3RazorHost razorHost)
         {
             razorHost.DefaultBaseClass = typeof(System.Web.WebPages.HelperPage).FullName;
 

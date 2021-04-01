@@ -41,15 +41,23 @@ namespace RazorGenerator.Core.CodeTransformers
 
         public override void Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
         {
-            base.Initialize(razorHost, directives);
+            if (razorHost  is null) throw new ArgumentNullException(nameof(razorHost));
+            if (directives is null) throw new ArgumentNullException(nameof(directives));
 
             if( razorHost is Version1RazorHost v1Host )
             {
-                this.Initialize( v1Host, directives );
+                base.Initialize( razorHost, directives );
+
+                this.Initialize( v1Host);
+            }
+            else
+            {
+                string message = "Expected " + nameof(razorHost) + " to be an instance of " + nameof(Version1RazorHost) + " but encountered an instance of " + razorHost.GetType().FullName + ".";
+                throw new InvalidOperationException( message );
             }
         }
 
-        public void Initialize(Version1RazorHost razorHost, IDictionary<string, string> directives)
+        private void Initialize(Version1RazorHost razorHost)
         {
             switch (razorHost.CodeLanguage.LanguageName)
             {
@@ -106,7 +114,7 @@ namespace RazorGenerator.Core.CodeTransformers
             {
                 CodeTypeReference baseType = new CodeTypeReference(name);
                 this.GeneratedClass.BaseTypes.Clear();
-                this.GeneratedClass.BaseTypes.Add(baseType);
+                _ = this.GeneratedClass.BaseTypes.Add(baseType);
             }
         }
 
@@ -141,7 +149,7 @@ namespace RazorGenerator.Core.CodeTransformers
             {
                 CodeTypeReference baseType = new CodeTypeReference(name);
                 this.GeneratedClass.BaseTypes.Clear();
-                this.GeneratedClass.BaseTypes.Add(baseType);
+                _ = this.GeneratedClass.BaseTypes.Add(baseType);
             }
         }
     }
