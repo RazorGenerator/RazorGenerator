@@ -1,20 +1,32 @@
+//extern alias razor1;
+
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+
+/*
+using razor1::System.Web.Razor;
+using razor1::System.Web.Razor.Generator;
+using razor1::System.Web.Razor.Parser;
+using razor1::System.Web.Razor.Parser.SyntaxTree;
+using razor1::System.Web.WebPages;
+*/
 using System.Web.Razor;
 using System.Web.Razor.Generator;
 using System.Web.Razor.Parser;
 using System.Web.Razor.Parser.SyntaxTree;
 using System.Web.WebPages;
 
+using RazorGenerator.Core.CodeTransformers;
+
 namespace RazorGenerator.Core
 {
-    public class RazorHost : RazorEngineHost, IRazorHost, ICodeGenerationEventProvider
+    public class Version1RazorHost : RazorEngineHost, IRazorHost, ICodeGenerationEventProvider
     {
-        private static readonly IEnumerable<string> _defaultImports = new[] {
+        private static readonly IReadOnlyList<string> _defaultImports = new[] {
             "System",
             "System.Collections.Generic",
             "System.IO",
@@ -38,20 +50,26 @@ namespace RazorGenerator.Core
         private string           _defaultClassName;
         private CodeLanguageUtil _languageUtil;
 
-        public RazorHost(string baseRelativePath, FileInfo fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives)
-            : base(RazorCodeLanguage.GetLanguageByExtension(fullPath.Extension))
+        public Version1RazorHost(
+            string                     baseRelativePath,
+            FileInfo                   fullPath,
+            IRazorCodeTransformer      codeTransformer,
+            CodeDomProvider            codeDomProvider,
+            IDictionary<string,string> directives
+        )
+            : base( codeLanguage: RazorCodeLanguage.GetLanguageByExtension(fullPath.Extension ) )
         {
-            if (codeTransformer  == null) throw new ArgumentNullException("codeTransformer");
-            if (baseRelativePath == null) throw new ArgumentNullException("baseRelativePath");
-            if (fullPath         == null) throw new ArgumentNullException("fullPath");
-            if (codeDomProvider  == null) throw new ArgumentNullException("codeDomProvider");
+            if (codeTransformer  is null) throw new ArgumentNullException(nameof(codeTransformer));
+            if (baseRelativePath is null) throw new ArgumentNullException(nameof(baseRelativePath));
+            if (fullPath         is null) throw new ArgumentNullException(nameof(fullPath));
+            if (codeDomProvider  is null) throw new ArgumentNullException(nameof(codeDomProvider));
 
             this._codeTransformer  = codeTransformer;
             this._baseRelativePath = baseRelativePath;
             this._fullPath         = fullPath;
             this._codeDomProvider  = codeDomProvider;
             this._directives       = directives;
-            this._languageUtil     = Core.CodeLanguageUtil.GetLanguageUtilFromFileName(fullPath);
+            this._languageUtil     = CodeLanguageUtil.GetLanguageUtilFromFileName(fullPath);
             base.DefaultNamespace  = "ASP";
             this.EnableLinePragmas = true;
 
@@ -196,23 +214,47 @@ namespace RazorGenerator.Core
 
         private void OnGenerateError(uint errorCode, string errorMessage, uint lineNumber, uint columnNumber)
         {
-            if (Error != null)
-            {
-                Error(this, new GeneratorErrorEventArgs(errorCode, errorMessage, lineNumber, columnNumber));
-            }
+            this.Error?.Invoke( this, new GeneratorErrorEventArgs(errorCode, errorMessage, lineNumber, columnNumber) );
         }
 
         private void OnCodeCompletion(uint completed, uint total)
         {
-            if (Progress != null)
-            {
-                Progress(this, new ProgressEventArgs(completed, total));
-            }
+            this.Progress?.Invoke(this, new ProgressEventArgs(completed, total));
         }
 
         protected virtual string GetClassName()
         {
             return ParserHelpers.SanitizeClassName(this._baseRelativePath);
+        }
+
+        public string ParserHelpers_SanitizeClassName(string inputName)
+        {
+            return System.Web.Razor.Parser.ParserHelpers.SanitizeClassName(inputName);
+        }
+
+        public IRazorVirtualPathUtility GetVirtualPathUtility()
+        {
+            return SystemWebVirtualPathProvider.Instance;
+        }
+    }
+
+    public class SystemWebVirtualPathProvider : IRazorVirtualPathUtility
+    {
+        public static SystemWebVirtualPathProvider Instance { get; } = new SystemWebVirtualPathProvider();
+
+        public string ToAppRelative(string virtualPath)
+        {
+            return System.Web.VirtualPathUtility.ToAppRelative(virtualPath);
+        }
+
+        public bool TryGetVirtualPathAttribute(string virtualPath, out CodeAttributeDeclaration attribute)
+        {
+            attribute = new CodeAttributeDeclaration(
+                typeof(System.Web.WebPages.PageVirtualPathAttribute).FullName,
+                new CodeAttributeArgument(new CodePrimitiveExpression(virtualPath))
+            );
+
+            return true;
         }
     }
 }

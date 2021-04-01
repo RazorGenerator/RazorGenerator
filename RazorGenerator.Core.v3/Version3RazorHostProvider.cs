@@ -4,10 +4,12 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 
-namespace RazorGenerator.Core.Mvc3
+using RazorGenerator.Core.CodeTransformers;
+
+namespace RazorGenerator.Core
 {
-    [Export(typeof(IHostProvider))]
-    public class RazorHostProvider : IHostProvider
+    [Export(typeof(IRazorHostProvider))]
+    public class Version3RazorHostProvider : IRazorHostProvider
     {
         public IRazorHost GetRazorHost(
             string                     projectRelativePath,
@@ -17,7 +19,7 @@ namespace RazorGenerator.Core.Mvc3
             IDictionary<string,string> directives
         )
         {
-            return new RazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
+            return new Version3RazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
         }
     }
 }

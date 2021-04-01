@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
@@ -9,9 +10,11 @@ using System.Web.Razor.Parser;
 using System.Web.Razor.Parser.SyntaxTree;
 using System.Web.WebPages;
 
+using RazorGenerator.Core.CodeTransformers;
+
 namespace RazorGenerator.Core
 {
-    public class RazorHost : RazorEngineHost, IRazorHost, ICodeGenerationEventProvider
+    public class Version3RazorHost : RazorEngineHost, IRazorHost, ICodeGenerationEventProvider
     {
         private static readonly IEnumerable<string> _defaultImports = new[] {
             "System",
@@ -37,7 +40,7 @@ namespace RazorGenerator.Core
         private string           _defaultClassName;
         private CodeLanguageUtil _languageUtil;
 
-        public RazorHost(string baseRelativePath, FileInfo fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives)
+        public Version3RazorHost(string baseRelativePath, FileInfo fullPath, IRazorCodeTransformer codeTransformer, CodeDomProvider codeDomProvider, IDictionary<string, string> directives)
             : base(RazorCodeLanguage.GetLanguageByExtension(fullPath.Extension))
         {
             if (codeTransformer == null) throw new ArgumentNullException("codeTransformer");
@@ -218,6 +221,36 @@ namespace RazorGenerator.Core
         protected virtual string GetClassName()
         {
             return ParserHelpers.SanitizeClassName(this._baseRelativePath);
+        }
+        
+        public string ParserHelpers_SanitizeClassName(string inputName)
+        {
+            return System.Web.Razor.Parser.ParserHelpers.SanitizeClassName(inputName);
+        }
+
+        public IRazorVirtualPathUtility GetVirtualPathUtility()
+        {
+            return SystemWebVirtualPathProvider.Instance;
+        }
+    }
+
+    public class SystemWebVirtualPathProvider : IRazorVirtualPathUtility
+    {
+        public static SystemWebVirtualPathProvider Instance { get; } = new SystemWebVirtualPathProvider();
+
+        public string ToAppRelative(string virtualPath)
+        {
+            return System.Web.VirtualPathUtility.ToAppRelative(virtualPath);
+        }
+
+        public bool TryGetVirtualPathAttribute(string virtualPath, out CodeAttributeDeclaration attribute)
+        {
+            attribute = new CodeAttributeDeclaration(
+                typeof(System.Web.WebPages.PageVirtualPathAttribute).FullName,
+                new CodeAttributeArgument(new CodePrimitiveExpression(virtualPath))
+            );
+
+            return true;
         }
     }
 }

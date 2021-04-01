@@ -87,15 +87,15 @@
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
     <Compile Include="VsGeneratorProgressExtensions.cs" />
-    <Compile Include="VsGeneratorProgressExtensions.cs">
-      <Link>Linked\VsGeneratorProgressExtensions.cs</Link>
-    </Compile>
     <Content Include="ReadMe.txt" />
     <Content Include="LICENSE.txt" />
     <None Include="source.extension.vsixmanifest">
       <Generator>VsixManifestGenerator</Generator>
       <LastGenOutput>source.extension.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Linked\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Condition="Exists($(VsSdkTargets))" Project="$(VsSdkTargets)" />
