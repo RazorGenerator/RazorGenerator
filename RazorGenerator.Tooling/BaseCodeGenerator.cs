@@ -114,6 +114,8 @@ namespace RazorGenerator
 
         private byte[] TryGenerateOrNull(string inputFileContent)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             string fileContents;
             try
             {
@@ -157,6 +159,8 @@ namespace RazorGenerator
 
         private byte[] ReportGenerationError(Exception exception, out string exceptionReport)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             exceptionReport = exception.ToString();
 
             const string messageFmt = @"Failed to generate file: {0}\r\n\r\n{1}";
@@ -167,6 +171,8 @@ namespace RazorGenerator
 
         private byte[] ReportEncodingError( Exception encodingException )
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             const string messageFmt = @"File generated succesfully, but failed to encode file contents string to bytes: {0}\r\n\r\n{1}";
             string message = String.Format(provider: CultureInfo.CurrentCulture, format: messageFmt, encodingException.Message, encodingException.ToString());
             this.codeGeneratorProgress.GeneratorErrorOrThrow(isWarning: false, level: 1, message: message, line: 0, column: 0);
@@ -215,6 +221,8 @@ namespace RazorGenerator
 
         protected static byte[] ConvertToUtf8BytesWithBom(string content, IVsGeneratorProgress codeGeneratorProgress)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             // https://docs.microsoft.com/en-us/dotnet/api/system.text.utf8encoding.getbytecount
             // > the number of bytes in the preamble is not reflected in the value returned by the GetByteCount method.
 

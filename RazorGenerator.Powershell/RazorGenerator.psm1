@@ -152,6 +152,7 @@ Function Change-CustomTool {
     Set-StrictMode -Off
 }
 
+# Sets RazorGenerator as the Custom Tool for every *.cshtml file in the project, which also runs the Custom Tool too.
 Function Enable-RazorGenerator {
     Param(
         [parameter(ValueFromPipelineByPropertyName = $true)][string]$projectName
@@ -160,6 +161,7 @@ Function Enable-RazorGenerator {
     Change-CustomTool $projectName "RazorGenerator"
 }
 
+# Removes the RazorGenerator Custom Tool from every *.cshtml file in the project.
 Function Disable-RazorGenerator {
     Param(
         [parameter(ValueFromPipelineByPropertyName = $true)][string]$projectName
@@ -168,6 +170,7 @@ Function Disable-RazorGenerator {
     Change-CustomTool $projectName ""
 }
 
+# Re-runs the RazorGenerator Custom Tool on every *.cshtml file in the project.
 Function Redo-RazorGenerator {
     Param(
         [parameter(ValueFromPipelineByPropertyName = $true)][string]$projectName

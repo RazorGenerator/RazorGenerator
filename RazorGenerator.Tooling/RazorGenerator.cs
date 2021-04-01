@@ -67,6 +67,7 @@ namespace RazorGenerator
             DirectoryInfo projectDirectory    = new DirectoryInfo(Path.GetDirectoryName(this.GetProject().FullName));
             string        projectRelativePath = this.InputFilePath.FullName.Substring(projectDirectory.FullName.Length);
 
+            #warning TODO: Don't hardcode RazorRuntime versions. When run as a Custom Tool, RazorGenerator should have access to all versions of RazorGenerator from its VSIX and so can load the correct version as specified by the .csproj's properties or directives file.
             IAssemblyLocator locator = new DescendantDirectoryAssemblyLocator( projectDirectory, maxDepth: 10 );
             FileInfo razorGeneratorAssemblyFile = locator.GetRazorGeneratorAssemblyFile( RazorRuntime.Version3 );
 
@@ -94,11 +95,15 @@ namespace RazorGenerator
 
         private void OnRazorHostError(object sender, GeneratorErrorEventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             this.Progress?.GeneratorErrorOrThrow(isWarning: false, level: 0, message: e.ErrorMessage, line: e.LineNumber, column: e.ColumnNumber);
         }
 
         private void OnRazorHostProgress(object sender, ProgressEventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             this.Progress?.ProgressOrThrow(nComplete: e.Completed, nTotal: e.Total);
         }
     }

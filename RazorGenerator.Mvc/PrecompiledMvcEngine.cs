@@ -1,4 +1,4 @@
-﻿/** 
+/** 
  * This is based on PrecompiledViews written by Chris van de Steeg. 
  * Code and discussions for Chris's changes are available at (http://www.chrisvandesteeg.nl/2010/11/22/embedding-pre-compiled-razor-views-in-your-dll/)
  **/
@@ -165,7 +165,7 @@ namespace RazorGenerator.Mvc
 
         protected virtual bool IsPhysicalFileNewer(string virtualPath)
         {
-            return IsPhysicalFileNewer(virtualPath, BaseVirtualPath, AssemblyLastWriteTime);
+            return IsPhysicalFileNewer(virtualPath, this.BaseVirtualPath, this.AssemblyLastWriteTime);
         }
 
         internal static bool IsPhysicalFileNewer(string virtualPath, string baseVirtualPath, Lazy<DateTime> assemblyLastWriteTime)
