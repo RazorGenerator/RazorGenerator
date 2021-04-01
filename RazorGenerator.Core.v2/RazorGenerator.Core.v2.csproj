@@ -60,7 +60,6 @@
     <Compile Include="CodeTransformers\MvcHelperTransformer.cs" />
     <Compile Include="CodeTransformers\MvcViewTransformer.cs" />
     <Compile Include="CodeTransformers\MvcWebConfigTransformer.cs" />
-    <Compile Include="CodeTransformers\TemplateTransformer.cs" />
     <Compile Include="CodeTransformers\WebPagesHelperTransformer.cs" />
     <Compile Include="CodeTransformers\WebPagesTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

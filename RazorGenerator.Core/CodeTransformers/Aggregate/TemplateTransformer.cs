@@ -5,10 +5,10 @@ using System.Linq;
 
 using RazorGenerator.Core.CodeTransformers;
 
-namespace RazorGenerator.Core.CodeTransformers
+namespace RazorGenerator.Core
 {
     [Export("Template", typeof(IOutputRazorCodeTransformer))]
-    public class Version2TemplateCodeTransformer : AggregateCodeTransformer, IOutputRazorCodeTransformer
+    public class TemplateCodeTransformer : AggregateCodeTransformer, IOutputRazorCodeTransformer
     {
         private const string GenerationEnvironmentPropertyName = "GenerationEnvironment";
 
