@@ -59,18 +59,13 @@
       <Project>{af040852-112f-494d-b1d0-b50888928db6}</Project>
       <Name>RazorGenerator.Core</Name>
     </ProjectReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.9.31025.194" ExcludeAssets="runtime">
-      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.9.1050">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.0.206" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.8.3038" />
+    <!--
     <PackageReference Include="Microsoft.VisualStudio.Sdk.BuildTasks.14.0" Version="14.9.23" />
+    -->
     <Reference Include="System" />
-    <!-- RazorGenerator.Tooling.VS2019-specific files: -->
     <Compile Include="AssemblyInfo.cs" />
-    <!-- RazorGenerator.Tooling.csproj files: -->
     <Compile Include="BaseCodeGenerator.cs" />
     <Compile Include="BaseCodeGeneratorWithSite.cs" />
     <Compile Include="Extensions.cs" />
@@ -95,6 +90,7 @@
     <Compile Include="VsGeneratorProgressExtensions.cs" />
     <Content Include="ReadMe.txt" />
     <Content Include="LICENSE.txt" />
+    <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <Generator>VsixManifestGenerator</Generator>
       <LastGenOutput>source.extension.cs</LastGenOutput>
