@@ -10,12 +10,12 @@ namespace RazorGenerator.Core
 
         void IRazorCodeTransformer.Initialize(IRazorHost razorHost, IDictionary<string, string> directives)
         {
-            Initialize((RazorHost)razorHost, directives);
+            this.Initialize((RazorHost)razorHost, directives);
         }
 
         public virtual void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
-            _razorHost = razorHost;
+            this._razorHost = razorHost;
             // do nothing
         }
 

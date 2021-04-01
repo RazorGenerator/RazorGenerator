@@ -10,16 +10,16 @@ namespace RazorGenerator.Core
 
         public SetTypeVisibility(string visibility)
         {
-            _visibility = visibility;
+            this._visibility = visibility;
         }
 
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
         {
-            if (_visibility.Equals("Public", StringComparison.OrdinalIgnoreCase))
+            if (this._visibility.Equals("Public", StringComparison.OrdinalIgnoreCase))
             {
                 generatedClass.TypeAttributes = generatedClass.TypeAttributes & ~TypeAttributes.VisibilityMask | TypeAttributes.Public;
             }
-            else if (_visibility.Equals("Internal", StringComparison.OrdinalIgnoreCase))
+            else if (this._visibility.Equals("Internal", StringComparison.OrdinalIgnoreCase))
             {
                 generatedClass.TypeAttributes = generatedClass.TypeAttributes & ~TypeAttributes.VisibilityMask | TypeAttributes.NestedFamANDAssem;
             }

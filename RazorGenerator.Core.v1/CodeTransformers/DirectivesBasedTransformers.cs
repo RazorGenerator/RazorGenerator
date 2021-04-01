@@ -20,27 +20,27 @@ namespace RazorGenerator.Core
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
         {
-            get { return _transformers; }
+            get { return this._transformers; }
         }
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
             if (ReadSwitchValue(directives, GeneratePrettyNamesTransformer.DirectiveName) == true)
             {
-                var trimLeadingUnderscores = ReadSwitchValue(directives, TrimLeadingUnderscoresKey) ?? false;
-                _transformers.Add(new GeneratePrettyNamesTransformer(trimLeadingUnderscores));
+                bool trimLeadingUnderscores = ReadSwitchValue(directives, TrimLeadingUnderscoresKey) ?? false;
+                this._transformers.Add(new GeneratePrettyNamesTransformer(trimLeadingUnderscores));
             }
 
             string typeVisibility;
             if (directives.TryGetValue(TypeVisibilityKey, out typeVisibility))
             {
-                _transformers.Add(new SetTypeVisibility(typeVisibility));
+                this._transformers.Add(new SetTypeVisibility(typeVisibility));
             }
 
             string typeNamespace;
             if (directives.TryGetValue(NamespaceKey, out typeNamespace))
             {
-                _transformers.Add(new SetTypeNamespace(typeNamespace));
+                this._transformers.Add(new SetTypeNamespace(typeNamespace));
             }
 
             if (ReadSwitchValue(directives, DisableLinePragmasKey) == true)
@@ -50,38 +50,38 @@ namespace RazorGenerator.Core
             else if (ReadSwitchValue(directives, GenerateAbsolutePathLinePragmas) != true)
             {
                 // Rewrite line pragamas to generate bin relative paths instead of absolute paths.
-                _transformers.Add(new RewriteLinePragmas());
+                this._transformers.Add(new RewriteLinePragmas());
             }
 
             if (ReadSwitchValue(directives, ExcludeFromCodeCoverage) == true)
             {
-                _transformers.Add(new ExcludeFromCodeCoverageTransformer());
+                this._transformers.Add(new ExcludeFromCodeCoverageTransformer());
             }
 
             string suffix;
             if (directives.TryGetValue(SuffixFileName, out suffix))
             {
-                _transformers.Add(new SuffixFileNameTransformer(suffix));
+                this._transformers.Add(new SuffixFileNameTransformer(suffix));
             }
 
             string genericParameters;
             if (directives.TryGetValue(GenericParametersKey, out genericParameters))
             {
-                var parameters = from p in genericParameters.Split(',') select p.Trim();
-                _transformers.Add(new GenericParametersTransformer(parameters));
+                IEnumerable<string> parameters = from p in genericParameters.Split(',') select p.Trim();
+                this._transformers.Add(new GenericParametersTransformer(parameters));
             }
 
             string imports;
             if (directives.TryGetValue(ImportsKey, out imports))
             {
-                var values = from p in imports.Split(',') select p.Trim();
-                _transformers.Add(new SetImports(values, false));
+                IEnumerable<string> values = from p in imports.Split(',') select p.Trim();
+                this._transformers.Add(new SetImports(values, false));
             }
 
             string baseType;
             if (directives.TryGetValue(BaseType, out baseType))
             {
-                _transformers.Add(new SetBaseType(baseType, @override: true));
+                this._transformers.Add(new SetBaseType(baseType, @override: true));
             }
 
             base.Initialize(razorHost, directives);

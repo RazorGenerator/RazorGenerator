@@ -10,12 +10,12 @@ namespace RazorGenerator.Core
 
         public GenericParametersTransformer(IEnumerable<string> parameters)
         {
-            _parameters = parameters.ToArray(/* copy */);
+            this._parameters = parameters.ToArray(/* copy */);
         }
 
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
         {
-            var parameters = from p in _parameters select new CodeTypeParameter(p);
+            IEnumerable<CodeTypeParameter> parameters = from p in this._parameters select new CodeTypeParameter(p);
             generatedClass.TypeParameters.AddRange(parameters.ToArray());
         }
     }

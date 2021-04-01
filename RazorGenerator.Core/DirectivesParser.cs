@@ -55,13 +55,13 @@ namespace RazorGenerator.Core
 
         private static void ParseGlobalDirectives(Dictionary<string, string> directives, FileInfo directivesPath)
         {
-            var fileContent = File.ReadAllText(path: directivesPath.FullName);
+            string fileContent = File.ReadAllText(path: directivesPath.FullName);
             ParseKeyValueDirectives(directives, fileContent);
         }
 
         private static void ParseFileDirectives(Dictionary<string, string> directives, FileInfo filePath)
         {
-            var inputFileContent = File.ReadAllText(filePath.FullName);
+            string inputFileContent = File.ReadAllText(filePath.FullName);
             int index = inputFileContent.IndexOf("*@", StringComparison.OrdinalIgnoreCase);
             if (inputFileContent.TrimStart().StartsWith("@*") && index != -1)
             {
@@ -80,12 +80,12 @@ namespace RazorGenerator.Core
             // TODO: Make this better.
 
             const string valueRegexPattern = @"[~\\\/\w\.]+";
-            var regex = new Regex(@"\b(?<Key>\w+)\s*:\s*(?<Value>" + valueRegexPattern + @"(\s*,\s*" + valueRegexPattern + @")*)\b", RegexOptions.ExplicitCapture);
+            Regex regex = new Regex(@"\b(?<Key>\w+)\s*:\s*(?<Value>" + valueRegexPattern + @"(\s*,\s*" + valueRegexPattern + @")*)\b", RegexOptions.ExplicitCapture);
 
             foreach (Match item in regex.Matches(directivesLine))
             {
-                var key = item.Groups["Key"].Value;
-                var value = item.Groups["Value"].Value;
+                string key = item.Groups["Key"].Value;
+                string value = item.Groups["Value"].Value;
 
                 directives[key] = value;
             }

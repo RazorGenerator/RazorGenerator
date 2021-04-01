@@ -14,7 +14,7 @@ namespace RazorGenerator.Core
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
         {
-            get { return _transformers; ; }
+            get { return this._transformers; ; }
         }
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
@@ -23,9 +23,9 @@ namespace RazorGenerator.Core
             string currentPath = razorHost.FullPath;
             string directoryVirtualPath = null;
 
-            var configFileMap = new WebConfigurationFileMap();
+            WebConfigurationFileMap configFileMap = new WebConfigurationFileMap();
 
-            var virtualDirectories = configFileMap.VirtualDirectories;
+            VirtualDirectoryMappingCollection virtualDirectories = configFileMap.VirtualDirectories;
             while (!currentPath.Equals(projectPath, StringComparison.OrdinalIgnoreCase))
             {
                 currentPath = Path.GetDirectoryName(currentPath);
@@ -44,14 +44,14 @@ namespace RazorGenerator.Core
 
             try
             {
-                var config = WebConfigurationManager.OpenMappedWebConfiguration(configFileMap, directoryVirtualPath);
+                System.Configuration.Configuration config = WebConfigurationManager.OpenMappedWebConfiguration(configFileMap, directoryVirtualPath);
                 RazorPagesSection section = config.GetSection(RazorPagesSection.SectionName) as RazorPagesSection;
                 if (section != null)
                 {
                     string baseType = section.PageBaseType;
                     if (!DefaultBaseType.Equals(baseType, StringComparison.OrdinalIgnoreCase))
                     {
-                        _transformers.Add(new SetBaseType(baseType, @override: true));
+                        this._transformers.Add(new SetBaseType(baseType, @override: true));
                     }
 
                     if (section != null)

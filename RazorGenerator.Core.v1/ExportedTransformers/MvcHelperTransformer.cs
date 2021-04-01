@@ -24,7 +24,7 @@ namespace RazorGenerator.Core
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
         {
-            get { return _transformers; }
+            get { return this._transformers; }
         }
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)

@@ -36,7 +36,7 @@ namespace RazorGenerator.Core
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
         {
-            get { return _codeTransformers; }
+            get { return this._codeTransformers; }
         }
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
@@ -77,7 +77,7 @@ namespace RazorGenerator.Core
                 string baseType;
                 
 
-                if (IsSpecialPage(sourceFileName))
+                if (this.IsSpecialPage(sourceFileName))
                 {
                     baseType = typeof(ViewStartPage).FullName;
                 }
@@ -85,7 +85,7 @@ namespace RazorGenerator.Core
                 {
                     baseType = host.CodeLanguageUtil.BuildGenericTypeReference( baseClass , new string[] { host.CodeLanguageUtil.DefaultModelTypeName });
                 }
-                SetBaseType(baseType);
+                this.SetBaseType(baseType);
             }
 
             private bool IsSpecialPage(string path)
@@ -96,9 +96,9 @@ namespace RazorGenerator.Core
 
             private void SetBaseType(string name)
             {
-                var baseType = new CodeTypeReference(name);
-                GeneratedClass.BaseTypes.Clear();
-                GeneratedClass.BaseTypes.Add(baseType);
+                CodeTypeReference baseType = new CodeTypeReference(name);
+                this.GeneratedClass.BaseTypes.Clear();
+                this.GeneratedClass.BaseTypes.Add(baseType);
             }
         }
 
@@ -112,7 +112,7 @@ namespace RazorGenerator.Core
                 string baseType;
 
 
-                if (IsSpecialPage(sourceFileName))
+                if (this.IsSpecialPage(sourceFileName))
                 {
                     baseType = typeof(ViewStartPage).FullName;
                 }
@@ -120,7 +120,7 @@ namespace RazorGenerator.Core
                 {
                     baseType = host.CodeLanguageUtil.BuildGenericTypeReference(baseClass, new string[] { host.CodeLanguageUtil.DefaultModelTypeName });
                 }
-                SetBaseType(baseType);
+                this.SetBaseType(baseType);
             }
 
             private bool IsSpecialPage(string path)
@@ -131,9 +131,9 @@ namespace RazorGenerator.Core
 
             private void SetBaseType(string name)
             {
-                var baseType = new CodeTypeReference(name);
-                GeneratedClass.BaseTypes.Clear();
-                GeneratedClass.BaseTypes.Add(baseType);
+                CodeTypeReference baseType = new CodeTypeReference(name);
+                this.GeneratedClass.BaseTypes.Clear();
+                this.GeneratedClass.BaseTypes.Add(baseType);
             }
         }
     }

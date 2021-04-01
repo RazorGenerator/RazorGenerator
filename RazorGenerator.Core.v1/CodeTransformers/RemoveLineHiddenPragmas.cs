@@ -11,8 +11,8 @@ namespace RazorGenerator.Core
 
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
         {
-            var linePragmaStatements = new List<CodeSnippetTypeMember>();
-            foreach (var member in generatedClass.Members.OfType<CodeSnippetTypeMember>())
+            List<CodeSnippetTypeMember> linePragmaStatements = new List<CodeSnippetTypeMember>();
+            foreach (CodeSnippetTypeMember member in generatedClass.Members.OfType<CodeSnippetTypeMember>())
             {
                 if (member.Text.TrimEnd().Equals(LinePragmaText, StringComparison.OrdinalIgnoreCase))
                 {
@@ -25,7 +25,7 @@ namespace RazorGenerator.Core
                 }
             }
 
-            foreach (var item in linePragmaStatements)
+            foreach (CodeSnippetTypeMember item in linePragmaStatements)
             {
                 generatedClass.Members.Remove(item);
             }

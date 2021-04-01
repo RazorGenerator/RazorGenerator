@@ -20,7 +20,7 @@ namespace RazorGenerator.Core
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
         {
-            get { return _codeTransformers; }
+            get { return this._codeTransformers; }
         }
 
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit,
@@ -31,9 +31,9 @@ namespace RazorGenerator.Core
             base.ProcessGeneratedCode(codeCompileUnit, generatedNamespace, generatedClass, executeMethod);
 
             // Make all helper methods prefixed by '_' internal
-            foreach (var method in generatedClass.Members.OfType<CodeSnippetTypeMember>())
+            foreach (CodeSnippetTypeMember method in generatedClass.Members.OfType<CodeSnippetTypeMember>())
             {
-                method.Text = _razorHost.CodeLanguageUtil.MakeHelperMethodsInternal(method.Text);
+                method.Text = this._razorHost.CodeLanguageUtil.MakeHelperMethodsInternal(method.Text);
             }
         }
     }

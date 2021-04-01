@@ -12,14 +12,14 @@ namespace RazorGenerator.Core
 
         public GeneratePrettyNamesTransformer(bool trimLeadingUnderscores)
         {
-            _trimLeadingUnderscores = trimLeadingUnderscores;
+            this._trimLeadingUnderscores = trimLeadingUnderscores;
         }
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
-            var fileName = Path.GetFileNameWithoutExtension(razorHost.ProjectRelativePath);
-            var className = ParserHelpers.SanitizeClassName(fileName);
-            if (_trimLeadingUnderscores)
+            string fileName = Path.GetFileNameWithoutExtension(razorHost.ProjectRelativePath);
+            string className = ParserHelpers.SanitizeClassName(fileName);
+            if (this._trimLeadingUnderscores)
             {
                 className = className.TrimStart('_');
             }

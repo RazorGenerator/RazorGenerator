@@ -10,7 +10,7 @@ namespace RazorGenerator.Core
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
         {
             string tool = "RazorGenerator";
-            Version version = GetType().Assembly.GetName().Version;
+            Version version = this.GetType().Assembly.GetName().Version;
             generatedClass.CustomAttributes.Add(
                 new CodeAttributeDeclaration(typeof(System.CodeDom.Compiler.GeneratedCodeAttribute).FullName,
                         new CodeAttributeArgument(new CodePrimitiveExpression(tool)),
@@ -26,17 +26,17 @@ namespace RazorGenerator.Core
 
         public SetImports(IEnumerable<string> imports, bool replaceExisting = false)
         {
-            _imports = imports;
-            _replaceExisting = replaceExisting;
+            this._imports = imports;
+            this._replaceExisting = replaceExisting;
         }
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
-            if (_replaceExisting)
+            if (this._replaceExisting)
             {
                 razorHost.NamespaceImports.Clear();
             }
-            foreach (var import in _imports)
+            foreach (string import in this._imports)
             {
                 razorHost.NamespaceImports.Add(import);
             }
@@ -45,7 +45,7 @@ namespace RazorGenerator.Core
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
         {
             // Sort imports.
-            var imports = new List<CodeNamespaceImport>(generatedNamespace.Imports.OfType<CodeNamespaceImport>());
+            List<CodeNamespaceImport> imports = new List<CodeNamespaceImport>(generatedNamespace.Imports.OfType<CodeNamespaceImport>());
             generatedNamespace.Imports.Clear();
             generatedNamespace.Imports.AddRange(imports.OrderBy(c => c.Namespace, NamespaceComparer.Instance).ToArray());
         }
@@ -79,7 +79,7 @@ namespace RazorGenerator.Core
     {
         public override string ProcessOutput(string codeContent)
         {
-            return _razorHost.CodeLanguageUtil.MakeTypeStatic(codeContent);
+            return this._razorHost.CodeLanguageUtil.MakeTypeStatic(codeContent);
         }
     }
 
@@ -90,8 +90,8 @@ namespace RazorGenerator.Core
 
         public SetBaseType(string typeName, bool @override = false)
         {
-            _typeName = typeName;
-            _override = @override;
+            this._typeName = typeName;
+            this._override = @override;
         }
 
         public SetBaseType(Type type, bool @override = false)
@@ -106,8 +106,8 @@ namespace RazorGenerator.Core
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
-            if (_override || IsDefaultBaseClass(razorHost.DefaultBaseClass))
-                razorHost.DefaultBaseClass = _typeName;
+            if (this._override || this.IsDefaultBaseClass(razorHost.DefaultBaseClass))
+                razorHost.DefaultBaseClass = this._typeName;
         }
     }
 

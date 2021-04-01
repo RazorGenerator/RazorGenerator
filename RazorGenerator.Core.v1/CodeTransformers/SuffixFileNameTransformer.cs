@@ -12,14 +12,14 @@ namespace RazorGenerator.Core
 
         public SuffixFileNameTransformer(string suffix)
         {
-            _suffix = suffix;
+            this._suffix = suffix;
         }
 
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
         {
-            if (!String.IsNullOrEmpty(_suffix))
+            if (!String.IsNullOrEmpty(this._suffix))
             {
-                generatedClass.Name += _suffix;
+                generatedClass.Name += this._suffix;
             }
         }
     }

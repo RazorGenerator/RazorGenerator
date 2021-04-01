@@ -8,12 +8,12 @@ namespace RazorGenerator.Core
 
         public SetTypeNamespace(string @namespace)
         {
-            _namespace = @namespace;
+            this._namespace = @namespace;
         }
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
-            razorHost.DefaultNamespace = _namespace;
+            razorHost.DefaultNamespace = this._namespace;
         }
     }
 }

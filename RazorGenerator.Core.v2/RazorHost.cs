@@ -70,7 +70,7 @@ namespace RazorGenerator.Core
             };
 
             base.DefaultBaseClass = typeof(WebPage).FullName;
-            foreach (var import in _defaultImports)
+            foreach (string import in _defaultImports)
             {
                 _ = base.NamespaceImports.Add(import);
             }
@@ -78,12 +78,12 @@ namespace RazorGenerator.Core
 
         public string ProjectRelativePath
         {
-            get { return _baseRelativePath; }
+            get { return this._baseRelativePath; }
         }
 
         public string FullPath
         {
-            get { return _fullPath.FullName; }
+            get { return this._fullPath.FullName; }
         }
 
         public event EventHandler<GeneratorErrorEventArgs> Error;
@@ -94,14 +94,14 @@ namespace RazorGenerator.Core
         {
             get
             {
-                return _defaultClassName ?? GetClassName();
+                return this._defaultClassName ?? this.GetClassName();
             }
             set
             {
                 if (!String.Equals(value, "__CompiledTemplate", StringComparison.OrdinalIgnoreCase))
                 {
                     //  By default RazorEngineHost assigns the name __CompiledTemplate. We'll ignore this assignment
-                    _defaultClassName = value;
+                    this._defaultClassName = value;
                 }
             }
         }
@@ -116,13 +116,13 @@ namespace RazorGenerator.Core
         {
             get
             {
-                return _languageUtil;
+                return this._languageUtil;
             }
         }
 
         public string GenerateCode()
         {
-            _codeTransformer.Initialize(this, _directives);
+            this._codeTransformer.Initialize(this, this._directives);
 
             // Create the engine
             RazorTemplateEngine engine = new RazorTemplateEngine(this);
@@ -139,7 +139,7 @@ namespace RazorGenerator.Core
             }
             catch (Exception e)
             {
-                OnGenerateError(4, e.ToString(), 1, 1);
+                this.OnGenerateError(4, e.ToString(), 1, 1);
                 //Returning null signifies that generation has failed
                 return null;
             }
@@ -147,12 +147,12 @@ namespace RazorGenerator.Core
             // Output errors
             foreach (RazorError error in results.ParserErrors)
             {
-                OnGenerateError(4, error.Message, (uint)error.Location.LineIndex + 1, (uint)error.Location.CharacterIndex + 1);
+                this.OnGenerateError(4, error.Message, (uint)error.Location.LineIndex + 1, (uint)error.Location.CharacterIndex + 1);
             }
 
             try
             {
-                OnCodeCompletion(50, 100);
+                this.OnCodeCompletion(50, 100);
 
                 using (StringWriter writer = new StringWriter())
                 {
@@ -161,22 +161,22 @@ namespace RazorGenerator.Core
                     options.BracingStyle = "C";
 
                     //Generate the code
-                    writer.WriteLine(CodeLanguageUtil.GetPreGeneratedCodeBlock());
-                    _codeDomProvider.GenerateCodeFromCompileUnit(results.GeneratedCode, writer, options);
-                    writer.WriteLine(CodeLanguageUtil.GetPostGeneratedCodeBlock());
+                    writer.WriteLine(this.CodeLanguageUtil.GetPreGeneratedCodeBlock());
+                    this._codeDomProvider.GenerateCodeFromCompileUnit(results.GeneratedCode, writer, options);
+                    writer.WriteLine(this.CodeLanguageUtil.GetPostGeneratedCodeBlock());
 
-                    OnCodeCompletion(100, 100);
+                    this.OnCodeCompletion(100, 100);
                     writer.Flush();
 
                     // Perform output transformations and return
                     string codeContent = writer.ToString();
-                    codeContent = _codeTransformer.ProcessOutput(codeContent);
+                    codeContent = this._codeTransformer.ProcessOutput(codeContent);
                     return codeContent;
                 }
             }
             catch (Exception e)
             {
-                OnGenerateError(4, e.ToString(), 1, 1);
+                this.OnGenerateError(4, e.ToString(), 1, 1);
                 //Returning null signifies that generation has failed
                 return null;
             }
@@ -184,19 +184,19 @@ namespace RazorGenerator.Core
 
         public override void PostProcessGeneratedCode(CodeGeneratorContext context)
         {
-            _codeTransformer.ProcessGeneratedCode(context.CompileUnit, context.Namespace, context.GeneratedClass, context.TargetMethod);
+            this._codeTransformer.ProcessGeneratedCode(context.CompileUnit, context.Namespace, context.GeneratedClass, context.TargetMethod);
         }
 
         public override RazorCodeGenerator DecorateCodeGenerator(RazorCodeGenerator incomingCodeGenerator)
         {
-            var codeGenerator = CodeGenerator ?? base.DecorateCodeGenerator(incomingCodeGenerator);
-            codeGenerator.GenerateLinePragmas = EnableLinePragmas;
+            RazorCodeGenerator codeGenerator = this.CodeGenerator ?? base.DecorateCodeGenerator(incomingCodeGenerator);
+            codeGenerator.GenerateLinePragmas = this.EnableLinePragmas;
             return codeGenerator;
         }
 
         public override ParserBase DecorateCodeParser(ParserBase incomingCodeParser)
         {
-            return Parser ?? base.DecorateCodeParser(incomingCodeParser);
+            return this.Parser ?? base.DecorateCodeParser(incomingCodeParser);
         }
 
         private void OnGenerateError(uint errorCode, string errorMessage, uint lineNumber, uint columnNumber)
@@ -217,7 +217,7 @@ namespace RazorGenerator.Core
 
         protected virtual string GetClassName()
         {
-            return ParserHelpers.SanitizeClassName(_baseRelativePath);
+            return ParserHelpers.SanitizeClassName(this._baseRelativePath);
         }
     }
 }

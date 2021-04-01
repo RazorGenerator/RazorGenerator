@@ -44,9 +44,9 @@ namespace RazorGenerator.Core
         {
             CodeLanguageUtil langutil = CodeLanguageUtil.GetLanguageUtilFromFileName(fullPath);
 
-            using (var codeDomProvider = langutil.GetCodeDomProvider())
+            using (CodeDomProvider codeDomProvider = langutil.GetCodeDomProvider())
             {
-                return CreateHost(fullPath, projectRelativePath, codeDomProvider, vsNamespace);
+                return this.CreateHost(fullPath, projectRelativePath, codeDomProvider, vsNamespace);
             }
         }
 
@@ -86,15 +86,15 @@ namespace RazorGenerator.Core
                 }
             }
 
-            if (_catalog == null)
+            if (this._catalog == null)
             {
-                _catalog = this.InitCompositionCatalog(baseDirectory, loadExtensions, runtime);
+                this._catalog = this.InitCompositionCatalog(this.baseDirectory, this.loadExtensions, runtime);
             }
 
-            using (var container = new CompositionContainer(_catalog))
+            using (CompositionContainer container = new CompositionContainer(this._catalog))
             {
-                var codeTransformer = this.GetRazorCodeTransformer(container, projectRelativePath, hostName);
-                var host = container.GetExport<IHostProvider>().Value;
+                IRazorCodeTransformer codeTransformer = this.GetRazorCodeTransformer(container, projectRelativePath, hostName);
+                IHostProvider host = container.GetExport<IHostProvider>().Value;
                 return host.GetRazorHost(projectRelativePath, fullPath, codeTransformer, codeDomProvider, directives);
             }
         }
@@ -127,8 +127,8 @@ namespace RazorGenerator.Core
         private ComposablePartCatalog InitCompositionCatalog(DirectoryInfo baseDirectory, bool loadExtensions, RazorRuntime runtime)
         {
             // Retrieve available hosts
-            var hostsAssembly = this.GetAssembly(runtime);
-            var catalog = new AggregateCatalog(new AssemblyCatalog(hostsAssembly));
+            Assembly hostsAssembly = this.GetAssembly(runtime);
+            AggregateCatalog catalog = new AggregateCatalog(new AssemblyCatalog(hostsAssembly));
 
             if (loadExtensions)
             {
@@ -136,7 +136,7 @@ namespace RazorGenerator.Core
                 AddCatalogIfHostsDirectoryExists(catalog, baseDirectory);
 
                 // Look for the Razor Hosts directory up to two directories above the baseDirectory. Hopefully this should cover the solution root.
-                var solutionDirectory = Path.Combine(baseDirectory.FullName, @"..\");
+                string solutionDirectory = Path.Combine(baseDirectory.FullName, @"..\");
                 AddCatalogIfHostsDirectoryExists(catalog, new DirectoryInfo(solutionDirectory));
 
                 solutionDirectory = Path.Combine(baseDirectory.FullName, @"..\..\");
@@ -181,7 +181,7 @@ namespace RazorGenerator.Core
             bool isMvcProject = IsMvcProject(projectRoot, out runtime) ?? false;
             if (isMvcProject)
             {
-                var mvcHelperRegex = new Regex(@"(^|\\)Views(\\.*)+Helpers?", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
+                Regex mvcHelperRegex = new Regex(@"(^|\\)Views(\\.*)+Helpers?", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
                 if (mvcHelperRegex.IsMatch(projectRelativePath))
                 {
                     host = new GuessedHost("MvcHelper", runtime);
@@ -199,14 +199,14 @@ namespace RazorGenerator.Core
             razorRuntime = RazorRuntime.Version1;
             try
             {
-                var projectFile = Directory.EnumerateFiles(projectRoot.FullName, "*.csproj").FirstOrDefault();
+                string projectFile = Directory.EnumerateFiles(projectRoot.FullName, "*.csproj").FirstOrDefault();
                 if (projectFile == null)
                 {
                     projectFile = Directory.EnumerateFiles(projectRoot.FullName, "*.vbproj").FirstOrDefault();
                 }
                 if (projectFile != null)
                 {
-                    var content = File.ReadAllText(projectFile);
+                    string content = File.ReadAllText(projectFile);
                     if (( content.IndexOf("System.Web.Mvc, Version=4", StringComparison.OrdinalIgnoreCase) != -1 ) ||
                         ( content.IndexOf("System.Web.Razor, Version=2", StringComparison.OrdinalIgnoreCase) != -1 ) ||
                         ( content.IndexOf("Microsoft.AspNet.Mvc.4", StringComparison.OrdinalIgnoreCase) != -1 ))
@@ -233,7 +233,7 @@ namespace RazorGenerator.Core
 
         private static void AddCatalogIfHostsDirectoryExists(AggregateCatalog catalog, DirectoryInfo directory)
         {
-            var extensionsDirectory = Path.GetFullPath(Path.Combine(directory.FullName, "RazorHosts"));
+            string extensionsDirectory = Path.GetFullPath(Path.Combine(directory.FullName, "RazorHosts"));
             if (Directory.Exists(extensionsDirectory))
             {
                 catalog.Catalogs.Add(new DirectoryCatalog(extensionsDirectory));
@@ -253,14 +253,14 @@ namespace RazorGenerator.Core
 
         public void Dispose()
         {
-            if (_catalog != null)
+            if (this._catalog != null)
             {
                 this._catalog.Dispose();
             }
 
-            if (loadExtensions)
+            if (this.loadExtensions)
             {
-                AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
+                AppDomain.CurrentDomain.AssemblyResolve -= this.OnAssemblyResolve;
             }
         }
 

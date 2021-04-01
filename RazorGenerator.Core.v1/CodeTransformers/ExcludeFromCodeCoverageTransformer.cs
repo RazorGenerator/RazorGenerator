@@ -7,7 +7,7 @@ namespace RazorGenerator.Core
     {
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
         {
-            var codeTypeReference = new CodeTypeReference(typeof(ExcludeFromCodeCoverageAttribute));
+            CodeTypeReference codeTypeReference = new CodeTypeReference(typeof(ExcludeFromCodeCoverageAttribute));
             generatedClass.CustomAttributes.Add(new CodeAttributeDeclaration(codeTypeReference));
         }
     }

@@ -22,7 +22,7 @@ namespace RazorGenerator.Core
         {
             get
             {
-                return _transformers;
+                return this._transformers;
             }
         }
 
@@ -50,7 +50,7 @@ namespace RazorGenerator.Core
 
 
             // Create the Href wrapper
-            CodeTypeMember hrefMethod = new CodeSnippetTypeMember(_razorHost.CodeLanguageUtil.HrefMethod);
+            CodeTypeMember hrefMethod = new CodeSnippetTypeMember(this._razorHost.CodeLanguageUtil.HrefMethod);
 
             generatedClass.Members.Add(hrefMethod);
 

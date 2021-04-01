@@ -15,7 +15,7 @@ namespace RazorGenerator.Core
         {
             base.Initialize(razorHost, directives);
 
-            foreach (var transformer in CodeTransformers)
+            foreach (RazorCodeTransformerBase transformer in this.CodeTransformers)
             {
                 transformer.Initialize(razorHost, directives);
             }
@@ -23,7 +23,7 @@ namespace RazorGenerator.Core
 
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
         {
-            foreach (var transformer in CodeTransformers)
+            foreach (RazorCodeTransformerBase transformer in this.CodeTransformers)
             {
                 transformer.ProcessGeneratedCode(codeCompileUnit, generatedNamespace, generatedClass, executeMethod);
             }
@@ -31,7 +31,7 @@ namespace RazorGenerator.Core
 
         public override string ProcessOutput(string codeContent)
         {
-            foreach (var transformer in CodeTransformers)
+            foreach (RazorCodeTransformerBase transformer in this.CodeTransformers)
             {
                 codeContent = transformer.ProcessOutput(codeContent);
             }

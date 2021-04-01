@@ -35,14 +35,14 @@ namespace RazorGenerator.Core.Test
             DirectoryInfo currentDirectory = new DirectoryInfo(Environment.CurrentDirectory);
             try
             {
-                using (var razorGenerator = new HostManager(workingDirectory, loadExtensions: false, defaultRuntime: runtime, assemblyDirectory: currentDirectory))
+                using (HostManager razorGenerator = new HostManager(workingDirectory, loadExtensions: false, defaultRuntime: runtime, assemblyDirectory: currentDirectory))
                 {
                     FileInfo inputFile = SaveInputFile(workingDirectory.FullName, testName);
-                    var host = razorGenerator.CreateHost(inputFile, testName + ".cshtml", string.Empty);
-                    host.DefaultNamespace = GetType().Namespace;
+                    IRazorHost host = razorGenerator.CreateHost(inputFile, testName + ".cshtml", string.Empty);
+                    host.DefaultNamespace = this.GetType().Namespace;
                     host.EnableLinePragmas = false;
 
-                    var output = host.GenerateCode();
+                    string output = host.GenerateCode();
                     AssertOutput(testName, output, runtime);
                 }
             }
@@ -96,7 +96,7 @@ namespace RazorGenerator.Core.Test
 
         private static void AssertOutput(string testName, string output, RazorRuntime runtime)
         {
-            var expectedContent = GetManifestFileContent(testName, "Output_v" + (int)runtime);
+            string expectedContent = GetManifestFileContent(testName, "Output_v" + (int)runtime);
             output = Regex.Replace(output, @"Runtime Version:[\d.]*", "Runtime Version:N.N.NNNNN.N")
                           .Replace(typeof(HostManager).Assembly.GetName().Version.ToString(), "v.v.v.v");
 
@@ -105,10 +105,10 @@ namespace RazorGenerator.Core.Test
 
         private static string GetManifestFileContent(string testName, string fileType)
         {
-            var extension = fileType.Equals("Input", StringComparison.OrdinalIgnoreCase) ? "cshtml" : "txt";
-            var resourceName = String.Join(".", "RazorGenerator.Core.Test.TestFiles", fileType, testName, extension);
+            string extension = fileType.Equals("Input", StringComparison.OrdinalIgnoreCase) ? "cshtml" : "txt";
+            string resourceName = String.Join(".", "RazorGenerator.Core.Test.TestFiles", fileType, testName, extension);
 
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName)))
+            using (StreamReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName)))
             {
                 return reader.ReadToEnd();
             }

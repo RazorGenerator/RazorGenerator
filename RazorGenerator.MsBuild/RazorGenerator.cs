@@ -32,7 +32,7 @@ namespace RazorGenerator.MsBuild
         {
             get
             {
-                return _generatedFiles.ToArray();
+                return this._generatedFiles.ToArray();
             }
         }
 
@@ -79,7 +79,7 @@ namespace RazorGenerator.MsBuild
 
                     CodeLanguageUtil langutil = CodeLanguageUtil.GetLanguageUtilFromFileName(filePath);
 
-                    string outputPath = Path.Combine(CodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + langutil.GetCodeFileExtension();
+                    string outputPath = Path.Combine(this.CodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + langutil.GetCodeFileExtension();
                     if (!RequiresRecompilation(filePath, outputPath))
                     {
                         this.Log.LogMessage(MessageImportance.Low, "Skipping file {0} since {1} is already up to date", filePath, outputPath);

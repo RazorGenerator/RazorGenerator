@@ -14,22 +14,22 @@ namespace RazorGenerator.Core
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
-            _projectRelativePath = razorHost.ProjectRelativePath;
-            directives.TryGetValue(VirtualPathDirectiveKey, out _overriddenVirtualPath);
+            this._projectRelativePath = razorHost.ProjectRelativePath;
+            directives.TryGetValue(VirtualPathDirectiveKey, out this._overriddenVirtualPath);
         }
 
         public override void ProcessGeneratedCode(CodeCompileUnit codeCompileUnit, CodeNamespace generatedNamespace, CodeTypeDeclaration generatedClass, CodeMemberMethod executeMethod)
         {
-            Debug.Assert(_projectRelativePath != null, "Initialize has to be called before we get here.");
+            Debug.Assert(this._projectRelativePath != null, "Initialize has to be called before we get here.");
             string virtualPath;
             try
             {
-                virtualPath = _overriddenVirtualPath ?? VirtualPathUtility.ToAppRelative("~/" + _projectRelativePath.TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+                virtualPath = this._overriddenVirtualPath ?? VirtualPathUtility.ToAppRelative("~/" + this._projectRelativePath.TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
             }
             catch (HttpException)
             {
                 // Crap mono.
-                virtualPath = "~/" + _projectRelativePath.TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                virtualPath = "~/" + this._projectRelativePath.TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
             }
 
             generatedClass.CustomAttributes.Add(

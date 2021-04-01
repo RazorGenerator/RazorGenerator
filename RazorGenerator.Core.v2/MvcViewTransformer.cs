@@ -41,16 +41,16 @@ namespace RazorGenerator.Core
 
         protected override IEnumerable<RazorCodeTransformerBase> CodeTransformers
         {
-            get { return _codeTransformers; }
+            get { return this._codeTransformers; }
         }
 
         public override void Initialize(RazorHost razorHost, IDictionary<string, string> directives)
         {
             base.Initialize(razorHost, directives);
-            _languageUtil = razorHost.CodeLanguageUtil;
+            this._languageUtil = razorHost.CodeLanguageUtil;
 
-            _isSpecialPage = IsSpecialPage(razorHost.FullPath);
-            FixupDefaultClassNameIfTemplate(razorHost);
+            this._isSpecialPage = this.IsSpecialPage(razorHost.FullPath);
+            this.FixupDefaultClassNameIfTemplate(razorHost);
 
 
             // The CSharpRazorCodeGenerator decides to generate line pragmas based on if the file path is available. Set it to an empty string if we 
@@ -93,15 +93,15 @@ namespace RazorGenerator.Core
             base.ProcessGeneratedCode(codeCompileUnit, generatedNamespace, generatedClass, executeMethod);
             if (generatedClass.BaseTypes.Count > 0)
             {
-                var codeTypeReference = (CodeTypeReference)generatedClass.BaseTypes[0];
-                if (_isSpecialPage)
+                CodeTypeReference codeTypeReference = (CodeTypeReference)generatedClass.BaseTypes[0];
+                if (this._isSpecialPage)
                 {
                     codeTypeReference.BaseType = typeof(ViewStartPage).FullName;
                 }
-                else if (!_languageUtil.IsGenericTypeReference( codeTypeReference.BaseType))
+                else if (!this._languageUtil.IsGenericTypeReference( codeTypeReference.BaseType))
                 {
                     // Use the default model if it wasn't specified by the user.
-                    codeTypeReference.BaseType = _languageUtil.BuildGenericTypeReference(codeTypeReference.BaseType, new string[]{ _languageUtil.DefaultModelTypeName});
+                    codeTypeReference.BaseType = this._languageUtil.BuildGenericTypeReference(codeTypeReference.BaseType, new string[]{ this._languageUtil.DefaultModelTypeName});
                 }
             }
         }
