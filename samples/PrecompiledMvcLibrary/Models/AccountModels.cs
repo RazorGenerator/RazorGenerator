@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -25,7 +25,7 @@ namespace MvcSample.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -64,7 +64,7 @@ namespace MvcSample.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [System.Web.Mvc.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
     #endregion
@@ -86,7 +86,7 @@ namespace MvcSample.Models
 
     public class AccountMembershipService : IMembershipService
     {
-        private readonly MembershipProvider _provider;
+        private readonly MembershipProvider provider;
 
         public AccountMembershipService()
             : this(null)
@@ -95,14 +95,14 @@ namespace MvcSample.Models
 
         public AccountMembershipService(MembershipProvider provider)
         {
-            _provider = provider ?? Membership.Provider;
+            this.provider = provider ?? Membership.Provider;
         }
 
         public int MinPasswordLength
         {
             get
             {
-                return _provider.MinRequiredPasswordLength;
+                return this.provider.MinRequiredPasswordLength;
             }
         }
 
@@ -111,7 +111,7 @@ namespace MvcSample.Models
             if (String.IsNullOrEmpty(userName)) throw new ArgumentException("Value cannot be null or empty.", "userName");
             if (String.IsNullOrEmpty(password)) throw new ArgumentException("Value cannot be null or empty.", "password");
 
-            return _provider.ValidateUser(userName, password);
+            return this.provider.ValidateUser(userName, password);
         }
 
         public MembershipCreateStatus CreateUser(string userName, string password, string email)
@@ -120,8 +120,7 @@ namespace MvcSample.Models
             if (String.IsNullOrEmpty(password)) throw new ArgumentException("Value cannot be null or empty.", "password");
             if (String.IsNullOrEmpty(email)) throw new ArgumentException("Value cannot be null or empty.", "email");
 
-            MembershipCreateStatus status;
-            _provider.CreateUser(userName, password, email, null, null, true, null, out status);
+            _ = this.provider.CreateUser(userName, password, email, null, null, true, null, out MembershipCreateStatus status);
             return status;
         }
 
@@ -135,7 +134,7 @@ namespace MvcSample.Models
             // than return false in certain failure scenarios.
             try
             {
-                MembershipUser currentUser = _provider.GetUser(userName, true /* userIsOnline */);
+                MembershipUser currentUser = this.provider.GetUser(userName, true /* userIsOnline */);
                 return currentUser.ChangePassword(oldPassword, newPassword);
             }
             catch (ArgumentException)
@@ -217,7 +216,7 @@ namespace MvcSample.Models
     public sealed class ValidatePasswordLengthAttribute : ValidationAttribute, IClientValidatable
     {
         private const string _defaultErrorMessage = "'{0}' must be at least {1} characters long.";
-        private readonly int _minCharacters = Membership.Provider.MinRequiredPasswordLength;
+        private readonly int minCharacters = Membership.Provider.MinRequiredPasswordLength;
 
         public ValidatePasswordLengthAttribute()
             : base(_defaultErrorMessage)
@@ -226,20 +225,22 @@ namespace MvcSample.Models
 
         public override string FormatErrorMessage(string name)
         {
-            return String.Format(CultureInfo.CurrentCulture, ErrorMessageString,
-                name, _minCharacters);
+            return String.Format(CultureInfo.CurrentCulture, this.ErrorMessageString,
+                name, this.minCharacters);
         }
 
         public override bool IsValid(object value)
         {
-            string valueAsString = value as string;
-            return (valueAsString != null && valueAsString.Length >= _minCharacters);
+            return
+                value is string valueAsString
+                &&
+                valueAsString.Length >= this.minCharacters;
         }
 
         public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
         {
             return new[]{
-                new ModelClientValidationStringLengthRule(FormatErrorMessage(metadata.GetDisplayName()), _minCharacters, int.MaxValue)
+                new ModelClientValidationStringLengthRule(this.FormatErrorMessage(metadata.GetDisplayName()), this.minCharacters, int.MaxValue)
             };
         }
     }
