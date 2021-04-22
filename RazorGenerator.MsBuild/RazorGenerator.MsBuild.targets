@@ -6,6 +6,10 @@
         <PrecompileRazorFiles Condition=" '$(PrecompileRazorFiles)' == '' ">true</PrecompileRazorFiles>
         <RazorGeneratorMsBuildPath Condition=" '$(RazorGeneratorMsBuildPath)' == '' ">$(MSBuildThisFileDirectory)\..\tools\RazorGenerator.MsBuild.dll</RazorGeneratorMsBuildPath>
         <RazorViewsCodeGenDirectory Condition=" '$(RazorViewsCodeGenDirectory)' == '' ">$(MsBuildProjectDirectory)\obj\CodeGen\</RazorViewsCodeGenDirectory>
+		
+		<!-- https://stackoverflow.com/questions/18912078/create-property-in-msbuild-with-result-of-a-boolean-expression -->
+		<!-- When `<RazorGeneratorMSBuildDebug>true</RazorGeneratorMSBuildDebug>` then the `RazorCodeGen` Task will wait for a debugger to attach for 30 seconds, otherwise it aborts the task. -->
+        <RazorGeneratorMSBuildDebug Condition=" '$(RazorGeneratorMSBuildDebug)' != '' And '$(RazorGeneratorMSBuildDebug)' != 'false' ">false</RazorGeneratorMSBuildDebug>
       
         <CompileDependsOn Condition=" '$(PrecompileRazorFiles)' == 'true' ">
             PrecompileRazorFiles;
@@ -19,37 +23,43 @@
              <RazorSrcFiles Condition=" '@(RazorSrcFiles)' == '' " Include="**\*.vbhtml;**\*.cshtml" />
         </ItemGroup>
         <ItemGroup>
-            <RazorCsSrcFiles Condition=" '@(RazorCsSrcFiles)' == '' and '%(Extension)' == '.cshtml' "
-                Include="@(RazorSrcFiles)" />
-            <RazorOutputFiles
-                Include="@(RazorCsSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).cs')" />
+            <RazorCsSrcFiles Condition=" '@(RazorCsSrcFiles)' == '' and '%(Extension)' == '.cshtml' " Include="@(RazorSrcFiles)" />
+            <RazorOutputFiles Include="@(RazorCsSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).cs')" />
         </ItemGroup>
         <ItemGroup>
-            <RazorVbSrcFiles Condition=" '@(RazorVbSrcFiles)' == '' and '%(Extension)' == '.vbhtml' "
-                Include="@(RazorSrcFiles)" />
-            <RazorVbOutputFiles
-                Include="@(RazorVbSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).vb')" />
+            <RazorVbSrcFiles Condition=" '@(RazorVbSrcFiles)' == '' and '%(Extension)' == '.vbhtml' " Include="@(RazorSrcFiles)" />
+            <RazorVbOutputFiles Include="@(RazorVbSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).vb')" />
          </ItemGroup>
          <ItemGroup>
              <RazorSrcFiles Include="@(RazorCsSrcFiles);@(RazorVbSrcFiles)" />
              <RazorOutputFiles Include="@(RazorCsOutputFiles);@(RazorVbOutputFiles)" />
          </ItemGroup>
     </Target>
+	
+	<!-- RazorCodeGen Task: -->
 
     <UsingTask AssemblyFile="$(RazorGeneratorMsBuildPath)" TaskName="RazorCodeGen" />
-    <Target Name="PrecompileRazorFiles"
-                    DependsOnTargets="_ResolveRazorFiles"
-                    Inputs="@(RazorSrcFiles)"
-                    Outputs="@(RazorOutputFiles)">
-        <RazorCodeGen ProjectRoot="$(MsBuildProjectDirectory)"
-                                    FilesToPrecompile="@(RazorSrcFiles)"
-                                    CodeGenDirectory="$(RazorViewsCodeGenDirectory)"
-                                    RootNamespace="$(RootNamespace)">
+	
+    <Target
+		Name="PrecompileRazorFiles"
+        DependsOnTargets="_ResolveRazorFiles"
+        Inputs="@(RazorSrcFiles)"
+        Outputs="@(RazorOutputFiles)"
+	>
+        <RazorCodeGen 
+			ProjectRoot="$(MsBuildProjectDirectory)"
+            FilesToPrecompile="@(RazorSrcFiles)"
+            CodeGenDirectory="$(RazorViewsCodeGenDirectory)"
+            RootNamespace="$(RootNamespace)"
+            EnableDebug="$(RazorGeneratorMSBuildDebug)"
+		>
             <Output TaskParameter="GeneratedFiles" ItemName="FilesGenerated" />
         </RazorCodeGen>
+		
         <ItemGroup>
           <Compile Include="@(FilesGenerated)" Condition=" '@(RazorOutputFiles)' == '' "/>
           <Compile Include="@(RazorOutputFiles)" />
         </ItemGroup>
     </Target>
+	
 </Project>

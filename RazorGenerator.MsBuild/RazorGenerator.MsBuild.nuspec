@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>$id$</id>
-    <version>$version$</version>
+    <version>3.0.4-debug</version>
     <authors>$author$</authors>
     <owners>$author$</owners>
     <licenseUrl>https://github.com/RazorGenerator/RazorGenerator/blob/master/LICENSE.txt</licenseUrl>
