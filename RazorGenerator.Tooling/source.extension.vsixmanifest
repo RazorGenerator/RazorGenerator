@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
     <Identity Id="2FD58EB3-29A2-40A3-BE17-C024CA9A17A2" Version="1.12.0" Language="en-US" Publisher="RazorGenerator contributors" />
     <DisplayName>Razor Generator</DisplayName>
@@ -9,16 +9,15 @@
     <GettingStartedGuide>https://github.com/RazorGenerator/RazorGenerator/wiki/Quick-Start-Guide</GettingStartedGuide>
   </Metadata>
   <Installation>
-    <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Community" />
-    <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Pro" />
-    <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Enterprise" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
   </Installation>
-  <Dependencies>
-  </Dependencies>
+  <Dependencies></Dependencies>
   <Assets>
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" Path="RazorGenerator.pkgdef" />
   </Assets>
   <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,)" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" />
   </Prerequisites>
 </PackageManifest>
