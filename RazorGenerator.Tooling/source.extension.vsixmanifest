@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
-    <Identity Id="2FD58EB3-29A2-40A3-BE17-C024CA9A17A2" Version="1.12.0" Language="en-US" Publisher="RazorGenerator contributors" />
+    <Identity Id="2FD58EB3-29A2-40A3-BE17-C024CA9A17A2" Version="1.13.0" Language="en-US" Publisher="RazorGenerator contributors" />
     <DisplayName>Razor Generator</DisplayName>
     <Description>Generates source code from Razor files (.cshtml/.vbhtml files), allowing them to be compiled into your assemblies. Supports MVC, Web Pages and standalone templates.</Description>
     <MoreInfo>https://github.com/RazorGenerator/RazorGenerator</MoreInfo>
@@ -9,15 +9,30 @@
     <GettingStartedGuide>https://github.com/RazorGenerator/RazorGenerator/wiki/Quick-Start-Guide</GettingStartedGuide>
   </Metadata>
   <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,)">
-      <ProductArchitecture>amd64</ProductArchitecture>
-    </InstallationTarget>
+    <InstallationTarget Version="[15.0,16.0]" Id="Microsoft.VisualStudio.Community">
+		<ProductArchitecture>x86</ProductArchitecture>
+	</InstallationTarget>
+    <InstallationTarget Version="[17.0,)" Id="Microsoft.VisualStudio.Community">
+		<ProductArchitecture>amd64</ProductArchitecture>
+	</InstallationTarget>
+    <InstallationTarget Version="[15.0,16.0]" Id="Microsoft.VisualStudio.Pro">
+		<ProductArchitecture>x86</ProductArchitecture>
+	</InstallationTarget>
+    <InstallationTarget Version="[17.0,)" Id="Microsoft.VisualStudio.Pro">
+		<ProductArchitecture>amd64</ProductArchitecture>
+	</InstallationTarget>
+    <InstallationTarget Version="[15.0,16.0]" Id="Microsoft.VisualStudio.Enterprise">
+		<ProductArchitecture>x86</ProductArchitecture>
+	</InstallationTarget>
+    <InstallationTarget Version="[17.0,)" Id="Microsoft.VisualStudio.Enterprise">
+		<ProductArchitecture>amd64</ProductArchitecture>
+	</InstallationTarget>
   </Installation>
   <Dependencies></Dependencies>
   <Assets>
     <Asset Type="Microsoft.VisualStudio.VsPackage" Path="RazorGenerator.pkgdef" />
   </Assets>
   <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,)" />
   </Prerequisites>
 </PackageManifest>
