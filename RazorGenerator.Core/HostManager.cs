@@ -202,9 +202,11 @@ namespace RazorGenerator.Core
                 {
                     projectFile = Directory.EnumerateFiles(projectRoot, "*.vbproj").FirstOrDefault();
                 }
+
                 if (projectFile != null)
                 {
                     var content = File.ReadAllText(projectFile);
+
                     if ((content.IndexOf("System.Web.Mvc, Version=4", StringComparison.OrdinalIgnoreCase) != -1) ||
                         (content.IndexOf("System.Web.Razor, Version=2", StringComparison.OrdinalIgnoreCase) != -1) ||
                         (content.IndexOf("Microsoft.AspNet.Mvc.4", StringComparison.OrdinalIgnoreCase) != -1))
@@ -219,8 +221,30 @@ namespace RazorGenerator.Core
                         // The project references Razor v3
                         razorRuntime = RazorRuntime.Version3;
                     }
+                    else
+                    {
+                        int startIndex = 0, endIndex;
 
-                    return content.IndexOf("System.Web.Mvc", StringComparison.OrdinalIgnoreCase) != -1;
+                        while(FindBetween(content, "<PackageReference", "</PackageReference", startIndex, out startIndex, out endIndex))
+                        {
+                            var include = (SubstringBetween(content, "Include=\"", "\"", startIndex, endIndex) ?? "").Trim().ToLower();
+                            var version = (SubstringBetween(content, "<Version>", "</Version>", startIndex, endIndex) ?? "").Trim();
+
+                            if ((include == "microsoft.aspnet.mvc" && version.StartsWith("5") && razorRuntime == RazorRuntime.Version1) ||
+                                (include == "microsoft.aspnet.razor" && version.StartsWith("3")))
+                            {
+                                razorRuntime = RazorRuntime.Version3;
+                            }
+                            else if ((include == "microsoft.aspnet.mvc" && version.StartsWith("4") && razorRuntime == RazorRuntime.Version1) ||
+                                (include == "microsoft.aspnet.razor" && version.StartsWith("2")))
+                            {
+                                razorRuntime = RazorRuntime.Version2;
+                            }
+                        }
+                    }
+
+                    return content.IndexOf("System.Web.Mvc", StringComparison.OrdinalIgnoreCase) != -1
+                        || content.IndexOf("Microsoft.AspNet.Mvc", StringComparison.OrdinalIgnoreCase) != -1;
                 }
             }
             catch
@@ -263,6 +287,26 @@ namespace RazorGenerator.Core
                 return Path.GetDirectoryName(uri.LocalPath);
             }
             return Path.GetDirectoryName(assembly.Location);
+        }
+
+        private static string SubstringBetween(string source, string startString, string endString, int start, int end)
+        {
+            return FindBetween(source, startString, endString, start, end, out start, out end)
+                ? source.Substring(start, end - start)
+                : null;
+        }
+
+        private static bool FindBetween(string source, string startString, string endString, int start, out int startIndex, out int endIndex)
+        {
+            return FindBetween(source, startString, endString, start, source.Length, out startIndex, out endIndex);
+        }
+
+        private static bool FindBetween(string source, string startString, string endString, int start, int end, out int startIndex, out int endIndex)
+        {
+            startIndex = source.IndexOf(startString, start, end - start, StringComparison.OrdinalIgnoreCase) + startString.Length;
+            endIndex = startIndex >= startString.Length ? source.IndexOf(endString, startIndex, end - startIndex, StringComparison.OrdinalIgnoreCase) : -1;
+
+            return endIndex >= startIndex;
         }
 
         public void Dispose()
