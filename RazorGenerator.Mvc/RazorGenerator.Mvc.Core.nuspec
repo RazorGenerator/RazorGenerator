@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/RazorGenerator/RazorGenerator/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/RazorGenerator/RazorGenerator</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <tags>mvc razor</tags>
+    <dependencies>
+      <dependency id="Microsoft.AspNet.Mvc" version="3.0.50813.1" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
+    </frameworkAssemblies>
+    <releaseNotes>
+        * v1.5.5:  Updated IsPhyicalPathsNewer to use case insensitive comparison
+    </releaseNotes>
+  </metadata>
+  <files>    
+    <file src="..\RazorGenerator.Powershell\*.ps*" target="tools" />
+  </files>
+</package>
