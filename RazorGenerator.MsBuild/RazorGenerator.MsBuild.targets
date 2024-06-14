@@ -21,7 +21,7 @@
         <ItemGroup>
             <RazorCsSrcFiles Condition=" '@(RazorCsSrcFiles)' == '' and '%(Extension)' == '.cshtml' "
                 Include="@(RazorSrcFiles)" />
-            <RazorOutputFiles
+          <RazorCsOutputFiles
                 Include="@(RazorCsSrcFiles -> '$(RazorViewsCodeGenDirectory)%(RelativeDir)%(Filename)%(Extension).cs')" />
         </ItemGroup>
         <ItemGroup>
