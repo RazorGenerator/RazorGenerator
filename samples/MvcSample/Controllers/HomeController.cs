@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using RazorGenerator.Mvc;
 
@@ -31,6 +32,21 @@ namespace MvcSample.Controllers
         public ActionResult About()
         {
             return View();
+        }
+
+        public ActionResult Yield()
+        {
+            IEnumerable<int> model = YieldRows(); // using 'ToList' makes error go away .ToList();
+
+            return View(model);
+        }
+
+        private IEnumerable<int> YieldRows()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                yield return i;
+            }
         }
 
         [HttpPost]
