@@ -24,9 +24,16 @@ namespace RazorGenerator.Testing
 
         private static readonly Dictionary<string, ViewPlaceholder> _views = new Dictionary<string, ViewPlaceholder>();
 
-        public static IViewEngine ViewEngine
+        private static StringWriter _writer;
+
+        public static DummyViewEngine ViewEngine
         {
             get { return _viewEngine; }
+        }
+
+        public static StringWriter Writer
+        {
+            get { return _writer; }
         }
 
         public static string Render<TModel>(this WebViewPage<TModel> view, TModel model = default(TModel))
@@ -36,16 +43,16 @@ namespace RazorGenerator.Testing
 
         public static string Render<TModel>(this WebViewPage<TModel> view, HttpContextBase httpContext, TModel model = default(TModel))
         {
-            var writer = new StringWriter();
+            _writer = new StringWriter();
             view.ViewData.Model = model;
-            view.Initialize(httpContext, writer);
+            view.Initialize(httpContext, _writer);
 
             var webPageContext = new WebPageContext(view.ViewContext.HttpContext, page: null, model: null);
 
             // Using private reflection to access some internals
             // Note: ideally we would not have to do this, but WebPages is just not mockable enough :(
             var dynamicPageContext = webPageContext.AsDynamic();
-            dynamicPageContext.OutputStack.Push(writer);
+            dynamicPageContext.OutputStack.Push(_writer);
 
             // Push some section writer dictionary onto the stack. We need two, because the logic in WebPageBase.RenderBody
             // checks that as a way to make sure the layout page is not called directly
@@ -59,7 +66,7 @@ namespace RazorGenerator.Testing
             view.AsDynamic().PageContext = webPageContext;
             view.Execute();
 
-            return writer.ToString();
+            return _writer.ToString();
         }
 
         public static HtmlDocument RenderAsHtml<TModel>(this WebViewPage<TModel> view, TModel model = default(TModel))
@@ -84,12 +91,14 @@ namespace RazorGenerator.Testing
         {
             EnsureDummyViewEngineRegistered();
 
-            var context = httpContext ?? new HttpContextBuilder().Build();
-            var routeData = new RouteData();
+            if (view.ViewContext == null)
+            { 
+                var context = httpContext ?? new HttpContextBuilder().Build();
+                var routeData = new RouteData();
+                var controllerContext = new ControllerContext(context, routeData, new Mock<ControllerBase>().Object);
 
-            var controllerContext = new ControllerContext(context, routeData, new Mock<ControllerBase>().Object);
-
-            view.ViewContext = new ViewContext(controllerContext, new Mock<IView>().Object, view.ViewData, new TempDataDictionary(), writer);
+                view.ViewContext = new ViewContext(controllerContext, new Mock<IView>().Object, view.ViewData, new TempDataDictionary(), writer);
+            }
 
             view.InitHelpers();
         }
@@ -158,20 +167,40 @@ namespace RazorGenerator.Testing
             }
         }
         
-        class DummyViewEngine : IViewEngine
+        public class DummyViewEngine : IViewEngine
         {
+            public bool ReturnDummyView = true;
+            public Func<string, IView> ViewFactory = s => null;
+
             public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
             {
-                return new ViewEngineResult(new DummyView(partialViewName, "partial"), this);
+                var view = CreateView(partialViewName, "partial");
+                return CreateViewResult(view);
             }
 
             public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
             {
-                return new ViewEngineResult(new DummyView(viewName, "view"), this);
+                var view = CreateView(viewName, "view");
+                return CreateViewResult(view);
             }
 
             public void ReleaseView(ControllerContext controllerContext, IView view)
             {
+            }
+
+            private IView CreateView(string viewName, string viewType)
+            {
+                var view = ViewFactory(viewName);
+                if (ReturnDummyView)
+                    view = view ?? new DummyView(viewName, viewType);
+                return view;
+            }
+
+            private ViewEngineResult CreateViewResult(IView view)
+            {
+                if (view != null)
+                    return new ViewEngineResult(view, this);
+                return new ViewEngineResult(new string[0]);
             }
         }
 
