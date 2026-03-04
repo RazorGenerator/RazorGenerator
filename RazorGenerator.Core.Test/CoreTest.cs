@@ -10,6 +10,59 @@ namespace RazorGenerator.Core.Test
 {
     public class CoreTest
     {
+        // Each Razor runtime version (v1/v2/v3) was compiled against a different
+        // generation of System.Web.Razor / System.Web.Mvc / System.Web.WebPages.
+        // The DLLs for v1 (Razor 1, MVC 3) and v2 (Razor 2, MVC 4) are placed in
+        // "v1\" and "v2\" sub-directories next to the test assembly so they can
+        // coexist with the v3 DLLs (Razor 3, MVC 5) in the main output directory.
+        // The AssemblyResolve handler below steers the CLR to the correct sub-dir
+        // rather than relying on app.config probing (which xunit 2.1 MSBuild runner
+        // may not honour because it runs tests in-process).
+        static CoreTest()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += ResolveVersionedWebAssembly;
+        }
+
+        private static Assembly ResolveVersionedWebAssembly(object sender, ResolveEventArgs args)
+        {
+            var requested = new AssemblyName(args.Name);
+            // Only intercept the ASP.NET web stack assemblies that differ across Razor runtimes.
+            var webAssemblies = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "System.Web.Razor",
+                "System.Web.Mvc",
+                "System.Web.WebPages",
+                "System.Web.WebPages.Razor",
+                "Microsoft.Web.Infrastructure"
+            };
+            if (!webAssemblies.Contains(requested.Name))
+                return null;
+
+            // Determine which versioned sub-directory to look in.
+            int majorVersion = requested.Version != null ? requested.Version.Major : 0;
+            string subDir;
+
+            // System.Web.Mvc 3.x → v1, 4.x → v2
+            if (requested.Name.Equals("System.Web.Mvc", StringComparison.OrdinalIgnoreCase))
+                subDir = majorVersion == 3 ? "v1" : majorVersion == 4 ? "v2" : null;
+            // Microsoft.Web.Infrastructure 1.x → v1
+            else if (requested.Name.Equals("Microsoft.Web.Infrastructure", StringComparison.OrdinalIgnoreCase))
+                subDir = "v1";
+            // System.Web.Razor, System.Web.WebPages, System.Web.WebPages.Razor: 1.x → v1, 2.x → v2
+            else
+                subDir = majorVersion == 1 ? "v1" : majorVersion == 2 ? "v2" : null;
+
+            if (subDir == null)
+                return null;
+
+            string outputDir = Path.GetDirectoryName(new Uri(typeof(CoreTest).Assembly.CodeBase).LocalPath);
+            string dllPath = Path.Combine(outputDir, subDir, requested.Name + ".dll");
+            if (File.Exists(dllPath))
+                return Assembly.LoadFrom(dllPath);
+
+            return null;
+        }
+
         private static readonly string[] _testNames = new[] 
         { 
             "WebPageTest",

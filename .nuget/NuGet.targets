@@ -33,7 +33,7 @@
        <PackageOutputDir Condition="$(PackageOutputDir) == ''">$([System.IO.Path]::GetFullPath('$(MsBuildThisFileDirectory)..\artifacts'))</PackageOutputDir>
 
         <!-- Commands -->
-       <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -p Configuration=$(Configuration) -o "$(PackageOutputDir)" -symbols $(BuildPackageFlags)</BuildCommand>
+       <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -p Configuration=$(Configuration) -OutputDirectory "$(PackageOutputDir)" -symbols $(BuildPackageFlags)</BuildCommand>
 
        <!-- Make the build depend on restore packages -->
        <BuildDependsOn Condition="$(BuildPackage) == 'true'">
