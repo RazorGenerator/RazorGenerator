@@ -62,13 +62,31 @@ namespace RazorGenerator.MsBuild
                 foreach (var file in FilesToPrecompile)
                 {
                     string filePath = file.GetMetadata("FullPath");
-                    string fileName = Path.GetFileNameWithoutExtension(filePath);
+                    string fileName = Path.GetFileName(filePath);                  // Index.cshtml
+                    string fileBaseName = Path.GetFileNameWithoutExtension(filePath); // Index
                     var projectRelativePath = GetProjectRelativePath(filePath, projectRoot);
                     string itemNamespace = GetNamespace(file, projectRelativePath);
-
-                    // Set the output path with the new suffix
-                    string outputPath = Path.Combine(CodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar));
-                    outputPath = Path.ChangeExtension(outputPath, $"{Suffix}.cs");
+                    
+                    CodeLanguageUtil langutil = CodeLanguageUtil.GetLanguageUtilFromFileName(fileName);
+                    
+                    string outputPath;
+                    if (string.IsNullOrEmpty(Suffix))
+                    {
+                        // preserve old behavior exactly
+                        outputPath = Path.Combine(
+                            CodeGenDirectory,
+                            projectRelativePath.TrimStart(Path.DirectorySeparatorChar))
+                            + langutil.GetCodeFileExtension();
+                    }
+                    else
+                    {
+                        var baseOutputPath = Path.Combine(
+                            CodeGenDirectory,
+                            projectRelativePath.TrimStart(Path.DirectorySeparatorChar));
+                    
+                        var normalizedSuffix = Suffix.StartsWith(".") ? Suffix : "." + Suffix;
+                        outputPath = Path.ChangeExtension(baseOutputPath, $"{normalizedSuffix}{langutil.GetCodeFileExtension()}");
+                    }
 
                     if (!RequiresRecompilation(filePath, outputPath))
                     {
