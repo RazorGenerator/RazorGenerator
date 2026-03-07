@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
+using Microsoft.Build.Utilities; 
 using RazorGenerator.Core;
 
 namespace RazorGenerator.MsBuild
@@ -26,6 +26,7 @@ namespace RazorGenerator.MsBuild
         [Required]
         public string CodeGenDirectory { get; set; }
 
+        public string Suffix { get; set; } = string.Empty;
         [Output]
         public ITaskItem[] GeneratedFiles
         {
@@ -61,13 +62,32 @@ namespace RazorGenerator.MsBuild
                 foreach (var file in FilesToPrecompile)
                 {
                     string filePath = file.GetMetadata("FullPath");
-                    string fileName = Path.GetFileName(filePath);
+                    string fileName = Path.GetFileName(filePath);                  // Index.cshtml
+                    string fileBaseName = Path.GetFileNameWithoutExtension(filePath); // Index
                     var projectRelativePath = GetProjectRelativePath(filePath, projectRoot);
                     string itemNamespace = GetNamespace(file, projectRelativePath);
-
+                    
                     CodeLanguageUtil langutil = CodeLanguageUtil.GetLanguageUtilFromFileName(fileName);
+                    
+                    string outputPath;
+                    if (string.IsNullOrEmpty(Suffix))
+                    {
+                        // preserve old behavior exactly
+                        outputPath = Path.Combine(
+                            CodeGenDirectory,
+                            projectRelativePath.TrimStart(Path.DirectorySeparatorChar))
+                            + langutil.GetCodeFileExtension();
+                    }
+                    else
+                    {
+                        var baseOutputPath = Path.Combine(
+                            CodeGenDirectory,
+                            projectRelativePath.TrimStart(Path.DirectorySeparatorChar));
+                    
+                        var normalizedSuffix = Suffix.StartsWith(".") ? Suffix : "." + Suffix;
+                        outputPath = Path.ChangeExtension(baseOutputPath, $"{normalizedSuffix}{langutil.GetCodeFileExtension()}");
+                    }
 
-                    string outputPath = Path.Combine(CodeGenDirectory, projectRelativePath.TrimStart(Path.DirectorySeparatorChar)) + langutil.GetCodeFileExtension();
                     if (!RequiresRecompilation(filePath, outputPath))
                     {
                         Log.LogMessage(MessageImportance.Low, "Skipping file {0} since {1} is already up to date", filePath, outputPath);
@@ -110,7 +130,7 @@ namespace RazorGenerator.MsBuild
 
                     var taskItem = new TaskItem(outputPath);
                     taskItem.SetMetadata("AutoGen", "true");
-                    taskItem.SetMetadata("DependentUpon", "fileName");
+                    taskItem.SetMetadata("DependentUpon", fileName); // Use the original file name
 
                     _generatedFiles.Add(taskItem);
                 }
@@ -140,6 +160,7 @@ namespace RazorGenerator.MsBuild
             projectRelativePath = Path.GetDirectoryName(projectRelativePath);
             // To keep the namespace consistent with VS, need to generate a namespace based on the folder path if no namespace is specified.
             // Also replace any non-alphanumeric characters with underscores.
+
             itemNamespace = projectRelativePath.Trim(Path.DirectorySeparatorChar);
             if (String.IsNullOrEmpty(itemNamespace))
             {
@@ -164,7 +185,7 @@ namespace RazorGenerator.MsBuild
             }
             itemNamespace = stringBuilder.ToString();
             itemNamespace = _namespaceRegex.Replace(itemNamespace, "$1_$2");
-            
+
             if (!String.IsNullOrEmpty(RootNamespace))
             {
                 itemNamespace = RootNamespace + '.' + itemNamespace;
